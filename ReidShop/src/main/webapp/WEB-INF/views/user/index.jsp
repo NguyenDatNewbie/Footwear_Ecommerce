@@ -12,17 +12,65 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="http://localhost:8081/user/assets/img/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicon.ico">
 
     <!-- CSS
     ========================= -->
 
 
+
     <!-- Plugins CSS -->
-    <link rel="stylesheet" href="http://localhost:8081/user/assets/css/plugins.css">
+    <link rel="stylesheet" href="../assets/css/plugins.css">
 
     <!-- Main Style CSS -->
-    <link rel="stylesheet" href="http://localhost:8081/user/assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <style>
+        .grid_list .product_thumb {
+            margin-bottom: 0;
+            min-width: 33.333333%;
+            margin-right: 15px;
+            width: 200px;
+        }
+        @media only screen and (min-width: 768px) and (max-width: 991px) {
+            .grid_list .product_thumb {
+                flex: 0 0 40.667%;
+                min-width: 40.667%;
+            }
+        }
+        @media only screen and (max-width: 767px) {
+            .grid_list .product_thumb {
+                flex: 0 0 100%;
+                min-width: 100%;
+                margin-right: 0;
+                margin-bottom: 25px;
+            }
+        }
+        .sidebar_widget.widget_categories ul li:focus {
+            color: #ff6a28;
+            font-style: oblique;
+            font-size: 16px;
+        }
+        .ul_menu_children li{
+            margin-left: 20px;
+
+        }
+
+        .ul_menu_children li a:hover span{
+            color: #ff6a28;
+        }
+
+
+        .listPage li:hover{
+            background: #ff6a28;
+            color: #ffffff;
+        }
+        .listPage .active{
+            background: #ff6a28;
+            color: #ffffff;
+        }
+
+    </style>
 
 </head>
 
@@ -33,12 +81,12 @@
 
     <!--slider area start-->
     <div class="slider_area slider_style home_three_slider owl-carousel">
-        <div class="single_slider" data-bgimg="http://localhost:8081/user/assets/img/slider/slider4.jpg">
+        <div class="single_slider" data-bgimg="../assets/img/slider/slider4.jpg">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12">
                         <div class="slider_content content_one">
-                            <img src="http://localhost:8081/user/assets/img/slider/content3.png" alt="">
+                            <img src="../assets/img/slider/content3.png" alt="">
                             <p>the wooboom clothing summer collection is back at half price</p>
                             <a href="shop.html">Discover Now</a>
                         </div>    
@@ -46,12 +94,12 @@
                 </div>
             </div>    
         </div>
-        <div class="single_slider" data-bgimg="http://localhost:8081/user/assets/img/slider/slider5.jpg">
+        <div class="single_slider" data-bgimg="../assets/img/slider/slider5.jpg">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12">
                         <div class="slider_content content_two">
-                            <img src="http://localhost:8081/user/assets/img/slider/content4.png" alt="">
+                            <img src="../assets/img/slider/content4.png" alt="">
                             <p>the wooboom clothing summer collection is back at half price</p>
                             <a href="shop.html">Discover Now</a>
                         </div>    
@@ -59,12 +107,12 @@
                 </div>
             </div>
         </div>
-        <div class="single_slider" data-bgimg="http://localhost:8081/user/assets/img/slider/slider6.jpg">
+        <div class="single_slider" data-bgimg="../assets/img/slider/slider6.jpg">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12">
                         <div class="slider_content content_three">
-                            <img src="http://localhost:8081/user/assets/img/slider/content5.png" alt="">
+                            <img src="../assets/img/slider/content5.png" alt="">
                             <p>the wooboom clothing summer collection is back at half price</p>
                             <a href="shop.html">Discover Now</a>
                         </div>    
@@ -82,21 +130,21 @@
                <div class="col-lg-4 col-md-6">
                     <div class="banner_area">
                         <div class="banner_thumb">
-                            <a href="shop.html"><img src="http://localhost:8081/user/assets/img/bg/banner8.jpg" alt="#"></a>
+                            <a href="shop.html"><img src="../assets/img/bg/banner8.jpg" alt="#"></a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="banner_area">
                         <div class="banner_thumb">
-                            <a href="shop.html"><img src="http://localhost:8081/user/assets/img/bg/banner9.jpg" alt="#"></a>
+                            <a href="shop.html"><img src="../assets/img/bg/banner9.jpg" alt="#"></a>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="banner_area bottom">
                         <div class="banner_thumb">
-                            <a href="shop.html"><img src="http://localhost:8081/user/assets/img/bg/banner10.jpg" alt="#"></a>
+                            <a href="shop.html"><img src="../assets/img/bg/banner10.jpg" alt="#"></a>
                         </div>
                     </div>
                 </div>
@@ -243,7 +291,7 @@
                <div class="col-lg-6 col-md-6">
                     <div class="banner_area">
                         <div class="banner_thumb">
-                            <a href="shop.html"><img src="http://localhost:8081/user/assets/img/bg/banner11.jpg" alt="#"></a>
+                            <a href="shop.html"><img src="../assets/img/bg/banner11.jpg" alt="#"></a>
                             <div class="banner_content">
                                <h1>Handbag <br> Men’s Collection</h1>
                                 <a href="shop.html">Discover Now</a>
@@ -254,7 +302,7 @@
                 <div class="col-lg-6 col-md-6">
                     <div class="banner_area">
                         <div class="banner_thumb">
-                            <a href="shop.html"><img src="http://localhost:8081/user/assets/img/bg/banner12.jpg" alt="#"></a>
+                            <a href="shop.html"><img src="../assets/img/bg/banner12.jpg" alt="#"></a>
                             <div class="banner_content">
                                <h1>Sneaker <br> Men’s Collection</h1>
                                 <a href="shop.html">Discover Now</a>
@@ -340,7 +388,7 @@
                     <div class="col-lg-4">
                         <div class="single_blog">
                             <div class="blog_thumb">
-                                <a href="blog-details.jsp"><img src="http://localhost:8081/user/assets/img/blog/blog1.jpg" alt=""></a>
+                                <a href="blog-details.jsp"><img src="../assets/img/blog/blog1.jpg" alt=""></a>
                                 <div class="blog_icon">
                                     <a href="blog-details.jsp"></a>
                                 </div>
@@ -364,7 +412,7 @@
                     <div class="col-lg-4">
                         <div class="single_blog">
                             <div class="blog_thumb">
-                                <a href="blog-details.jsp"><img src="http://localhost:8081/user/assets/img/blog/blog2.jpg" alt=""></a>
+                                <a href="blog-details.jsp"><img src="../assets/img/blog/blog2.jpg" alt=""></a>
                                 <div class="blog_icon">
                                     <a href="blog-details.jsp"></a>
                                 </div>
@@ -388,7 +436,7 @@
                     <div class="col-lg-4">
                         <div class="single_blog">
                             <div class="blog_thumb">
-                                <a href="blog-details.jsp"><img src="http://localhost:8081/user/assets/img/blog/blog3.jpg" alt=""></a>
+                                <a href="blog-details.jsp"><img src="../assets/img/blog/blog3.jpg" alt=""></a>
                                 <div class="blog_icon">
                                     <a href="blog-details.jsp"></a>
                                 </div>
@@ -412,7 +460,7 @@
                     <div class="col-lg-4">
                         <div class="single_blog">
                             <div class="blog_thumb">
-                                <a href="blog-details.jsp"><img src="http://localhost:8081/user/assets/img/blog/blog2.jpg" alt=""></a>
+                                <a href="blog-details.jsp"><img src="../assets/img/blog/blog2.jpg" alt=""></a>
                                 <div class="blog_icon">
                                     <a href="blog-details.jsp"></a>
                                 </div>
@@ -456,46 +504,46 @@
                                     <div class="tab-content product-details-large">
                                         <div class="tab-pane fade show active" id="tab1" role="tabpanel" >
                                             <div class="modal_tab_img">
-                                                <a href="#"><img src="http://localhost:8081/user/assets/img/product/product4.jpg" alt=""></a>
+                                                <a href="#"><img src="../assets/img/product/product4.jpg" alt=""></a>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="tab2" role="tabpanel">
                                             <div class="modal_tab_img">
-                                                <a href="#"><img src="http://localhost:8081/user/assets/img/product/product6.jpg" alt=""></a>
+                                                <a href="#"><img src="../assets/img/product/product6.jpg" alt=""></a>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="tab3" role="tabpanel">
                                             <div class="modal_tab_img">
-                                                <a href="#"><img src="http://localhost:8081/user/assets/img/product/product8.jpg" alt=""></a>
+                                                <a href="#"><img src="../assets/img/product/product8.jpg" alt=""></a>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="tab4" role="tabpanel">
                                             <div class="modal_tab_img">
-                                                <a href="#"><img src="http://localhost:8081/user/assets/img/product/product2.jpg" alt=""></a>
+                                                <a href="#"><img src="../assets/img/product/product2.jpg" alt=""></a>
                                             </div>
                                         </div>
                                         <div class="tab-pane fade" id="tab5" role="tabpanel">
                                             <div class="modal_tab_img">
-                                                <a href="#"><img src="http://localhost:8081/user/assets/img/product/product12.jpg" alt=""></a>
+                                                <a href="#"><img src="../assets/img/product/product12.jpg" alt=""></a>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal_tab_button">    
                                         <ul class="nav product_navactive owl-carousel" role="tablist">
                                             <li >
-                                                <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="false"><img src="http://localhost:8081/user/assets/img/s-product/product3.jpg" alt=""></a>
+                                                <a class="nav-link active" data-toggle="tab" href="#tab1" role="tab" aria-controls="tab1" aria-selected="false"><img src="../assets/img/s-product/product3.jpg" alt=""></a>
                                             </li>
                                             <li>
-                                                 <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false"><img src="http://localhost:8081/user/assets/img/s-product/product.jpg" alt=""></a>
+                                                 <a class="nav-link" data-toggle="tab" href="#tab2" role="tab" aria-controls="tab2" aria-selected="false"><img src="../assets/img/s-product/product.jpg" alt=""></a>
                                             </li>
                                             <li>
-                                               <a class="nav-link button_three" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false"><img src="http://localhost:8081/user/assets/img/s-product/product2.jpg" alt=""></a>
+                                               <a class="nav-link button_three" data-toggle="tab" href="#tab3" role="tab" aria-controls="tab3" aria-selected="false"><img src="../assets/img/s-product/product2.jpg" alt=""></a>
                                             </li>
                                             <li>
-                                               <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false"><img src="http://localhost:8081/user/assets/img/s-product/product4.jpg" alt=""></a>
+                                               <a class="nav-link" data-toggle="tab" href="#tab4" role="tab" aria-controls="tab4" aria-selected="false"><img src="../assets/img/s-product/product4.jpg" alt=""></a>
                                             </li>
                                             <li>
-                                               <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-controls="tab5" aria-selected="false"><img src="http://localhost:8081/user/assets/img/s-product/product5.jpg" alt=""></a>
+                                               <a class="nav-link" data-toggle="tab" href="#tab5" role="tab" aria-controls="tab5" aria-selected="false"><img src="../assets/img/s-product/product5.jpg" alt=""></a>
                                             </li>
 
                                         </ul>
@@ -567,10 +615,10 @@
 ============================================ -->
 
 <!-- Plugins JS -->
-<script src="http://localhost:8081/user/assets/js/plugins.js"></script>
+<script src="<c:url value="/assets/js/plugins.js"/>"></script>
 
 <!-- Main JS -->
-<script src="http://localhost:8081/user/assets/js/main.js"></script>
+<script src="<c:url value="/assets/js/main.js"/>"></script>
 
 
 

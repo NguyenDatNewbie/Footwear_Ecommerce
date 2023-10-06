@@ -30,7 +30,6 @@ public class ProductServiceImpl implements IProductService {
 		return result;
 	}
 
-	
 
 	@Override
 	public List<Product> findAllByProductCategorySoldTop(Long category){
@@ -128,8 +127,7 @@ public class ProductServiceImpl implements IProductService {
 			return new ArrayList<>();
 		if(to>products.size())
 			to = products.size();
-		for(int i = from;i<to;i++)
-		{
+		for(int i = from;i<to;i++) {
 			result.add(products.get(i));
 		}
 		return result;
@@ -146,5 +144,39 @@ public class ProductServiceImpl implements IProductService {
 			sizes.add(i);
 		}
 		return sizes;
+	}
+
+	@Override
+	public List<Product> filterRange(Long categoryId, double min, double max){
+		List<Product> products = productRepository.findAllByCategory(categoryId);
+		List<Product> result = new ArrayList<>();
+		double price;
+		for(int i =0;i<products.size();i++){
+			price =products.get(i).getPrice()*(1-products.get(i).getPromotion()/100.0);
+
+			if(price>=min && price<=max)
+				result.add(products.get(i));
+		}
+
+		return sortByPriceDESC(result);
+	}
+
+	@Override
+	public List<Product> findNewProduct(int quantityProduct){
+		List<Product> products = productRepository.findAll();
+		List<Product> result = new ArrayList<>();
+		int size = products.size()-1;
+		if(quantityProduct>size)
+			quantityProduct=size;
+		for(int i =0;i<quantityProduct;i++){
+			result.add(products.get(size-i));
+		}
+		return result;
+	}
+
+	@Override
+	public List<Product> addAll(List<Product> products1, List<Product> products2){
+		products1.addAll(products2);
+		return products1;
 	}
 }

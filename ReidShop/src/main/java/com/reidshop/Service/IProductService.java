@@ -28,4 +28,10 @@ public interface IProductService {
 	List<Product> selectTop(List<Product> products, int from, int to);
 
 	List<Integer> sizeProduct(List<Product> products);
+
+    List<Product> filterRange(Long categoryId, double min, double max);
+
+    List<Product> findNewProduct(int quantityProduct);
+
+    List<Product> addAll(List<Product> products1, List<Product> products2);
 }

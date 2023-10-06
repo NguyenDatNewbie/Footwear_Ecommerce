@@ -3,6 +3,7 @@ package com.reidshop.Entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Table
@@ -19,6 +20,12 @@ public class Evaluate {
     @Column
     String comment;
 
+    @Column
+    String img;
+
+    @Column
+    Date createdAt;
+
     @ManyToOne
     @JoinColumn(name = "product_id")
     Product product;
@@ -26,4 +33,7 @@ public class Evaluate {
     @ManyToOne
     @JoinColumn(name="account_id")
     Account account;
+
+
+
 }

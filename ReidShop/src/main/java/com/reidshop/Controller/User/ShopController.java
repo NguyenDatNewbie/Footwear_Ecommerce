@@ -59,11 +59,9 @@ public class ShopController {
         return "user/shop";
     }
 
-    @GetMapping({"/{brandId}/sort/{option}"})
-    ResponseEntity<List<Product>> getAllSort(@PathVariable Long brandId,@PathVariable int option){
-        products = productRepository.findAllByCategory(brandId);
+    @GetMapping({"/{categoryId}/sort/{option}"})
+    ResponseEntity<List<Product>> getAllSort(@PathVariable Long categoryId,@PathVariable int option){
         if(option == 1) {
-            products = productService.findAllByProductCategorySoldTop(brandId);
             products = productService.sortByProductSold(products);
         }
         else if(option==2)
@@ -75,6 +73,12 @@ public class ShopController {
         else
             products = productService.sortByNameZtoA(products);
 
+        return new ResponseEntity<>(products,HttpStatus.OK);
+    }
+
+    @GetMapping({"/{categoryId}/filterPrice/{min}/{max}"})
+    ResponseEntity<List<Product>> filterPrice(@PathVariable Long categoryId,@PathVariable double min,@PathVariable double max){
+        products = productService.filterRange(categoryId,min,max);
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
