@@ -4,6 +4,7 @@ import lombok.Data;
 
 import jakarta.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -24,4 +25,7 @@ public class Stock {
     @ManyToOne
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
+
+    @OneToMany(mappedBy = "stock")
+    List<Inventory> inventories;
 }
