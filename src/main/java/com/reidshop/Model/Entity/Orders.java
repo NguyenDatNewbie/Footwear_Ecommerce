@@ -1,9 +1,10 @@
-package com.reidshop.Entity;
+package com.reidshop.Model.Entity;
 
+import com.reidshop.Model.Enum.OrderStatus;
 import lombok.Data;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+
 import java.sql.Date;
 
 @Table
@@ -23,6 +24,9 @@ public class Orders {
 
     @Column
     double totalPrice;
+
+    @Column
+    OrderStatus status;
 
     @Column
     Date createdAt;

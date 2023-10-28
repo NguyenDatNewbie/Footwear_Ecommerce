@@ -1,7 +1,7 @@
 package com.reidshop.Controller.User;
 
-import com.reidshop.Entity.Evaluate;
-import com.reidshop.Entity.Product;
+import com.reidshop.Model.Entity.Evaluate;
+import com.reidshop.Model.Entity.Product;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IEvaluateServiceImpl;
 import com.reidshop.Service.IProductService;

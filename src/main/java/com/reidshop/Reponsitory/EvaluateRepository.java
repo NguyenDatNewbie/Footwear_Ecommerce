@@ -1,6 +1,6 @@
 package com.reidshop.Reponsitory;
 
-import com.reidshop.Entity.Evaluate;
+import com.reidshop.Model.Entity.Evaluate;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

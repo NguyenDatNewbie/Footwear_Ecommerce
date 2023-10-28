@@ -1,8 +1,9 @@
 package com.reidshop.Service;
 
-import com.reidshop.Model.AccountDetailDto;
-import com.reidshop.Model.AccountDto;
+import com.reidshop.Model.Entity.Account;
+import com.reidshop.Model.Entity.AccountDetail;
+import com.reidshop.Model.Request.RegisterRequest;
 
 public interface IAccountSevice {
-    void save(AccountDto accountDto, AccountDetailDto accountDetailDto, byte role);
+    Boolean save(RegisterRequest register);
 }

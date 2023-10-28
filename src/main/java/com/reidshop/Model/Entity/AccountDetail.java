@@ -1,4 +1,4 @@
-package com.reidshop.Entity;
+package com.reidshop.Model.Entity;
 
 import lombok.Data;
 

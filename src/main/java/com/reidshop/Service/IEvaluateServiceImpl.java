@@ -1,6 +1,6 @@
 package com.reidshop.Service;
 
-import com.reidshop.Entity.Evaluate;
+import com.reidshop.Model.Entity.Evaluate;
 
 import java.util.ArrayList;
 import java.util.List;

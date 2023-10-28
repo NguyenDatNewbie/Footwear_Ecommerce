@@ -1,6 +1,6 @@
 package com.reidshop.Reponsitory;
 
-import com.reidshop.Entity.Store;
+import com.reidshop.Model.Entity.Store;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,9 +1,8 @@
-package com.reidshop.Entity;
+package com.reidshop.Model.Entity;
 
 import lombok.Data;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 
 @Table
 @Entity
@@ -27,4 +26,8 @@ public class OrderItem {
 
     @Column
     double price;
+
+    @ManyToOne
+    @JoinColumn(name = "stock_id")
+    Stock stock;
 }

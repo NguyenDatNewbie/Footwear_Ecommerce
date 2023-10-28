@@ -1,6 +1,6 @@
 package com.reidshop.Service.Impl;
 
-import com.reidshop.Entity.Evaluate;
+import com.reidshop.Model.Entity.Evaluate;
 import com.reidshop.Reponsitory.EvaluateRepository;
 import com.reidshop.Service.IEvaluateServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
