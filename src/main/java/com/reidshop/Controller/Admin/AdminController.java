@@ -1,6 +1,6 @@
 package com.reidshop.Controller.Admin;
 
-import com.reidshop.Entity.Category;
+import com.reidshop.Model.Entity.Category;
 import com.reidshop.Reponsitory.CategoryRepository;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.OrdersRepository;

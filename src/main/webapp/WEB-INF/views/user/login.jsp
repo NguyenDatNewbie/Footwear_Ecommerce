@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
-         isELIgnored="false"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+         isELIgnored="false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,28 +10,45 @@
     <title>Sign In/Sign Up</title>
 
     <!-- Font Icon -->
-    <link rel="stylesheet" href="user/login/fonts/material-icon/css/material-design-iconic-font.min.css">
+    <link rel="stylesheet"
+          href="<c:url value="/user/login/fonts/material-icon/css/material-design-iconic-font.min.css"/>">
 
     <!-- Main css -->
-    <link rel="stylesheet" href="user/login/css/style.css">
+    <link rel="stylesheet" href="<c:url value="/user/login/css/style.css"/>">
 
-    <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/assets/img/favicon.ico"/>">
+
 
     <!-- CSS
     ========================= -->
 
 
     <!-- Plugins CSS -->
-    <link rel="stylesheet" href="../assets/css/plugins.css">
+    <link rel="stylesheet" href="<c:url value="/assets/css/plugins.css"/>">
 
     <!-- Main Style CSS -->
-    <link rel="stylesheet" href="user/assets/css/style.css">
+    <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
     <style>
-        .main{
+        label {
+            top: 30%;
+        }
+
+        h2 {
+            line-height: 1.66;
+            margin: 0;
+            padding: 0;
+            font-weight: bold;
+            color: #222;
+            font-family: Poppins;
+            font-size: 36px;
+        }
+
+        .main {
             height: 700px;
             background: #f8f8f8;
             padding: 50px 0px 1px 0;
         }
+
         .hidden {
             opacity: 0;
             transform: translateX(100%); /* Di chuyển sang phải 100% */
@@ -44,6 +61,10 @@
             transition: opacity 0.5s, transform 0.5s;
         }
 
+        .form-group span {
+
+        }
+
     </style>
 </head>
 <body>
@@ -53,88 +74,117 @@
     <div class="main">
 
         <!-- Sign up form -->
-        <div class="signup" id="sign_up">
+        <section class="signup hidden" id="sign_up">
             <div class="container">
                 <div class="signup-content">
                     <div class="signup-form">
                         <h2 class="form-title">Sign up</h2>
-                        <form:form  action="/sign-in-up/save" method="POST" class="register-form" id="register-form">
+                        <form action="/sign-in-up/save" method="POST" class="register-form" id="register-form">
                             <div class="form-group">
                                 <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                                <input type="text" name="name" id="name" placeholder="Your Name"/>
-                                <form:errors path="name" cssClass="error" />
-x                            </div>
+                                <input type="text" name="name" id="name" placeholder="Your Name"
+                                       <c:if test="${not empty request.name}">value="${request.name}"</c:if>/>
+                                <c:if test="${not empty errors.name}">
+                                    <span style="color: red;"><c:out value="${errors.name}"/></span>
+                                </c:if>
+                            </div>
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-email"></i></label>
-                                <input type="email" name="email" id="email" placeholder="Your Email"/>
-                                <form:errors path="email" cssClass="error" />
+                                <input type="email" name="email" id="email" placeholder="Your Email"
+                                       <c:if test="${not empty request.email}">value="${request.email}"</c:if>/>
+                                <c:if test="${not empty errors.email}">
+                                    <span style="color: red;"><c:out value="${errors.email}"/></span>
+                                </c:if>
+                                <c:if test="${not empty exitsEmail}">
+                                    <span style="color: red;"><c:out value="${exitsEmail}"/></span>
+                                </c:if>
                             </div>
                             <div class="form-group">
-                                <label for="pass"><i class="zmdi zmdi-lock"></i></label>
-                                <input type="password" name="password" id="pass" placeholder="Password"/>
-                                <form:errors path="password" cssClass="error" />
+                                <label for="password"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="password" id="password" placeholder="Password"
+                                       <c:if test="${not empty request.password}">value="${request.password}"</c:if> />
+                                <c:if test="${not empty errors.password}">
+                                    <span style="color: red;"><c:out value="${errors.password}"/></span>
+                                </c:if>
                             </div>
                             <div class="form-group">
-                                <label for="re_pass"><i class="zmdi zmdi-lock-outline"></i></label>
-                                <input type="password" name="re_pass" id="re_pass" placeholder="Repeat your password"/>
+                                <label for="rePassword"><i class="zmdi zmdi-lock-outline"></i></label>
+                                <input type="password" name="rePassword" id="rePassword"
+                                       placeholder="Repeat your password"
+                                       <c:if test="${not empty request.rePassword}">value="${request.rePassword}"</c:if>/>
+                                <c:if test="${not empty errors.rePassword}">
+                                    <span style="color: red;"><c:out value="${errors.rePassword}"/></span>
+                                </c:if>
+                                <c:if test="${not empty rePasswordEqual}">
+                                    <span style="color: red;"><c:out value="${rePasswordEqual}"/></span>
+                                </c:if>
                             </div>
                             <div class="form-group">
-                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
-                                <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
+                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term"/>
+                                <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all
+                                    statements in <a href="#" class="term-service">Terms of service</a></label>
                             </div>
                             <div class="form-group form-button">
                                 <input type="submit" name="signup" id="signup" class="form-submit" value="Register"/>
                             </div>
-                        </form:form>
+                        </form>
                     </div>
                     <div class="signup-image">
-                        <figure><img src="user/login/images/signup-image.jpg" alt="sing up image"></figure>
+                        <figure><img src="<c:url value="/user/login/images/signup-image.jpg"/>" alt="sing up image">
+                        </figure>
                         <a class="signup-image-link" id="onSignIn">I am already member</a>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-<%--        <!-- Sing in  Form -->--%>
-<%--        <section class="sign-in visible" id="sign_in">--%>
-<%--            <div class="container">--%>
-<%--                <div class="signin-content">--%>
-<%--                    <div class="signin-image">--%>
-<%--                        <figure><img src="user/login/images/signin-image.jpg" alt="sing up image"></figure>--%>
-<%--                        <a class="signup-image-link" id="onSignUp">Create an account</a>--%>
-<%--                    </div>--%>
+        <!-- Sing in  Form -->
+        <section class="sign-in visible" id="sign_in">
+            <div class="container">
+                <div class="signin-content">
+                    <div class="signin-image">
+                        <figure><img src="<c:url value="/user/login/images/signin-image.jpg"/>" alt="sing up image">
+                        </figure>
+                        <a class="signup-image-link" id="onSignUp">Create an account</a>
+                    </div>
 
-<%--                    <div class="signin-form">--%>
-<%--                        <h2 class="form-title">Sign up</h2>--%>
-<%--                        <form method="POST" class="register-form" id="login-form">--%>
-<%--                            <div class="form-group">--%>
-<%--                                <label for="your_name"><i class="zmdi zmdi-account material-icons-name"></i></label>--%>
-<%--                                <input type="text" name="your_name" id="your_name" placeholder="Your Name"/>--%>
-<%--                            </div>--%>
-<%--                            <div class="form-group">--%>
-<%--                                <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>--%>
-<%--                                <input type="password" name="your_pass" id="your_pass" placeholder="Password"/>--%>
-<%--                            </div>--%>
-<%--                            <div class="form-group">--%>
-<%--                                <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />--%>
-<%--                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>--%>
-<%--                            </div>--%>
-<%--                            <div class="form-group form-button">--%>
-<%--                                <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>--%>
-<%--                            </div>--%>
-<%--                        </form>--%>
-<%--                        <div class="social-login">--%>
-<%--                            <span class="social-label">Or login with</span>--%>
-<%--                            <ul class="socials">--%>
-<%--                                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>--%>
-<%--                                <li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>--%>
-<%--                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>--%>
-<%--                            </ul>--%>
-<%--                        </div>--%>
-<%--                    </div>--%>
-<%--                </div>--%>
-<%--            </div>--%>
-<%--        </section>--%>
+                    <div class="signin-form">
+                        <h2 class="form-title">Sign In</h2>
+                        <form action="/sign-in-up/sign-in" method="POST" class="register-form" id="login-form">
+                            <div class="form-group">
+                                <label for="email"><i class="zmdi zmdi-account material-icons-name"></i></label>
+                                <input type="email" name="email" id="your_email" placeholder="Your email"
+                                       <c:if test="${not empty requestLogin.email}">value="${requestLogin.email}"</c:if>/>
+                            </div>
+                            <div class="form-group">
+                                <label for="your_pass"><i class="zmdi zmdi-lock"></i></label>
+                                <input type="password" name="password" id="your_pass" placeholder="Password"
+                                       <c:if test="${not empty requestLogin.password}">value="${requestLogin.password}"</c:if>/>
+                            </div>
+                            <c:if test="${not empty loginError}">
+                                <span style="color: red;"><c:out value="${loginError}"/></span>
+                            </c:if>
+                            <div class="form-group">
+                                <input type="checkbox" name="remember-me" id="remember-me" class="agree-term"/>
+                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
+                            </div>
+                            <div class="form-group form-button">
+                                <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
+                            </div>
+                        </form>
+
+                        <div class="social-login">
+                            <span class="social-label">Or login with</span>
+                            <ul class="socials">
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>
+                                <li><a href="#"><i class="display-flex-center zmdi zmdi-google"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
 
     </div>
@@ -166,8 +216,12 @@ x                            </div>
         elementB.classList.add('hidden');
     });
 
+<%--    <c:if test="${!isLogin}">signUp.click();</c:if>--%>
+<%--    <c:if test="${isLogin || empty isLogin}">--%>
+<%--        signIn.click();--%>
+<%--    </c:if>--%>
 
 
 </script>
-</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
+</body>
 </html>

@@ -1,9 +1,9 @@
-package com.reidshop.Entity;
+package com.reidshop.Model.Entity;
 
 import lombok.Data;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
+
 import java.util.ArrayList;
 import java.util.List;
 

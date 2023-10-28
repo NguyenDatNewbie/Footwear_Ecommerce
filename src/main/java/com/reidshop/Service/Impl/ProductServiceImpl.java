@@ -1,6 +1,6 @@
 package com.reidshop.Service.Impl;
 
-import com.reidshop.Entity.Product;
+import com.reidshop.Model.Entity.Product;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.ProductRepository;
 import com.reidshop.Service.IProductService;

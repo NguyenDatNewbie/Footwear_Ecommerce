@@ -1,4 +1,4 @@
-package com.reidshop.Entity;
+package com.reidshop.Model.Entity;
 
 import lombok.Data;
 
@@ -22,7 +22,7 @@ public class Account {
     String password;
 
     @Column
-    byte role;
+    String role;
 
     @OneToOne(mappedBy = "account")
     AccountDetail accountDetail;

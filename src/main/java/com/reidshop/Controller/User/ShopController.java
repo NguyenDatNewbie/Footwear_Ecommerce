@@ -1,7 +1,7 @@
 package com.reidshop.Controller.User;
 
-import com.reidshop.Entity.Category;
-import com.reidshop.Entity.Product;
+import com.reidshop.Model.Entity.Category;
+import com.reidshop.Model.Entity.Product;
 import com.reidshop.Reponsitory.CategoryRepository;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.ProductRepository;

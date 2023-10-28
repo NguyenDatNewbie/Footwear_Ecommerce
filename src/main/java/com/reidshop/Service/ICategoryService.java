@@ -1,6 +1,6 @@
 package com.reidshop.Service;
 
-import com.reidshop.Entity.Category;
+import com.reidshop.Model.Entity.Category;
 
 import java.util.List;
 

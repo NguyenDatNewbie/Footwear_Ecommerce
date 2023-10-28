@@ -1,26 +1,27 @@
-package com.reidshop.Entity;
+package com.reidshop.Model.Entity;
 
 import lombok.Data;
 
 import jakarta.persistence.*;
+import java.util.Date;
 
-@Table
 @Entity
 @Data
-public class Inventory {
+@Table
+public class Stock {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "inventory_id")
+    @Column(name = "stock_id")
     Long id;
 
     @Column
-    int quantity;
-
-    @ManyToOne
-    @JoinColumn(name = "size_id")
-    Size size;
+    Date createdAt;
 
     @ManyToOne
     @JoinColumn(name = "store_id")
     Store store;
+
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    Supplier supplier;
 }

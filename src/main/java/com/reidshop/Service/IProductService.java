@@ -1,12 +1,8 @@
 package com.reidshop.Service;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Sort;
-
-import com.reidshop.Entity.Product;
+import com.reidshop.Model.Entity.Product;
 
 public interface IProductService {
 

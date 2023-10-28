@@ -1,6 +1,6 @@
 package com.reidshop.Service.Impl;
 
-import com.reidshop.Entity.Category;
+import com.reidshop.Model.Entity.Category;
 import com.reidshop.Reponsitory.CategoryRepository;
 import com.reidshop.Service.ICategoryService;
 import org.springframework.beans.factory.annotation.Autowired;

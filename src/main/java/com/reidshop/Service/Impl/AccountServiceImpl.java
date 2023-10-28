@@ -1,20 +1,30 @@
 package com.reidshop.Service.Impl;
 
-import com.reidshop.Entity.Account;
-import com.reidshop.Entity.AccountDetail;
-import com.reidshop.Model.AccountDetailDto;
-import com.reidshop.Model.AccountDto;
+import com.reidshop.Model.Entity.Account;
+import com.reidshop.Model.Entity.AccountDetail;
+import com.reidshop.Model.Enum.ROLE;
+import com.reidshop.Model.Request.RegisterRequest;
 import com.reidshop.Reponsitory.AccountDetailRepository;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Service.IAccountSevice;
+import com.reidshop.security.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
+@RequiredArgsConstructor
 public class AccountServiceImpl implements IAccountSevice {
     @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
     PasswordEncoder passwordEncoder;
+    @Autowired
+    JwtService jwtService;
     @Autowired
     AccountRepository accountRepository;
     @Autowired
@@ -22,32 +32,24 @@ public class AccountServiceImpl implements IAccountSevice {
 
 
     @Override
-    public void save(AccountDto accountDto, AccountDetailDto accountDetailDto, byte role){
+    public Boolean save(RegisterRequest request){
         Account account = new Account();
-        account.setEmail(accountDto.getEmail());
-        account.setPassword(passwordEncoder.encode(accountDto.getPassword()));
-        account.setRole(role);
-
-
+        account.setEmail(request.getEmail());
+        account.setPassword(passwordEncoder.encode(request.getPassword()));
+        account.setRole(ROLE.USER.toString());
         try{
             accountRepository.save(account);
             AccountDetail accountDetail = new AccountDetail();
-            if(isExistAccount(account.getId(),accountDetail,accountDetailDto))
-                accountDetailRepository.save(accountDetail);
+            accountDetail.setAccount(account);
+            accountDetail.setName(request.getName());
+
+            accountDetailRepository.save(accountDetail);
+            return true;
         }catch (Exception exception){
             System.out.println(exception);
+            return false;
         }
     }
 
-    Boolean isExistAccount(Long id,AccountDetail accountDetail, AccountDetailDto dto){
-        Account account = accountRepository.findByAccountId(id);
-        if(account!=null){
-            accountDetail.setAccount(account);
-            accountDetail.setName(dto.getName());
-            accountDetail.setPhone(dto.getPhone());
-            accountDetail.setAddress(dto.getAddress());
-            return true;
-        }
-        return false;
-    }
+
 }

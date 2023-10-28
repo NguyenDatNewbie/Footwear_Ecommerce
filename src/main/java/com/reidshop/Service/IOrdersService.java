@@ -1,6 +1,6 @@
 package com.reidshop.Service;
 
-import com.reidshop.Entity.Orders;
+import com.reidshop.Model.Entity.Category;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;

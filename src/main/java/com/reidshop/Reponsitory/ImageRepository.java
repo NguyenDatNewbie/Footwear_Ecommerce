@@ -1,6 +1,6 @@
 package com.reidshop.Reponsitory;
 
-import com.reidshop.Entity.Image;
+import com.reidshop.Model.Entity.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

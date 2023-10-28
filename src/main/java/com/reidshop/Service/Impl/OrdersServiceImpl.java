@@ -1,6 +1,6 @@
 package com.reidshop.Service.Impl;
 
-import com.reidshop.Entity.Orders;
+import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Reponsitory.OrdersRepository;
 import com.reidshop.Service.IOrdersService;
 import org.springframework.beans.factory.annotation.Autowired;

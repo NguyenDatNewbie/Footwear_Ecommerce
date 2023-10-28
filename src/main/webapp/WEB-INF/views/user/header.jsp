@@ -35,18 +35,6 @@
                                     <li><a href="compare.html">Compare Products  </a></li>
                                 </ul>
                             </li>
-                            <li class="language"><a href="#"><img src="http://localhost:8082/user/assets/img/logo/language.png" alt=""> English <i class="ion-chevron-down"></i></a>
-                                <ul class="dropdown_language">
-                                    <li><a href="#"><img src="http://localhost:8082/user/assets/img/logo/cigar.jpg" alt=""> French</a></li>
-                                    <li><a href="#"><img src="http://localhost:8082/user/assets/img/logo/language2.png" alt="">German</a></li>
-                                </ul>
-                            </li>
-                            <li class="currency"><a href="#">USD <i class="ion-chevron-down"></i></a>
-                                <ul class="dropdown_currency">
-                                    <li><a href="#">EUR</a></li>
-                                    <li><a href="#">BRL</a></li>
-                                </ul>
-                            </li>
                         </ul>
                     </div>
                     <div class="search_bar">
@@ -288,7 +276,7 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="logo">
-                            <a href="index.jsp"><img src="http://localhost:8082/user/assets/img/logo/logo.png" alt=""></a>
+                            <a href="index.jsp"><img src="<c:url value="/user/assets/img/logo/logo.png" />" ></a>
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -299,7 +287,7 @@
                                 <div class="mini_cart">
                                     <div class="cart_item top">
                                         <div class="cart_img">
-                                            <a href="#"><img src="http://localhost:8082/user/assets/img/s-product/product.jpg" alt=""></a>
+                                            <a href="#"><img src="<c:url value="/user/assets/img/s-product/product.jpg" />" ></a>
                                         </div>
                                         <div class="cart_info">
                                             <a href="#">Apple iPhone SE 16GB</a>
@@ -411,7 +399,7 @@
 
                                             </ul>
                                         </li>
-                                        <li class="banner_menu"><a href="#"><img src="http://localhost:8082/user/assets/img/bg/banner1.jpg" alt=""></a></li>
+                                        <li class="banner_menu"><a href="#"><img src="<c:url value="/user/assets/img/bg/banner1.jpg"/>"></a></li>
                                     </ul>
                                 </li>
                                 <li><a href="blog.html">blog <i class="fa fa-angle-down"></i></a>
@@ -440,7 +428,7 @@
                     </div>
                 </div>
                 <div class="logo_container">
-                    <a href="index.jsp"><img src="http://localhost:8082/user/assets/img/logo/logo.png" alt=""></a>
+                    <a href="index.jsp"><img src="<c:url value="/user/assets/img/logo/logo.png"/>" ></a>
                 </div>
                 <div class="right_menu">
                     <div class="main_menu">
