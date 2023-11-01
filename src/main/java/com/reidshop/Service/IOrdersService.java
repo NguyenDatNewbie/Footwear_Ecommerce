@@ -1,6 +1,7 @@
 package com.reidshop.Service;
 
 import com.reidshop.Model.Entity.Category;
+import com.reidshop.Model.Entity.Orders;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
@@ -12,11 +13,19 @@ public interface IOrdersService {
     Long countOrdersInCurrentMonth();
     Long countOrdersInCurrenYear();
     double revenueAll();
-    double totalRevenueOfToday();
-    double totalRevenueOfThisMonth();
-    double totalRevenueOfThisYear();
+    double totalSalesOfToday();
+    double totalSalesOfThisMonth();
+    double totalSalesOfThisYear();
     Long countOrdersOfMonth(int year, int month);
     Long countOrderByDate(Date date);
+
+    List<Integer> findAllOrderToday();
+    List<Integer> findAllOrderOfThisWeek();
+    double totalPriceOfThisWeek();
+
+    List<Integer> findAllOrderOfThisMonth();
+
+    List<Double> listTotalPriceOfThisWeek();
 
 
 }

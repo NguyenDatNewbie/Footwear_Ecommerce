@@ -1,6 +1,7 @@
 package com.reidshop.Reponsitory;
 
 import com.reidshop.Model.Entity.Orders;
+import com.reidshop.Model.Entity.Size;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -35,10 +36,29 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     double revenueAll();
     //Tổng doanh thu theo ngày
     @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE")
-    double totalRevenueOfToday();
+    double totalSalesOfToday();
     @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')")
-    double totalRevenueOfThisMonth();
+    double totalSalesOfThisMonth();
     @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE)")
-    double totalRevenueOfThisYear();
+    double totalSalesOfThisYear();
+
+    //Lấy tất cả order_id trong ngày
+    @Query("SELECT o.id FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE")
+    List<Integer> findAllOrderToday();
+
+    //lấy order_id trong 1 tuần
+    @Query("SELECT o.id FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1)")
+    List<Integer> findAllOrderOfThisWeek();
+    //tổng doanh số trong tuần hiện tại
+    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1)")
+    double totalPriceOfThisWeek();
+
+    //Lấy order_id trong 1 tháng
+    @Query("SELECT o.id FROM Orders o WHERE FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')")
+    List<Integer> findAllOrderOfThisMonth();
+
+    //List total_price của các order trong tuần
+    @Query("SELECT o.totalPrice FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1)")
+    List<Double> listTotalPriceOfThisWeek();
 
 }

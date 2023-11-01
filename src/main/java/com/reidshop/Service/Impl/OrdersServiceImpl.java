@@ -45,18 +45,18 @@ public class OrdersServiceImpl implements IOrdersService {
     }
 
     @Override
-    public double totalRevenueOfToday() {
-        return ordersRepository.totalRevenueOfToday();
+    public double totalSalesOfToday() {
+        return ordersRepository.totalSalesOfToday();
     }
 
     @Override
-    public double totalRevenueOfThisMonth() {
-        return ordersRepository.totalRevenueOfThisMonth();
+    public double totalSalesOfThisMonth() {
+        return ordersRepository.totalSalesOfThisMonth();
     }
 
     @Override
-    public double totalRevenueOfThisYear() {
-        return ordersRepository.totalRevenueOfThisYear();
+    public double totalSalesOfThisYear() {
+        return ordersRepository.totalSalesOfThisYear();
     }
 
     @Override
@@ -67,5 +67,34 @@ public class OrdersServiceImpl implements IOrdersService {
     @Override
     public Long countOrderByDate(Date date) {
         return ordersRepository.countOrderByDate(date);
+    }
+
+    @Override
+    public List<Integer> findAllOrderToday() {
+        List<Integer> orderIdList = ordersRepository.findAllOrderToday();
+        return orderIdList;
+    }
+
+    @Override
+    public List<Integer> findAllOrderOfThisWeek() {
+        List<Integer> listIdOfWeek = ordersRepository.findAllOrderOfThisWeek();
+        return listIdOfWeek;
+    }
+
+    @Override
+    public double totalPriceOfThisWeek() {
+        return ordersRepository.totalPriceOfThisWeek();
+    }
+
+    @Override
+    public List<Integer> findAllOrderOfThisMonth() {
+        List<Integer> listIdOfMonth = ordersRepository.findAllOrderOfThisMonth();
+        return listIdOfMonth;
+    }
+
+    @Override
+    public List<Double> listTotalPriceOfThisWeek() {
+        List<Double> listTotalPriceThisWeek = ordersRepository.listTotalPriceOfThisWeek();
+        return listTotalPriceThisWeek;
     }
 }

@@ -34,133 +34,10 @@
 
     <!-- Template Main CSS File -->
     <link href="/admin/assets/css/style.css" rel="stylesheet">
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('#today').click(function() {
-                $.ajax({
-                    url: '/admin/getTotalSaleToday', // Địa chỉ máy chủ để gửi yêu cầu
-                    method: 'GET',
-                    success: function(response) {
-                        var newTotalSales = response;
-                        $('#totalSales').text(newTotalSales);
-                        $('#saleText').text("| Today");
-                    }
-                });
-                $.ajax({
-                    url: '/admin/getOrderIncreaseLastDate', // Địa chỉ máy chủ để gửi yêu cầu
-                    method: 'GET',
-                    success: function(response) {
-                        var percent = parseFloat(response);
 
-                        var saleIncreaseText = $('#saleIncreaseText');
-                        var increaseText = $('#increaseText');
+    <script>
 
-                        //Thực hiện logic
-                        if(percent < 0){
-                            saleIncreaseText.removeClass('text-success').addClass('text-danger');
-                            percent = Math.abs(percent);
-                            increaseText.text('Decrease');
-                        } else
-                        {
-                            increaseText.text('Increase');
-                        }
-
-                        saleIncreaseText.text(percent + "%");
-                    }
-                });
-            });
-        });
-        $(document).ready(function() {
-            $('#thisMonth').click(function() {
-                $.ajax({
-                    url: '/admin/getTotalSaleThisMonth', // Địa chỉ máy chủ để gửi yêu cầu
-                    method: 'GET',
-                    success: function(response) {
-                        var newTotalSales = response;
-                        $('#totalSales').text(newTotalSales);
-                        $('#saleText').text("| This Month");
-                    }
-                });
-                $.ajax({
-                    url: '/admin/getOrderIncreaseLastMonth', // Địa chỉ máy chủ để gửi yêu cầu
-                    method: 'GET',
-                    success: function(response) {
-                        var percent = parseFloat(response);
-
-                        var saleIncreaseText = $('#saleIncreaseText');
-                        var increaseText = $('#increaseText');
-
-                        //Thực hiện logic
-                        if(percent < 0){
-                            saleIncreaseText.removeClass('text-success').addClass('text-danger');
-                            percent = Math.abs(percent);
-                            increaseText.text('Decrease');
-                        } else
-                        {
-                            increaseText.text('Increase');
-                        }
-
-                        saleIncreaseText.text(percent + "%");
-                    }
-                });
-            });
-        });
-        $(document).ready(function() {
-            $('#thisYear').click(function() {
-                $.ajax({
-                    url: '/admin/getTotalSaleThisYear', // Địa chỉ máy chủ để gửi yêu cầu
-                    method: 'GET',
-                    success: function(response) {
-                        var newTotalSales = response;
-                        $('#totalSales').text(newTotalSales);
-                        $('#saleText').text("| This Year");
-                    }
-                });
-            });
-        });
-        $(document).ready(function() {
-            $('#todayRevenue').click(function() {
-                $.ajax({
-                    url: '/admin/getTotalRevenueToday', // Địa chỉ máy chủ để gửi yêu cầu
-                    method: 'GET',
-                    success: function(response) {
-                        var newTotalRevenue = response;
-                        $('#totalRevenue').text(newTotalRevenue);
-                        $('#revenueText').text("| Today");
-                    }
-                });
-            });
-        });
-        $(document).ready(function() {
-            $('#monthRevenue').click(function() {
-                $.ajax({
-                    url: '/admin/getTotalRevenueThisMonth', // Địa chỉ máy chủ để gửi yêu cầu
-                    method: 'GET',
-                    success: function(response) {
-                        var newTotalRevenue = response;
-                        $('#totalRevenue').text(newTotalRevenue);
-                        $('#revenueText').text("| This Month");
-                    }
-                });
-            });
-        });
-        $(document).ready(function() {
-            $('#yearRevenue').click(function() {
-                $.ajax({
-                    url: '/admin/getTotalRevenueThisYear', // Địa chỉ máy chủ để gửi yêu cầu
-                    method: 'GET',
-                    success: function(response) {
-                        var newTotalRevenue = response;
-                        $('#totalRevenue').text(newTotalRevenue);
-                        $('#revenueText').text("| This Year");
-                    }
-                });
-            });
-        });
     </script>
-
-
-
 
 </head>
 
@@ -189,7 +66,7 @@
             <div class="col-lg-8">
                 <div class="row">
 
-                    <!-- Sales Card -->
+                    <!-- Orders Card -->
                     <div class="col-xxl-4 col-md-6">
                         <div class="card info-card sales-card">
 
@@ -207,7 +84,7 @@
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Sales <span id="saleText">| All</span></h5>
+                                <h5 class="card-title">Orders <span id="orderText">| All</span></h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
@@ -215,17 +92,17 @@
                                     </div>
                                     <div class="ps-3">
 
-                                        <h6 id="totalSales">${ordersService.countAllOrders()}</h6>
-                                        <span class="text-success small pt-1 fw-bold" id="saleIncreaseText"></span> <span class="text-muted small pt-2 ps-1" id="increaseText">Keep up the good work</span>
+                                        <h6 id="totalOrders">${ordersService.countAllOrders()}</h6>
+                                        <span class="text-success small pt-1 fw-bold" id="orderIncreaseText"></span> <span class="text-muted small pt-2 ps-1" id="increaseOrderText">Keep up the good work</span>
 
                                     </div>
                                 </div>
                             </div>
 
                         </div>
-                    </div><!-- End Sales Card -->
+                    </div><!-- End Orders Card -->
 
-                    <!-- Revenue Card -->
+                    <!-- Sales Card -->
                     <div class="col-xxl-4 col-md-6">
                         <div class="card info-card revenue-card">
 
@@ -236,21 +113,21 @@
                                         <h6>Filter</h6>
                                     </li>
 
-                                    <li><a class="dropdown-item" href="#" id="todayRevenue">Today</a></li>
-                                    <li><a class="dropdown-item" href="#" id="monthRevenue">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#" id="yearRevenue">This Year</a></li>
+                                    <li><a class="dropdown-item" href="#" id="todaySales">Today</a></li>
+                                    <li><a class="dropdown-item" href="#" id="monthSales">This Month</a></li>
+                                    <li><a class="dropdown-item" href="#" id="yearSales">This Year</a></li>
                                 </ul>
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Revenue <span id="revenueText">| All</span></h5>
+                                <h5 class="card-title">Sales <span id="salesText">| All</span></h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-currency-dollar"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6 id="totalRevenue">${ordersService.revenueAll()}</h6>
+                                        <h6 id="totalSales">${formatVND.format(ordersService.revenueAll())}</h6>
                                         <span class="text-success small pt-1 fw-bold" >8%</span> <span class="text-muted small pt-2 ps-1">increase</span>
 
                                     </div>
@@ -258,9 +135,9 @@
                             </div>
 
                         </div>
-                    </div><!-- End Revenue Card -->
+                    </div><!-- End Sales Card -->
 
-                    <!-- Customers Card -->
+                    <!-- Revenue Card -->
                     <div class="col-xxl-4 col-xl-12">
 
                         <div class="card info-card customers-card">
@@ -272,21 +149,21 @@
                                         <h6>Filter</h6>
                                     </li>
 
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                                    <li><a class="dropdown-item" id="todayRevenue">Today</a></li>
+                                    <li><a class="dropdown-item" id="thisWeekRevenue">This Week</a></li>
+                                    <li><a class="dropdown-item" id="thisMonthRevenue">This Month</a></li>
                                 </ul>
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Customers <span>| This Year</span></h5>
+                                <h5 class="card-title">Revenue <span id="revenueText">| Today</span></h5>
 
                                 <div class="d-flex align-items-center">
                                     <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6>1244</h6>
+                                        <h6 id="revenue"></h6>
                                         <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>
 
                                     </div>
@@ -295,7 +172,7 @@
                             </div>
                         </div>
 
-                    </div><!-- End Customers Card -->
+                    </div><!-- End Revenue Card -->
 
                     <!-- Reports -->
                     <div class="col-12">
@@ -315,7 +192,7 @@
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Reports <span>/Today</span></h5>
+                                <h5 class="card-title">Reports <span>/This Week</span></h5>
 
                                 <!-- Line Chart -->
                                 <div id="reportsChart"></div>
@@ -325,13 +202,10 @@
                                         new ApexCharts(document.querySelector("#reportsChart"), {
                                             series: [{
                                                 name: 'Sales',
-                                                data: [31, 40, 28, 51, 42, 82, 56],
+                                                data: ${ordersService.listTotalPriceOfThisWeek()},
                                             }, {
                                                 name: 'Revenue',
-                                                data: [11, 32, 45, 32, 34, 52, 41]
-                                            }, {
-                                                name: 'Customers',
-                                                data: [15, 11, 32, 18, 9, 24, 11]
+                                                data: [500000, 1200000, 400000, 4000000, 3000000, 2000000, 6000000]
                                             }],
                                             chart: {
                                                 height: 350,
@@ -343,7 +217,7 @@
                                             markers: {
                                                 size: 4
                                             },
-                                            colors: ['#4154f1', '#2eca6a', '#ff771d'],
+                                            colors: ['#4154f1', '#2eca6a'],
                                             fill: {
                                                 type: "gradient",
                                                 gradient: {
@@ -361,8 +235,8 @@
                                                 width: 2
                                             },
                                             xaxis: {
-                                                type: 'datetime',
-                                                categories: ["2018-09-19T00:00:00.000Z", "2018-09-19T01:30:00.000Z", "2018-09-19T02:30:00.000Z", "2018-09-19T03:30:00.000Z", "2018-09-19T04:30:00.000Z", "2018-09-19T05:30:00.000Z", "2018-09-19T06:30:00.000Z"]
+                                                type: 'text',
+                                                categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
                                             },
                                             tooltip: {
                                                 x: {
@@ -765,20 +639,6 @@
 
 </main><!-- End #main -->
 
-<!-- ======= Footer ======= -->
-<%--<footer id="footer" class="footer">--%>
-<%--    <div class="copyright">--%>
-<%--        &copy; Copyright <strong><span>NiceAdmin</span></strong>. All Rights Reserved--%>
-<%--    </div>--%>
-<%--    <div class="credits">--%>
-<%--        <!-- All the links in the footer should remain intact. -->--%>
-<%--        <!-- You can delete the links only if you purchased the pro version. -->--%>
-<%--        <!-- Licensing information: https://bootstrapmade.com/license/ -->--%>
-<%--        <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->--%>
-<%--        Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>--%>
-<%--    </div>--%>
-<%--</footer><!-- End Footer -->--%>
-
 <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
 <!-- Vendor JS Files -->
@@ -794,6 +654,7 @@
 
 <!-- Template Main JS File -->
 <script src="/admin/assets/js/main.js"></script>
+<script src="/admin/assets/js/admin.js"></script>
 
 
 </body>
