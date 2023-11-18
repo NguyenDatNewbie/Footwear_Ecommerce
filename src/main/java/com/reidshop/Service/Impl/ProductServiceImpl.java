@@ -46,12 +46,11 @@ public class ProductServiceImpl implements IProductService {
 
 	@Override
 	public List<Product> sortByPriceDESC(List<Product> products){
-		Product p = new Product();
 		for(int i =0;i<products.size();i++) {
 			for(int j = i+1;j<products.size();j++) {
-				p = products.get(i);
-				double tmp =p.getPrice() * (1- (p.getPromotion()/100.0));
-				double val =  products.get(j).getPrice()*(1-products.get(j).getPromotion()/100.0);
+				Product p = products.get(i);
+				double tmp = p.getPrice() * (1- (p.getPromotion()/100.0));
+				double val = products.get(j).getPrice()*(1-products.get(j).getPromotion()/100.0);
 				if(tmp<val) {
 					products.set(i, products.get(j));
 					products.set(j,p);

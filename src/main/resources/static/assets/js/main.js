@@ -853,6 +853,17 @@
 		dropRadius: 20,
 		perturbance: 0.04
 	});
-    
-    
-})(jQuery);	
+
+    function reloadCartLength(){
+        let cart = [];
+        let storage = localStorage.getItem('cart');
+        if (storage)
+            cart = JSON.parse(storage);
+
+        document.getElementById("cart_link").textContent = cart.length.toString();
+        document.getElementById("cart_link2").textContent = cart.length.toString();
+    }
+
+
+
+})(jQuery);

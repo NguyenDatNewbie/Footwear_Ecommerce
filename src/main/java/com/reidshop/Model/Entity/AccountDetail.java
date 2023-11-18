@@ -25,4 +25,8 @@ public class AccountDetail {
     @OneToOne
     @JoinColumn(name = "account_id")
     Account account;
+
+    public Long getAccount() {
+        return account.getId();
+    }
 }

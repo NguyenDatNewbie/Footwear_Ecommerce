@@ -24,7 +24,7 @@ public class Account {
     @Column
     String role;
 
-    @OneToOne(mappedBy = "account")
+    @OneToOne(mappedBy = "account",fetch = FetchType.LAZY)
     AccountDetail accountDetail;
 
     @OneToMany(mappedBy = "account")

@@ -47,11 +47,15 @@
                     + ' <div class="single_product">'
                     + '<div class="product_thumb">';
                 if(products[i].images.length>0)
-                    result += '<a class="primary_img" href="product-details.html"><img src=' +
+                    result += '<a class="primary_img" href="/product/' +
+                        products.id +
+                        '"><img src=' +
                         products[i].images[0].img +
                         ' alt=""></a>';
                 if(products[i].images.length>1)
-                    result += '<a class="secondary_img" href="product-details.html"><img src='
+                    result += '<a class="secondary_img" href="/product/' +
+                        products.id +
+                        '"><img src='
                         + products[i].images[1].img
                         + ' alt=""></a>';
                 result+=' <div class="quick_button">'
@@ -213,7 +217,6 @@
                                 <div id="slider-range"></div>
                                 <button type="submit">Lọc</button>
                                 <input type="text" name="productValue" id="amount" />
-
                             </form>
                         </div>
                         <div class="widget_list widget_categories">
@@ -269,14 +272,14 @@
                                 <div class="single_product">
                                     <div class="product_thumb">
                                         <c:if test="${product.images.size()>0}">
-                                            <a class="primary_img" href="product-details.jsp"><img src="${product.images.get(0).img}" alt=""></a>
+                                            <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
                                         </c:if>
                                         <c:if test="${product.images.size()>1}">
-                                            <a class="secondary_img" href="product-details.jsp"><img src="${product.images.get(1).img}" alt=""></a>
+                                            <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
                                         </c:if>
 
                                         <div class="quick_button">
-                                            <a href="product-details.jsp" title="quick_view">Xem sản phẩm</a>
+                                            <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
                                         </div>
 
 
@@ -359,7 +362,7 @@
 <script src="<c:url value="/user/assets/js/plugins.js"/>"></script>
 
 <!-- Main JS -->
-<script src="<c:url value="/user/assets/js/main.js"/> "></script>
+<script src="<c:url value="/assets/js/main.js"/> "></script>
 
 <script>
 
