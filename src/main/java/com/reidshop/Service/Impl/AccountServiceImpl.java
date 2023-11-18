@@ -6,7 +6,7 @@ import com.reidshop.Model.Enum.ROLE;
 import com.reidshop.Model.Request.RegisterRequest;
 import com.reidshop.Reponsitory.AccountDetailRepository;
 import com.reidshop.Reponsitory.AccountRepository;
-import com.reidshop.Service.IAccountSevice;
+import com.reidshop.Service.IAccountService;
 import com.reidshop.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +14,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl implements IAccountSevice {
+public class AccountServiceImpl implements IAccountService {
     @Autowired
     AuthenticationManager authenticationManager;
     @Autowired

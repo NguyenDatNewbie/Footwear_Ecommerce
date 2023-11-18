@@ -65,60 +65,8 @@
                             </ul>
 
                         </div>
-                        <div class="cart_link">
-                            <a href="#"><i class="fa fa-shopping-basket"></i>2 item(s)</a>
-                            <!--mini cart-->
-                            <div class="mini_cart">
-                                <div class="cart_item top">
-                                    <div class="cart_img">
-                                        <a href="#"><img src="http://localhost:8082/user/assets/img/s-product/product.jpg" alt=""></a>
-                                    </div>
-                                    <div class="cart_info">
-                                        <a href="#">Apple iPhone SE 16GB</a>
-
-                                        <span>1x $60.00</span>
-
-                                    </div>
-                                    <div class="cart_remove">
-                                        <a href="#"><i class="ion-android-close"></i></a>
-                                    </div>
-                                </div>
-                                <div class="cart_item bottom">
-                                    <div class="cart_img">
-                                        <a href="#"><img src="http://localhost:8082/user/assets/img/s-product/product2.jpg" alt=""></a>
-                                    </div>
-                                    <div class="cart_info">
-                                        <a href="#">Marshall Portable  Bluetooth</a>
-                                        <span> 1x $160.00</span>
-                                    </div>
-                                    <div class="cart_remove">
-                                        <a href="#"><i class="ion-android-close"></i></a>
-                                    </div>
-                                </div>
-                                <div class="cart__table">
-                                    <table>
-                                        <tbody>
-                                        <tr>
-                                            <td class="text-left">Sub-Total :</td>
-                                            <td class="text-right">$150.00</td>
-                                        </tr>
-
-                                        <tr>
-                                            <td class="text-left">Total :</td>
-                                            <td class="text-right">$184.00</td>
-                                        </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="cart_button view_cart">
-                                    <a href="cart.html">View Cart</a>
-                                </div>
-                                <div class="cart_button checkout">
-                                    <a href="checkout.html">Checkout</a>
-                                </div>
-                            </div>
-                            <!--mini cart end-->
+                        <div  class="cart_link">
+                            <a href="/cart" style="display: flex"><i class="fa fa-shopping-basket"><span style="margin-left: 3px" id="cart_link"></span></i></a>
                         </div>
                     </div>
                     <div class="contact_phone">
@@ -281,60 +229,8 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="cart_area">
-                            <div class="cart_link">
-                                <a href="#"><i class="fa fa-shopping-basket"></i>2 item(s)</a>
-                                <!--mini cart-->
-                                <div class="mini_cart">
-                                    <div class="cart_item top">
-                                        <div class="cart_img">
-                                            <a href="#"><img src="<c:url value="/user/assets/img/s-product/product.jpg" />" ></a>
-                                        </div>
-                                        <div class="cart_info">
-                                            <a href="#">Apple iPhone SE 16GB</a>
-
-                                            <span>1x $60.00</span>
-
-                                        </div>
-                                        <div class="cart_remove">
-                                            <a href="#"><i class="ion-android-close"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="cart_item bottom">
-                                        <div class="cart_img">
-                                            <a href="#"><img src="http://localhost:8082/user/assets/img/s-product/product2.jpg" alt=""></a>
-                                        </div>
-                                        <div class="cart_info">
-                                            <a href="#">Marshall Portable  Bluetooth</a>
-                                            <span> 1x $160.00</span>
-                                        </div>
-                                        <div class="cart_remove">
-                                            <a href="#"><i class="ion-android-close"></i></a>
-                                        </div>
-                                    </div>
-                                    <div class="cart__table">
-                                        <table>
-                                            <tbody>
-                                            <tr>
-                                                <td class="text-left">Sub-Total :</td>
-                                                <td class="text-right">$150.00</td>
-                                            </tr>
-
-                                            <tr>
-                                                <td class="text-left">Total :</td>
-                                                <td class="text-right">$184.00</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                    <div class="cart_button view_cart">
-                                        <a href="cart.html">View Cart</a>
-                                    </div>
-                                    <div class="cart_button checkout">
-                                        <a href="checkout.html">Checkout</a>
-                                    </div>
-                                </div>
-                                <!--mini cart end-->
+                            <div  class="cart_link">
+                                <a href="/cart" ><i class="fa fa-shopping-basket"><span style="margin-left: 3px" id="cart_link2"></span></i></a>
                             </div>
                         </div>
                     </div>
@@ -486,3 +382,15 @@
     <!--header bottom end-->
 </header>
 <!--header area end-->
+<script>
+    function  reloadCartLength(){
+        let cart = [];
+        let storage = localStorage.getItem('cart');
+        if (storage)
+            cart = JSON.parse(storage);
+
+        document.getElementById("cart_link").textContent = cart.length.toString();
+        document.getElementById("cart_link2").textContent = cart.length.toString();
+    }
+    reloadCartLength();
+</script>

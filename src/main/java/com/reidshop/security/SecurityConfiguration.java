@@ -38,13 +38,13 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests(req ->
-                        req.requestMatchers("/order").authenticated()
+                        req.requestMatchers("/cart").authenticated()
                                 .anyRequest().permitAll()
                 )
-//                .formLogin((login->login.
-//                        loginPage("/sign-in-up").permitAll()
-//                        ))
-                
+                .formLogin((login->login.
+                        loginPage("/sign-in-up").permitAll()
+                        ))
+
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
