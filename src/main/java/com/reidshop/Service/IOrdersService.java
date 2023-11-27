@@ -2,6 +2,8 @@ package com.reidshop.Service;
 
 import com.reidshop.Model.Entity.Category;
 import com.reidshop.Model.Entity.Orders;
+import com.reidshop.Model.Request.OrderCombineRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
@@ -28,4 +30,5 @@ public interface IOrdersService {
     List<Double> listTotalPriceOfThisWeek();
 
 
+    void savePaymentReceive(OrderCombineRequest orderCombineRequest, Long storeId, int type, HttpServletRequest request);
 }

@@ -21,4 +21,5 @@ public class UserServiceUserDetails implements UserDetailsService {
         return userInfo.map(UserInfoUserDetails::new)
                 .orElse(null);
     }
+
 }

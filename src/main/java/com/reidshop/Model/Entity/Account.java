@@ -1,5 +1,6 @@
 package com.reidshop.Model.Entity;
 
+import com.reidshop.Model.Enum.ROLE;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -22,14 +23,10 @@ public class Account {
     String password;
 
     @Column
-    String role;
+    @Enumerated(EnumType.STRING)
+    ROLE role;
 
-    @OneToOne(mappedBy = "account",fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "account")
     AccountDetail accountDetail;
 
-    @OneToMany(mappedBy = "account")
-    List<Orders> orders = new ArrayList<>();
-
-    @OneToMany(mappedBy = "account")
-    List<Evaluate> evaluates = new ArrayList<>();
 }

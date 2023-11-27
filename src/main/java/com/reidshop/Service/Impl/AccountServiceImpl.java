@@ -34,7 +34,7 @@ public class AccountServiceImpl implements IAccountService {
         Account account = new Account();
         account.setEmail(request.getEmail());
         account.setPassword(passwordEncoder.encode(request.getPassword()));
-        account.setRole(ROLE.USER.toString());
+        account.setRole(ROLE.USER);
         try{
             accountRepository.save(account);
             AccountDetail accountDetail = new AccountDetail();

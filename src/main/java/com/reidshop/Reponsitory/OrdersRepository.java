@@ -61,4 +61,7 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     @Query("SELECT o.totalPrice FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1)")
     List<Double> listTotalPriceOfThisWeek();
 
+
+    // User
+
 }

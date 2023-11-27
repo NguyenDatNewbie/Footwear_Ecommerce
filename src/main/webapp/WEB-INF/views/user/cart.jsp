@@ -92,14 +92,17 @@
             width: fit-content;
             height: fit-content;
         }
-        .store ul li label{
+
+        .store ul li label {
             color: #242424;
         }
-        .store #ul-address li label input label{
+
+        .store #ul-address li label input label {
             margin-left: 7px;
             margin-right: 4px;
         }
-        .store ul li label span{
+
+        .store ul li label span {
             color: #10a702;
             font-size: 12px;
         }
@@ -109,7 +112,11 @@
             overflow: auto; /* Tạo thanh trượt khi nội dung vượt quá kích thước của phần tử */
         }
 
-
+        p .cart_amount {
+            color: red;
+            font-size: 16px;
+            font-weight: 600;
+        }
     </style>
 
 
@@ -141,30 +148,30 @@
 <!-- shopping cart area start -->
 <div class="shopping_cart_area">
     <div class="container">
-        <form action="" method="post" id="form-cart">
-            <div class="row">
-                <div class="col-12">
-                    <div class="table_desc">
-                        <div class="cart_page table-responsive">
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th class="product_remove">Xóa</th>
-                                    <th class="product_thumb">Hình ảnh</th>
-                                    <th class="product_name">Sản phẩm</th>
-                                    <th class="product-price">Giá</th>
-                                    <th class="product_quantity">Số lượng</th>
-                                    <th class="product_total">Tổng tiền(VNĐ)</th>
-                                </tr>
-                                </thead>
-                                <tbody id="t-body">
-                                </tbody>
-                            </table>
-                        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="table_desc">
+                    <div class="cart_page table-responsive">
+                        <table>
+                            <thead>
+                            <tr>
+                                <th class="product_remove">Xóa</th>
+                                <th class="product_thumb">Hình ảnh</th>
+                                <th class="product_name">Sản phẩm</th>
+                                <th class="product-price">Giá</th>
+                                <th class="product_quantity">Số lượng</th>
+                                <th class="product_total">Tổng tiền(VNĐ)</th>
+                            </tr>
+                            </thead>
+                            <tbody id="t-body">
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <form action="javascript:pay()" method="post" id="form-cart">
             <!--coupon code area start-->
             <div class="coupon_area">
                 <div class="row">
@@ -216,7 +223,7 @@
                                             <option value="" selected>Chọn phường xã</option>
                                         </select>
 
-                                        <input placeholder="Địa chỉ giao hàng" name="address" id="address"
+                                        <input placeholder="Địa chỉ giao hàng" name="addressDetail" id="addressDetail"
                                                type="text" required>
                                     </div>
                                 </div>
@@ -245,34 +252,14 @@
                         <div class="coupon_code right" id="cart-sub">
                             <h3>Hóa đơn</h3>
                             <div class="coupon_inner">
-                                <div class="cart_subtotal">
+                                <div class="cart_subtotal" id="total_cart">
                                     <p>Tổng tiền</p>
-                                    <p class="cart_amount">${cartItemDAO.TotalPrice(cart)}</p>
                                 </div>
                                 <div class="cart_subtotal" id="price_deli">
                                     <p>Phí giao hàng</p>
-                                    <p class="cart_amount">30000.00</p>
                                 </div>
-                                <div class="cart_subtotal">
-                                    <p>Đơn vị vận chuyển</p>
-                                    <select class="select_option" id="deliveryOption" name="deliveryId"
-                                            onchange="changeDeli(this)">
-                                        <c:forEach items="${iDeliveryDAO.getAll()}" var="delivery">
-                                            <option value="${delivery.id}">${delivery.name}</option>
-                                        </c:forEach>
-                                    </select>
-                                </div>
-                                <div class="cart_subtotal" style="margin-top: 12px;" id="subtotal">
+                                <div class="cart_subtotal" id="subtotal">
                                     <p>Thành tiền</p>
-                                    <c:choose>
-                                        <c:when test="${cartItemDAO.TotalPrice(cart)!=0}">
-                                            <p class="cart_amount">${cartItemDAO.TotalPrice(cart)+30000}VNĐ</p>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <p class="cart_amount">0VNĐ</p>
-                                        </c:otherwise>
-                                    </c:choose>
-
                                 </div>
                                 <div class="checkout_btn">
                                     <button type="submit">Thanh toán</button>
@@ -283,6 +270,9 @@
                 </div>
             </div>
             <!--coupon code area end-->
+
+            <input name="address" id="address"
+                   type="text" style="display: none">
         </form>
     </div>
 </div>
@@ -321,14 +311,11 @@
     });
 
 
-
     function renderCity(data) {
         for (const x of data) {
             citis.options[citis.options.length] = new Option(x.Name, x.Id);
             citis1.options[citis1.options.length] = new Option(x.Name, x.Id);
-
         }
-
 
         citis1.onchange = function () {
             district1.length = 1;
@@ -343,12 +330,11 @@
         }
 
         district1.onchange = function () {
-            const dataCity = data.filter((n) => n.Id === citis.value);
             showStore();
         };
 
         citis.onchange = function () {
-            district1.length = 1;
+            district.length = 1;
             ward.length = 1;
             if (this.value != "") {
                 const result = data.filter(n => n.Id === this.value);
@@ -369,9 +355,18 @@
                 }
             }
         };
+        ward.onchange = function () {
+            showOrder(10);
+        }
     }
 
     function openTab(tabId) {
+        document.getElementById('addressDetail').setAttribute('required', 'required');
+        if (tabId === "tab2") {
+            showOrder(0);
+            document.getElementById('addressDetail').removeAttribute('required');
+        }
+
         // Lấy tất cả các tab content
         var tabContents = document.querySelectorAll(".tab-content");
 
@@ -399,7 +394,7 @@
     function selectRadio(element) {
         // Xóa lớp 'selected' từ tất cả các div
         var radios = document.querySelectorAll('.custom-radio');
-        radios.forEach(function(radio) {
+        radios.forEach(function (radio) {
             radio.classList.remove('selected');
         });
 
@@ -429,7 +424,6 @@
     }
 </script>
 <script>
-
     // Function để thêm một mục vào danh sách
     function addItemToList(item) {
         // Tạo một phần tử li
@@ -451,7 +445,7 @@
 
         // Tạo phần tử span
         const spanElement = document.createElement('span');
-        if(item.status==1)
+        if (item.status == 1)
             spanElement.textContent = 'Còn hàng';
         else {
             spanElement.textContent = 'Nhận hàng sau 3 - 7 ngày';
@@ -487,33 +481,34 @@
         });
         reloadCartLength();
     }
+
     function showStore() {
         let cart = localStorage.getItem('cart');
         var city = document.getElementById('city1');
         var district = document.getElementById('district1');
-        var valueCity=city.options[city.selectedIndex].textContent;
+        var valueCity = city.options[city.selectedIndex].textContent;
         var valueDistrict = district.options[district.selectedIndex].textContent;
-        if(city.value=="")
-            valueCity="";
-        if(district.value=="")
-            valueDistrict="";
-        var data = JSON.stringify({carts:JSON.parse(cart),city: valueCity,district:valueDistrict});
+        if (city.value == "")
+            valueCity = "";
+        if (district.value == "")
+            valueDistrict = "";
+        var data = JSON.stringify({carts: JSON.parse(cart), city: valueCity, district: valueDistrict});
         $.ajax({
             url: '/cart/getStore',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: data,
             success: function (response) {
-                document.getElementById('ul-address').innerHTML='';
-                response.forEach(item=>{
+                document.getElementById('ul-address').innerHTML = '';
+                response.forEach(item => {
                     addItemToList(item);
                 });
             }
         });
     }
+
     window.addEventListener('load', function () {
         showCart();
-
     });
     window.addEventListener('load', function () {
         // Sự kiện click được gắn vào thẻ ul để theo dõi các thẻ li
@@ -530,6 +525,7 @@
             }
         });
     });
+
     function changeQuantity(cell) {
         let cart = JSON.parse(localStorage.getItem('cart'));
         let cellIndex = cell.parentNode.parentNode;
@@ -546,14 +542,98 @@
         showCart();
     }
 
-
-
-
-
 </script>
 
 <script>
+    // Show Value Order
+    function showOrder(cost) {
+        var total_price = document.getElementById('total_cart');
+        var costDelivery = document.getElementById('price_deli');
+        var total_last = document.getElementById('subtotal');
+        let price = 0;
 
+        const formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+
+        if (document.querySelector('.product-price.product_total')) {
+            // Xóa đơn vị tiền tệ và xóa , và số sau ,
+            price = parseFloat(document.querySelector('.product-price.product_total').textContent.replace(/[.₫]/g, ''));
+        }
+
+        // Xóa
+        const amounts = document.querySelectorAll('.cart_amount');
+        amounts.forEach(element => {
+            element.remove();
+        });
+        // Thêm
+        const valTotal = document.createElement('p');
+        valTotal.classList.add('cart_amount');
+        valTotal.textContent = formatter.format(price);
+
+        const valCost = document.createElement('p');
+        valCost.classList.add('cart_amount');
+        if (cost != 0)
+            valCost.textContent = formatter.format(cost);
+        else {
+            valCost.textContent = "Miễn phí";
+            valCost.style.color = "#10a702";
+            valCost.style.fontSize = "14px";
+        }
+
+        const valTotalLast = document.createElement('p');
+        valTotalLast.classList.add('cart_amount');
+        valTotalLast.textContent = formatter.format(price + cost);
+
+        total_price.appendChild(valTotal);
+        costDelivery.appendChild(valCost);
+        total_last.appendChild(valTotalLast);
+    }
+
+    function pay() {
+        const type = document.querySelector('.tab-content.active').id;
+        let cart = localStorage.getItem('cart');
+
+        // const store =
+        if (type === "tab2") {
+            if (document.getElementById("ul-address").children) {
+                // var selectedElement = document.querySelector('#ul-address.selected');
+                var selectedRadioButton = document.querySelector('input[name="option"]:checked');
+                if (selectedRadioButton) {
+                    var status = selectedRadioButton.parentElement.querySelector('span').textContent;
+                    var statusValue = status != 'Còn hàng' ? '0' : '1';
+                    var name = document.getElementById('name').value;
+                    var phone = document.getElementById('phone').value;
+
+                    var orders = {
+                        name: name,
+                        phone: phone
+                    }
+
+                    var orderCombine ={
+                        orders:orders,
+                        carts: JSON.parse(cart)
+                    }
+                    console.log(orderCombine);
+                    console.log(JSON.stringify(orderCombine));
+
+                    $.ajax({
+                        url: '/cart/payment/receive/'+selectedRadioButton.value+'/'+statusValue,
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        data: JSON.stringify(orderCombine),
+                        success: function (response) {
+                            if(response!="success"){
+                                window.location.href = "/sign-in-up"
+                            }
+                            localStorage.removeItem('cart');
+                        }
+                    });
+                }
+            } else console.log(1);
+        }
+    }
 </script>
 </body>
 

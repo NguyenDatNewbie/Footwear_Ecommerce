@@ -12,19 +12,20 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="../../assets/img/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/assets/img/favicon.ico"/>
+">
 
     <!-- CSS 
     ========================= -->
 
 
     <!-- Plugins CSS -->
-    <link rel="stylesheet" href="../../assets/css/plugins.css">
+    <link rel="stylesheet" href="<c:url value="/assets/css/plugins.css"/>">
 
     <!-- Main Style CSS -->
-    <link rel="stylesheet" href="../../assets/css/style.css">
+    <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
 
     <style>
@@ -130,14 +131,16 @@
             color: #faca50;
         }
 
-        i.fa.fa-star-half-o {
+        i.fa.fa-star-half-alt {
             color: #faca50;
         }
 
         i.fa.fa-star-none {
             color: black;
         }
-
+        i.fa.fa-star.o{
+            color: black;
+        }
         .listPage li:hover {
             background: #ff6a28;
             color: #ffffff;
@@ -275,15 +278,15 @@
             <div class="col-lg-5 col-md-5">
                 <div class="product-details-tab">
                     <div id="img-1" class="zoomWrapper single-zoom">
-                        <img id="zoom1" src="${imageRepository.findAllByProduct(productCurrent.id).get(0).img}"
-                             data-zoom-image="${imageRepository.findAllByProduct(productCurrent.id).get(0).img}"
+                        <img id="zoom1" src="${productCurrent.images.get(0).img}"
+                             data-zoom-image="${productCurrent.images.get(0).img}"
                              alt="big-1">
                     </div>
 
                     <div class="single-zoom-thumb">
                         <ul class="s-tab-zoom owl-carousel single-product-active"
                             id="gallery_01">
-                            <c:forEach items="${imageRepository.findAllByProduct(productCurrent.id)}"
+                            <c:forEach items="${productCurrent.images}"
                                        var="img">
                                 <li><a href="#" class="elevatezoom-gallery active"
                                        data-update="" data-image="${img.img}"
@@ -304,16 +307,17 @@
                         <c:if test="${evaluateList.size()>0}">
                             <div class=" product_ratting" style="margin-bottom: 0px">
                                 <ul>
-                                    <c:forEach items="${evaluateService.rateStar(rateAvg)}" var="star">
+                                    <c:forEach items="${evaluateService.rateStar(evaluateService.avg(evaluateList))}" var="star">
+                                        <script> console.log(${star})</script>
                                         <c:choose>
                                             <c:when test="${star==1}">
                                                 <li><i class="fa fa-star"></i></li>
                                             </c:when>
                                             <c:when test="${star==0}">
-                                                <li><i class="fa fa-star-o" style="color: #faca50;"></i></li>
+                                                <li><i class="far fa-star"></i></li>
                                             </c:when>
                                             <c:otherwise>
-                                                <li><i class="fa fa-star-half-o "></i></li>
+                                                <li><i class="fa fa-star-half-alt "></i></li>
                                             </c:otherwise>
                                         </c:choose>
                                     </c:forEach>
@@ -416,7 +420,7 @@
                                     <c:forEach items="${evaluateList}" var="evaluate">
                                         <div class="comment item" style="margin-bottom: 20px">
                                             <div class="comment-rate" style="display: flex;">
-                                                <strong style="margin-right: 15px">${accountDetailRepository.findByAccountId(evaluate.account.id).name}</strong>
+                                                <strong style="margin-right: 15px">${evaluate.account.accountDetail.name}</strong>
                                                 <ul style="display: flex; margin-right: 15px">
                                                     <c:forEach items="${evaluateService.rateStar(evaluate.rate)}"
                                                                var="star">
@@ -425,16 +429,16 @@
                                                                 <li><i class="fa fa-star"></i></li>
                                                             </c:when>
                                                             <c:when test="${star==0}">
-                                                                <li><i class="fa fa-star-o" style="color: #faca50;"></i>
+                                                                <li><i class="far fa-star"></i>
                                                                 </li>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <li><i class="fa fa-star-half-o "></i></li>
+                                                                <li><i class="fa fa-star-half-alt "></i></li>
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </c:forEach>
                                                 </ul>
-                                                <p>09/07/2018</p>
+                                                <p>${evaluate.createdAt}</p>
                                             </div>
                                             <div class="comment_content">${evaluate.comment}</div>
                                         </div>
@@ -448,17 +452,17 @@
                                         </div>
                                         <div class="rate_avg_star">
                                             <ul style="display: flex;">
-                                                <c:forEach items="${evaluateService.rateStar(rateAvg)}" var="star">
+                                                <c:forEach items="${evaluateService.rateStar(evaluateService.avg(evaluateList))}" var="star">
                                                     <c:choose>
                                                         <c:when test="${star==1}">
                                                             <li><i class="fa fa-star"></i></li>
                                                         </c:when>
                                                         <c:when test="${star==0}">
-                                                            <li><i class="fa fa-star-o" style="color: #faca50;"></i>
+                                                            <li><i class="far fa-star"></i>
                                                             </li>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <li><i class="fa fa-star-half-o "></i></li>
+                                                            <li><i class="fa fa-star-half-alt "></i></li>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </c:forEach>
@@ -480,11 +484,10 @@
                                                                     <li><i class="fa fa-star"></i></li>
                                                                 </c:when>
                                                                 <c:when test="${star==0}">
-                                                                    <li><i class="fa fa-star-o"
-                                                                           style="color: #faca50;"></i></li>
+                                                                    <li><i class="far fa-star"></i></li>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <li><i class="fa fa-star-half-o "></i></li>
+                                                                    <li><i class="fa fa-star-half-alt"></i></li>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </c:forEach>
@@ -500,7 +503,6 @@
                                                     <progress max="${evaluateList.size()}" value="${count}"
                                                               aria-busy=""></progress>
                                                     <span>${count}</span>
-
                                                 </div>
                                             </c:forEach>
                                         </div>
@@ -537,18 +539,19 @@
         <div class="product_area">
             <div class="row">
                 <div class="product_carousel product_three_column4 owl-carousel">
+
                     <c:forEach items="${productService.findAllByProductCategorySoldTop(productCurrent.category.id)}"
                                var="product">
                         <div class="col-lg-3">
                             <div class="single_product">
                                 <div class="product_thumb">
-                                    <c:if test="${imageRepository.findAllByProduct(product.id).size()>0}">
-                                        <a class="primary_img" href="product-details.jsp"><img
-                                                src="${imageRepository.findAllByProduct(product.id).get(0).img}" alt=""></a>
+                                    <c:if test="${product.images.size()>0}">
+                                        <a class="primary_img" href="/product/${product.id}"><img
+                                                src="${product.images.get(0).img}" alt=""></a>
                                     </c:if>
-                                    <c:if test="${imageRepository.findAllByProduct(product.id).size()>1}">
-                                        <a class="secondary_img" href="product-details.jsp"><img
-                                                src="${imageRepository.findAllByProduct(product.id).get(0).img}" alt=""></a>
+                                    <c:if test="${product.images.size()>1}">
+                                        <a class="secondary_img" href="/product/${product.id}"><img
+                                                src="${product.images.get(1).img}" alt=""></a>
                                     </c:if>
 
                                     <div class="quick_button">
@@ -601,13 +604,13 @@
                         <div class="col-lg-3">
                             <div class="single_product">
                                 <div class="product_thumb">
-                                    <c:if test="${imageRepository.findAllByProduct(product.id).size()>0}">
-                                        <a class="primary_img" href="product-details.jsp"><img
-                                                src="${imageRepository.findAllByProduct(product.id).get(0).img}" alt=""></a>
+                                    <c:if test="${product.images.size()>0}">
+                                        <a class="primary_img" href="/product/${product.id}"><img
+                                                src="${product.images.get(0).img}" alt=""></a>
                                     </c:if>
-                                    <c:if test="${imageRepository.findAllByProduct(product.id).size()>1}">
-                                        <a class="secondary_img" href="product-details.jsp"><img
-                                                src="${imageRepository.findAllByProduct(product.id).get(0).img}" alt=""></a>
+                                    <c:if test="${product.images.size()>1}">
+                                        <a class="secondary_img" href="/product/${product.id}"><img
+                                                src="${product.images.get(1).img}" alt=""></a>
                                     </c:if>
 
                                     <div class="quick_button">
@@ -664,21 +667,21 @@
                                     <div class="product-details-tab">
                                         <div id="img-2" class="zoomWrapper single-zoom">
                                             <img id="zoom2"
-                                                 src="${imageRepository.findAllByProduct(product.id).get(0).img}"
-                                                 data-zoom-image="${imageRepository.findAllByProduct(product.id).get(0).img}"
+                                                 src="${product.images.get(0).img}"
+                                                 data-zoom-image="${product.images.get(0).img}"
                                                  alt="big-1">
                                         </div>
 
                                         <div class="single-zoom-thumb">
                                             <ul class="s-tab-zoom owl-carousel single-product-active"
                                                 id="gallery_02">
-                                                <c:forEach items="${imageRepository.findAllByProduct(product.id)}"
+                                                <c:forEach items="${product.images}"
                                                            var="img">
-                                                    <li><a href="#" class="elevatezoom-gallery active"
+                                                    <li><p href="#" class="elevatezoom-gallery active"
                                                            data-update="" data-image="${img.img}"
                                                            data-zoom-image="${img.img}"> <img src="${img.img}"
                                                                                               alt="zo-th-1"/>
-                                                    </a></li>
+                                                    </p></li>
                                                 </c:forEach>
 
                                             </ul>
@@ -703,11 +706,10 @@
                                                                     <li><i class="fa fa-star"></i></li>
                                                                 </c:when>
                                                                 <c:when test="${star==0}">
-                                                                    <li><i class="fa fa-star-o"
-                                                                           style="color: #faca50;"></i></li>
+                                                                    <li><i class="far fa-star"></i></li>
                                                                 </c:when>
                                                                 <c:otherwise>
-                                                                    <li><i class="fa fa-star-half-o "></i></li>
+                                                                    <li><i class="fa fa-star-half-alt "></i></li>
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </c:forEach>
@@ -784,10 +786,10 @@
 <!-- JS============================================ -->
 
 <!-- Plugins JS -->
-<script src="../../assets/js/plugins.js"></script>
+<script src="<c:url value="/assets/js/plugins.js"/>"></script>
 
 <!-- Main JS -->
-<script src="../../assets/js/main.js"></script>
+<script src="<c:url value="/assets/js/main.js"/>"></script>
 <%--    Page--%>
 <script>
     // Xử lý phân trang

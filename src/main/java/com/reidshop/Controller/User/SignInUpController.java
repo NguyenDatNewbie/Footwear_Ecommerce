@@ -1,6 +1,6 @@
 package com.reidshop.Controller.User;
 
-import com.reidshop.Model.Cookie.SetCookie;
+import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Request.RegisterRequest;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Service.IAccountService;
@@ -14,9 +14,6 @@ import com.reidshop.token.HandleToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -73,7 +70,7 @@ public class SignInUpController {
         }
 
         accountService.save(request);
-        response.addCookie(SetCookie.createCookie("token",jwtService.generateToken(request.getEmail())));
+        response.addCookie(CookieHandle.createCookie("token",jwtService.generateToken(request.getEmail())));
         return new ModelAndView("user/index");
     }
 
@@ -81,7 +78,7 @@ public class SignInUpController {
     @PostMapping("/sign-in")
     public ModelAndView login(@ModelAttribute("request") RegisterRequest request, ModelMap modelMap, HttpServletResponse response) {
         try {
-            response.addCookie(SetCookie.createCookie("token",token.generateToken(request.getEmail(),request.getPassword())));
+            response.addCookie(CookieHandle.createCookie("token",token.generateToken(request.getEmail(),request.getPassword())));
             return new ModelAndView("redirect:/index");
         } catch (BadCredentialsException exception)
         {

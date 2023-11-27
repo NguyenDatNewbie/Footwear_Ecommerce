@@ -1,20 +1,39 @@
 package com.reidshop.Service.Impl;
 
+import com.reidshop.Model.Cookie.CookieHandle;
+import com.reidshop.Model.Entity.Account;
 import com.reidshop.Model.Entity.Orders;
+import com.reidshop.Model.Entity.Store;
+import com.reidshop.Model.Enum.OrderStatus;
+import com.reidshop.Model.Enum.TypeReceive;
+import com.reidshop.Model.Request.OrderCombineRequest;
+import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
 import com.reidshop.Service.IOrdersService;
+import com.reidshop.Service.IReceiveService;
+import com.reidshop.security.JwtService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class OrdersServiceImpl implements IOrdersService {
     @Autowired
     OrdersRepository ordersRepository;
+
+    @Autowired
+    JwtService jwtService;
+
+    @Autowired
+    AccountRepository accountRepository;
+
+    @Autowired
+    IReceiveService receiveService;
+
 
     public OrdersServiceImpl(OrdersRepository ordersRepository) {
         this.ordersRepository = ordersRepository;
@@ -96,5 +115,25 @@ public class OrdersServiceImpl implements IOrdersService {
     public List<Double> listTotalPriceOfThisWeek() {
         List<Double> listTotalPriceThisWeek = ordersRepository.listTotalPriceOfThisWeek();
         return listTotalPriceThisWeek;
+    }
+
+    @Override
+    public void savePaymentReceive(OrderCombineRequest orderCombineRequest, Long storeId, int type, HttpServletRequest request){
+        String token = CookieHandle.getCookieValue(request, "token");
+        String email = jwtService.extractUsername(token);
+
+        Orders orders = orderCombineRequest.getOrders();
+        Account account = accountRepository.findByEmail(email).orElse(null);
+        Store store = new Store();
+        store.setId(storeId);
+        orders.setAccount(account);
+        orders.setStore(store);
+        orders.setCreatedAt(Date.valueOf(LocalDate.now()));
+        orders.setTotalPrice(0);
+        orders.setStatus(OrderStatus.WAIT);
+        orders.setTypeReceive(TypeReceive.STORE);
+
+        Orders complete = ordersRepository.save(orders);
+        receiveService.save(orderCombineRequest.getCarts(),storeId,type,complete);
     }
 }

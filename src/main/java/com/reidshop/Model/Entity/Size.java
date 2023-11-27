@@ -16,7 +16,7 @@ public class Size {
     @Column
     String size;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @ManyToOne
+    @JoinColumn(name = "product_id",nullable = false,referencedColumnName = "product_id")
     Product product;
 }

@@ -9334,8 +9334,9 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   font-size: 14px;
 }
 .cart_subtotal p.cart_amount {
-  font-size: 18px;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
+  color: red;
 }
 @media only screen and (max-width: 767px) {
   .cart_subtotal p.cart_amount {
