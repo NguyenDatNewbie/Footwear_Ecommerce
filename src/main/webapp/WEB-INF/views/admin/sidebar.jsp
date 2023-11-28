@@ -1,12 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
          isELIgnored="false"%>
+
 <aside id="sidebar" class="sidebar">
 
   <ul class="sidebar-nav" id="sidebar-nav">
 
     <li class="nav-item">
-      <a class="nav-link " href="index.html">
+      <a class="nav-link " href="<c:url value="/admin/home"/>">
         <i class="bi bi-grid"></i>
         <span>Dashboard</span>
       </a>
@@ -185,9 +186,9 @@
     <li class="nav-heading">Pages</li>
 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="users-profile.html">
+      <a class="nav-link collapsed" href="<c:url value="/admin/order"/>">
         <i class="bi bi-person"></i>
-        <span>Profile</span>
+        <span>Orders</span>
       </a>
     </li><!-- End Profile Page Nav -->
 
@@ -199,7 +200,7 @@
     </li><!-- End F.A.Q Page Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="pages-contact.html">
+      <a class="nav-link collapsed" href="pages-contact.jsp">
         <i class="bi bi-envelope"></i>
         <span>Contact</span>
       </a>

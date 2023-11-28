@@ -3,6 +3,7 @@ package com.reidshop.Service.Impl;
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Reponsitory.OrdersRepository;
 import com.reidshop.Service.IOrdersService;
+import com.reidshop.dto.DailyTotalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
@@ -97,4 +98,10 @@ public class OrdersServiceImpl implements IOrdersService {
         List<Double> listTotalPriceThisWeek = ordersRepository.listTotalPriceOfThisWeek();
         return listTotalPriceThisWeek;
     }
+
+    @Override
+    public List<Object[]> findOrderIdsByWeek() {
+        return ordersRepository.findOrderIdsByWeek();
+    }
+
 }

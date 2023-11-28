@@ -10,10 +10,12 @@ import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
 import com.reidshop.Service.IProductService;
 import com.reidshop.Service.Impl.OrdersServiceImpl;
+import com.reidshop.dto.DailyTotalDTO;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,13 +27,10 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Controller
-@RequestMapping("/admin")
+@RequestMapping("/admin/home")
 public class AdminController {
     @Autowired
     IOrdersService ordersService;
@@ -52,6 +51,7 @@ public class AdminController {
     @RequestMapping("")
     public String index(ModelMap modelMap){
         List<Category> categoryList = categoryRepository.findAll();
+        listRevenueOfThisWeek();
         modelMap.addAttribute("categories",categoryList);
         modelMap.addAttribute("productService",productService);
         modelMap.addAttribute("formatVND",formatVND);
@@ -188,7 +188,6 @@ public class AdminController {
     public Double getRevenueThisMonth(){
         //List order of this month
         List<Integer> listId = ordersService.findAllOrderOfThisMonth();
-        System.out.println(listId);
         //Doanh số thu được trong 1 month
         double salesThisMonth = ordersService.totalSalesOfThisMonth();
 
@@ -209,6 +208,48 @@ public class AdminController {
         return ResponseEntity.ok(salesData);
     }
 
+    public List<Object[]> listRevenueOfThisWeek(){
+        List<Object[]> result = ordersService.findOrderIdsByWeek();
+        List<Double> salesData = ordersService.listTotalPriceOfThisWeek();
+        Collections.reverse(salesData);
+        for (Double value : salesData) {
+            System.out.print(value + " ");
+        }
+        for (Object[] row : result) {
+            Date orderDate = (Date) row[0];
+            String orderIds = (String) row[1];
 
+            String[] orderIdArray = orderIds.split(",");
+
+            double totalOriginalOfDay = calculateTotalPrice(Arrays.asList(orderIdArray));
+            System.out.println("orderDate: " + orderDate+ ", orderIds: " + Arrays.toString(orderIdArray));
+            System.out.println("totalOriginalOfDay: " + totalOriginalOfDay);
+        }
+        return ordersService.findOrderIdsByWeek();
+    }
+
+    public double calculateTotalPrice(List<String> orderIds) {
+        double originalPrice = 0.0;
+        for (String orderId : orderIds) {
+            originalPrice += orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
+        }
+        return originalPrice;
+    }
+
+    public static void reverseArray(int[] arr) {
+        int left = 0;
+        int right = arr.length - 1;
+
+        while (left < right) {
+            // Hoán đổi phần tử tại left và right
+            int temp = arr[left];
+            arr[left] = arr[right];
+            arr[right] = temp;
+
+            // Di chuyển left và right đến phần tử tiếp theo
+            left++;
+            right--;
+        }
+    }
 
 }

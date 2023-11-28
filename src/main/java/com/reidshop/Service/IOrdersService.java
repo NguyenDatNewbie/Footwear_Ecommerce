@@ -2,6 +2,7 @@ package com.reidshop.Service;
 
 import com.reidshop.Model.Entity.Category;
 import com.reidshop.Model.Entity.Orders;
+import com.reidshop.dto.DailyTotalDTO;
 import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
@@ -26,6 +27,7 @@ public interface IOrdersService {
     List<Integer> findAllOrderOfThisMonth();
 
     List<Double> listTotalPriceOfThisWeek();
+    List<Object[]> findOrderIdsByWeek();
 
 
 }
