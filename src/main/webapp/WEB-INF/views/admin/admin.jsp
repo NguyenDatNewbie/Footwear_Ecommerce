@@ -35,10 +35,6 @@
     <!-- Template Main CSS File -->
     <link href="/admin/assets/css/style.css" rel="stylesheet">
 
-    <script>
-
-    </script>
-
 </head>
 
 <body>
@@ -202,10 +198,10 @@
                                         new ApexCharts(document.querySelector("#reportsChart"), {
                                             series: [{
                                                 name: 'Sales',
-                                                data: ${ordersService.listTotalPriceOfThisWeek()},
+                                                data: ${ordersRepository.listTotalPriceOfThisWeek()},
                                             }, {
                                                 name: 'Revenue',
-                                                data: [500000, 1200000, 400000, 4000000, 3000000, 2000000, 6000000]
+                                                data: []
                                             }],
                                             chart: {
                                                 height: 350,
@@ -235,7 +231,7 @@
                                                 width: 2
                                             },
                                             xaxis: {
-                                                type: 'text',
+                                                type: 'category',
                                                 categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
                                             },
                                             tooltip: {

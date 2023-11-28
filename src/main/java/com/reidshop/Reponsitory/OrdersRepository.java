@@ -58,10 +58,22 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     List<Integer> findAllOrderOfThisMonth();
 
     //List total_price của các order trong tuần
-    @Query("SELECT o.totalPrice FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1)")
+    @Query("SELECT SUM(o.totalPrice) AS dailyTotal " +
+            "FROM Orders o " +
+            "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) " +
+            "GROUP BY DATE(o.createdAt) ")
     List<Double> listTotalPriceOfThisWeek();
 
 
+    //List order id của mỗi ngày trong tuần
+    @Query("SELECT DATE(o.createdAt) AS orderDate, GROUP_CONCAT(o.id) AS orderIds " +
+            "FROM Orders o " +
+            "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) " +
+            "GROUP BY DATE(o.createdAt)")
+    List<Object[]> findOrderIdsByWeek();
+
+
     // User
+
 
 }

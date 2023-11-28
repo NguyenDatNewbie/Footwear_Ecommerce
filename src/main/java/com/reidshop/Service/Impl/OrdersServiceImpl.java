@@ -118,6 +118,10 @@ public class OrdersServiceImpl implements IOrdersService {
     }
 
     @Override
+    public List<Object[]> findOrderIdsByWeek() {
+        return ordersRepository.findOrderIdsByWeek();
+    }
+
     public void savePaymentReceive(OrderCombineRequest orderCombineRequest, Long storeId, int type, HttpServletRequest request){
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
