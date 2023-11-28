@@ -3,6 +3,8 @@ package com.reidshop.Model.Entity;
 import lombok.Data;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 
 @Table
@@ -24,15 +26,15 @@ public class Evaluate {
     String img;
 
     @Column
+    @Temporal(TemporalType.DATE)
+    @DateTimeFormat(pattern = "dd--MM--yyyy")
     Date createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",nullable = false,referencedColumnName = "product_id")
     Product product;
 
     @ManyToOne
-    @JoinColumn(name="account_id")
+    @JoinColumn(name="account_id",nullable = false,referencedColumnName = "account_id")
     Account account;
-
-
 }

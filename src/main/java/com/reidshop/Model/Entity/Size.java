@@ -17,6 +17,6 @@ public class Size {
     String size;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",nullable = false,referencedColumnName = "product_id")
     Product product;
 }

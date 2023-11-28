@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Controller
-@RequestMapping("/productDetail")
+@RequestMapping("/product")
 public class ProductDetailController {
     @Autowired
     ProductRepository productRepository;

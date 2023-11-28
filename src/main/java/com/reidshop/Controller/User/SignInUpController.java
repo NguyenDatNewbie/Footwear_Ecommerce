@@ -1,13 +1,11 @@
 package com.reidshop.Controller.User;
 
-import com.reidshop.Model.Cookie.SetCookie;
-import com.reidshop.Model.Entity.Account;
+import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Request.RegisterRequest;
 import com.reidshop.Reponsitory.AccountRepository;
-import com.reidshop.Service.IAccountSevice;
+import com.reidshop.Service.IAccountService;
 import com.reidshop.exception.ValidationHandle;
 import com.reidshop.security.JwtService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
@@ -16,23 +14,11 @@ import com.reidshop.token.HandleToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 //import com.reidshop.Config.WebSecurityConfig;
 
 
@@ -43,7 +29,7 @@ public class SignInUpController {
     @Autowired
     AccountRepository accountRepository;
     @Autowired
-    IAccountSevice accountSevice;
+    IAccountService accountService;
     @Autowired
     HandleToken token;
 
@@ -60,7 +46,7 @@ public class SignInUpController {
 
     @PostMapping("/save")
     public ModelAndView registration(@Valid @ModelAttribute("request") RegisterRequest request,
-                              BindingResult result, ModelMap modelMap) {
+                              BindingResult result, ModelMap modelMap, HttpServletResponse response) {
         if(accountRepository.findByEmail(request.getEmail()).isPresent()) {
             modelMap.addAttribute("exitsEmail","Email đã tồn tại");
             modelMap.addAttribute("isLogin",false);
@@ -83,8 +69,8 @@ public class SignInUpController {
             return new ModelAndView("user/login");
         }
 
-        accountSevice.save(request);
-        System.out.println(token.generateToken(request.getEmail(), request.getPassword()));
+        accountService.save(request);
+        response.addCookie(CookieHandle.createCookie("token",jwtService.generateToken(request.getEmail())));
         return new ModelAndView("user/index");
     }
 
@@ -92,12 +78,7 @@ public class SignInUpController {
     @PostMapping("/sign-in")
     public ModelAndView login(@ModelAttribute("request") RegisterRequest request, ModelMap modelMap, HttpServletResponse response) {
         try {
-            Authentication authentication =  authenticationManager.authenticate((new UsernamePasswordAuthenticationToken
-                    (request.getEmail(), request.getPassword())));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-
-            response.addCookie(SetCookie.createCookie("token",jwtService.generateToken(request.getEmail())));
+            response.addCookie(CookieHandle.createCookie("token",token.generateToken(request.getEmail(),request.getPassword())));
             return new ModelAndView("redirect:/index");
         } catch (BadCredentialsException exception)
         {

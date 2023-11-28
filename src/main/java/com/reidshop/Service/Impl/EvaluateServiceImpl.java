@@ -21,19 +21,20 @@ public class EvaluateServiceImpl implements IEvaluateServiceImpl {
         for(int i =0;i<size;i++){
             sum += evaluateList.get(i).getRate();
         }
-
         double avg = (double) sum/size;
+        System.out.println(avg);
+
         double impair = avg - (int)avg;
-        if(impair>0.3 && impair<=0.5){
-            avg = avg - impair + 0.5;
-        }
-        else if(impair>0.5){
+        if(impair>0.5){
             avg = avg - impair + 1;
         }
-        else {
-            avg = avg - impair - 1;
+        else if(impair>0.3){
+            avg = avg - impair + 0.5;
         }
-
+        else {
+            avg = 0;
+        }
+        System.out.println(avg);
         return avg;
     }
 

@@ -1,8 +1,9 @@
 package com.reidshop.Model.Enum;
 
 public enum OrderStatus {
-    PREPARING,
+    WAIT,
+    PREPARE,
     DELIVERY,
-    COMPLETED,
-    CANCELED
+    COMPLETE,
+    CANCEL
 }

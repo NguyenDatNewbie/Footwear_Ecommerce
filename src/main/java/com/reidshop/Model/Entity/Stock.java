@@ -3,6 +3,8 @@ package com.reidshop.Model.Entity;
 import lombok.Data;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.util.Date;
 import java.util.List;
 
@@ -15,6 +17,8 @@ public class Stock {
     @Column(name = "stock_id")
     Long id;
 
+    @Temporal(TemporalType.DATE) // Chỉ lấy ngày, bỏ qua giờ và phút
+    @DateTimeFormat(pattern = "dd--MM--yyyy") // Định dạng ngày theo ý muốn
     @Column
     Date createdAt;
 

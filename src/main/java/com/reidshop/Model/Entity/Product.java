@@ -35,12 +35,7 @@ public class Product {
     @JoinColumn(name = "category_id")
     Category category;
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "product")
     List<Image> images = new ArrayList<>();
 
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
-    List<Evaluate> evaluates = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product",fetch = FetchType.LAZY)
-    List<Size> sizes = new ArrayList<>();
 }

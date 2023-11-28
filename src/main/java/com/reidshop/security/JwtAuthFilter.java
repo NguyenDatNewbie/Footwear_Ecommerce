@@ -1,6 +1,7 @@
 package com.reidshop.security;
 
 
+import com.reidshop.Model.Cookie.CookieHandle;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -30,32 +31,28 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = getCookieValue(request,"token");
+        String token = CookieHandle.getCookieValue(request, "token");
         String username = null;
-        if(token!=null) {
+        if (token != null) {
             username = jwtService.extractUsername(token);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (jwtService.validateToken(token, userDetails)) {
+
+            if (userDetails != null && jwtService.validateToken(token, userDetails)) {
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
+//            if (userDetails != null) {
+//                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+//                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+//                SecurityContextHolder.getContext().setAuthentication(authToken);
+//            }
         }
         filterChain.doFilter(request, response);
     }
 
-    private String getCookieValue(HttpServletRequest req, String cookieName) {
-        Cookie[] cookies = req.getCookies();
-        if (cookies != null) {
-            return Arrays.stream(cookies)
-                    .filter(c -> c.getName().equals(cookieName))
-                    .findFirst()
-                    .map(Cookie::getValue)
-                    .orElse(null);
-        }
-        return null;
-    }
+
 }

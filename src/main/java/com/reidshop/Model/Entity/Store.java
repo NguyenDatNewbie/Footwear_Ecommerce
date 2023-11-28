@@ -22,9 +22,9 @@ public class Store {
     @JoinColumn(name="manager_id")
     Account account;
 
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store",fetch = FetchType.LAZY)
     List<Inventory> inventories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "store")
+    @OneToMany(mappedBy = "store",fetch = FetchType.LAZY)
     List<Orders> orders = new ArrayList<>();
 }

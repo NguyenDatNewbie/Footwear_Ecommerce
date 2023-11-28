@@ -196,27 +196,28 @@
                                                 <div class="col-lg-3">
                                                     <div class="single_product">
                                                         <div class="product_thumb">
-                                                            <c:if test="${iImageService.findAllByProduct(product.id).size()>0}">
-                                                                <a class="primary_img" href="product-details.jsp"><img src="${iImageService.findAllByProduct(product.id).get(0).img}" alt=""></a>
+                                                            <c:if test="${product.images.size()>0}">
+                                                                <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
                                                             </c:if>
-                                                            <c:if test="${iImageService.findAllByProduct(product.id).size()>1}">
-                                                                <a class="secondary_img" href="product-details.jsp"><img src="${iImageService.findAllByProduct(product.id).get(1).img}" alt=""></a>
+                                                            <c:if test="${product.images.size()>1}">
+                                                                <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
                                                             </c:if>
 
                                                             <div class="quick_button">
-                                                                <a href="#" title="quick_view">Xem sản phẩm</a>
-
+                                                                <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
                                                             </div>
+
 
                                                             <div class="product_sale">
                                                                 <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
                                                             </div>
+
                                                         </div>
-                                                        <div class="product_content">
+                                                        <div class="product_content grid_content" >
                                                             <h3><a href="product-details.jsp">${product.name}</a></h3>
                                                             <c:choose>
                                                                 <c:when test="${product.promotion>0}">
-                                                                    <span class="current_price">${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                                                    <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
                                                                     <span class="old_price">${formatVND.format(product.price)}</span>
                                                                 </c:when>
                                                                 <c:otherwise>
@@ -239,27 +240,28 @@
                                                 <div class="col-lg-3">
                                                     <div class="single_product">
                                                         <div class="product_thumb">
-                                                            <c:if test="${iImageService.findAllByProduct(product.id).size()>0}">
-                                                                <a class="primary_img" href="product-details.jsp"><img src="${iImageService.findAllByProduct(product.id).get(0).img}" alt=""></a>
+                                                            <c:if test="${product.images.size()>0}">
+                                                                <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
                                                             </c:if>
-                                                            <c:if test="${iImageService.findAllByProduct(product.id).size()>1}">
-                                                                <a class="secondary_img" href="product-details.jsp"><img src="${iImageService.findAllByProduct(product.id).get(1).img}" alt=""></a>
+                                                            <c:if test="${product.images.size()>1}">
+                                                                <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
                                                             </c:if>
 
                                                             <div class="quick_button">
-                                                                <a href="#" title="quick_view">Xem sản phẩm</a>
-
+                                                                <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
                                                             </div>
+
 
                                                             <div class="product_sale">
                                                                 <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
                                                             </div>
+
                                                         </div>
-                                                        <div class="product_content">
+                                                        <div class="product_content grid_content" >
                                                             <h3><a href="product-details.jsp">${product.name}</a></h3>
                                                             <c:choose>
                                                                 <c:when test="${product.promotion>0}">
-                                                                    <span class="current_price">${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                                                    <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
                                                                     <span class="old_price">${formatVND.format(product.price)}</span>
                                                                 </c:when>
                                                                 <c:otherwise>
@@ -333,27 +335,28 @@
                             <div class="col-lg-3">
                                 <div class="single_product">
                                     <div class="product_thumb">
-                                        <c:if test="${iImageService.findAllByProduct(product.id).size()>0}">
-                                            <a class="primary_img" href="product-details.jsp"><img src="${iImageService.findAllByProduct(product.id).get(0).img}" alt=""></a>
+                                        <c:if test="${product.images.size()>0}">
+                                            <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
                                         </c:if>
-                                        <c:if test="${iImageService.findAllByProduct(product.id).size()>1}">
-                                            <a class="secondary_img" href="product-details.jsp"><img src="${iImageService.findAllByProduct(product.id).get(0).img}" alt=""></a>
+                                        <c:if test="${product.images.size()>1}">
+                                            <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
                                         </c:if>
 
                                         <div class="quick_button">
-                                            <a href="#" title="quick_view">Xem sản phẩm</a>
-
+                                            <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
                                         </div>
+
 
                                         <div class="product_sale">
                                             <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
                                         </div>
+
                                     </div>
-                                    <div class="product_content">
+                                    <div class="product_content grid_content" >
                                         <h3><a href="product-details.jsp">${product.name}</a></h3>
                                         <c:choose>
                                             <c:when test="${product.promotion>0}">
-                                                <span class="current_price">${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                                <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
                                                 <span class="old_price">${formatVND.format(product.price)}</span>
                                             </c:when>
                                             <c:otherwise>
