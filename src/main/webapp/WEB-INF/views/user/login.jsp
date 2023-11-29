@@ -78,8 +78,8 @@
             <div class="container">
                 <div class="signup-content">
                     <div class="signup-form">
-                        <h2 class="form-title">Sign up</h2>
-                        <form action="/sign-in-up/save" method="POST" class="register-form" id="register-form">
+                        <h2 class="form-title">Welcome To<br> Reid Store</h2>
+                        <form action="/sign-in-up/register" method="POST" class="register-form" id="register-form">
                             <div class="form-group">
                                 <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
                                 <input type="text" name="name" id="name" placeholder="Your Name"
@@ -119,20 +119,16 @@
                                     <span style="color: red;"><c:out value="${rePasswordEqual}"/></span>
                                 </c:if>
                             </div>
-                            <div class="form-group">
-                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term"/>
-                                <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all
-                                    statements in <a href="#" class="term-service">Terms of service</a></label>
-                            </div>
+
                             <div class="form-group form-button">
-                                <input type="submit" name="signup" id="signup" class="form-submit" value="Register"/>
+                                <input type="submit" name="signup" id="signup" class="form-submit" value="Đăng ký"/>
                             </div>
                         </form>
                     </div>
                     <div class="signup-image">
                         <figure><img src="<c:url value="/user/login/images/signup-image.jpg"/>" alt="sing up image">
                         </figure>
-                        <a class="signup-image-link" id="onSignIn">I am already member</a>
+                        <a class="signup-image-link" id="onSignIn">Tôi đã có tài khoản</a>
                     </div>
                 </div>
             </div>
@@ -145,12 +141,16 @@
                     <div class="signin-image">
                         <figure><img src="<c:url value="/user/login/images/signin-image.jpg"/>" alt="sing up image">
                         </figure>
-                        <a class="signup-image-link" id="onSignUp">Create an account</a>
+                        <div style="display:flex; justify-content: center"><a class="signup-image-link" id="onSignUp">Đăng ký tài khoản</a>
+                            <strong style="margin: 0px 5px">/</strong>
+                            <a class="signup-image-link" href="/password/forgot" >Quên mật khẩu</a>
+                        </div>
+
                     </div>
 
                     <div class="signin-form">
-                        <h2 class="form-title">Sign In</h2>
-                        <form action="/sign-in-up/sign-in" method="POST" class="register-form" id="login-form">
+                        <h2 class="form-title">Welcome To<br> Reid Store</h2>
+                        <form action="/sign-in-up/login" method="POST" class="register-form" id="login-form">
                             <div class="form-group">
                                 <label for="email"><i class="zmdi zmdi-account material-icons-name"></i></label>
                                 <input type="email" name="email" id="your_email" placeholder="Your email"
@@ -164,17 +164,14 @@
                             <c:if test="${not empty loginError}">
                                 <span style="color: red;"><c:out value="${loginError}"/></span>
                             </c:if>
-                            <div class="form-group">
-                                <input type="checkbox" name="remember-me" id="remember-me" class="agree-term"/>
-                                <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
-                            </div>
+
                             <div class="form-group form-button">
-                                <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>
+                                <input type="submit" name="signin" id="signin" class="form-submit" value="Đăng nhập"/>
                             </div>
                         </form>
 
                         <div class="social-login">
-                            <span class="social-label">Or login with</span>
+                            <span class="social-label">Hoặc đăng nhập với</span>
                             <ul class="socials">
                                 <li><a href="#"><i class="display-flex-center zmdi zmdi-facebook"></i></a></li>
                                 <li><a href="#"><i class="display-flex-center zmdi zmdi-twitter"></i></a></li>
@@ -216,10 +213,10 @@
         elementB.classList.add('hidden');
     });
 
-<%--    <c:if test="${!isLogin}">signUp.click();</c:if>--%>
-<%--    <c:if test="${isLogin || empty isLogin}">--%>
-<%--        signIn.click();--%>
-<%--    </c:if>--%>
+    <c:if test="${!isLogin}">signUp.click();</c:if>
+    <c:if test="${isLogin || empty isLogin}">
+        signIn.click();
+    </c:if>
 
 
 </script>
