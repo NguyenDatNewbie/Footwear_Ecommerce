@@ -1,5 +1,7 @@
 package com.reidshop.Controller.User;
 
+import com.mservice.allinone.processor.allinone.CaptureMoMo;
+import com.mservice.shared.sharedmodels.Environment;
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.Account;
 import com.reidshop.Model.Entity.Inventory;
@@ -31,6 +33,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
+import static com.mservice.shared.sharedmodels.Environment.ProcessType.PAY_GATE;
+
 @Controller
 @RequestMapping("/cart")
 public class CartController {
@@ -53,11 +57,19 @@ public class CartController {
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
 
     @GetMapping("")
-    String index(ModelMap modelMap){
+    String index(ModelMap modelMap) throws Exception {
         modelMap.addAttribute("productRepository",productRepository);
         modelMap.addAttribute("formatVND",formatVND);
         modelMap.addAttribute("imageRepository",imageRepository);
         modelMap.addAttribute("store",storeRepository.findAll());
+//        String orderInfo = "Pay With MoMo";
+//        String returnURL = "https://google.com.vn";
+//        String notifyURL = "https://google.com.vn";
+//        String requestId = String.valueOf(System.currentTimeMillis());
+//        String orderId = String.valueOf(System.currentTimeMillis());
+//        long amount = 50000;
+//        Environment environment = Environment.selectEnv("dev", Environment.ProcessType.APP_IN_APP);
+//        System.out.println(CaptureMoMo.process(environment,orderId,requestId,Long.toString(amount),orderInfo,returnURL,notifyURL,""));
         return "user/cart";
     }
 
@@ -78,6 +90,8 @@ public class CartController {
     ResponseEntity<?> payment(@RequestBody OrderCombineRequest orderCombineRequest, @PathVariable Long storeId, @PathVariable int type,
                                 HttpServletRequest request){
         ordersService.savePaymentReceive(orderCombineRequest,storeId,type,request);
+
         return ResponseEntity.status(HttpStatus.OK).body("success");
     }
+
 }
