@@ -5,7 +5,7 @@ var formatter = new Intl.NumberFormat('vi-VN', {
 $(document).ready(function() {
     $('#today').click(function() {
         $.ajax({
-            url: '/admin/getTotalOrderToday', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getTotalOrderToday', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var newTotalOrder = response;
@@ -14,7 +14,7 @@ $(document).ready(function() {
             }
         });
         $.ajax({
-            url: '/admin/getOrderIncreaseLastDate', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getOrderIncreaseLastDate', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var percent = parseFloat(response);
@@ -40,7 +40,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#thisMonth').click(function() {
         $.ajax({
-            url: '/admin/getTotalOrderThisMonth', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getTotalOrderThisMonth', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var newTotalOrder = response;
@@ -49,7 +49,7 @@ $(document).ready(function() {
             }
         });
         $.ajax({
-            url: '/admin/getOrderIncreaseLastMonth', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getOrderIncreaseLastMonth', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var percent = parseFloat(response);
@@ -75,7 +75,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#thisYear').click(function() {
         $.ajax({
-            url: '/admin/getTotalOrderThisYear', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getTotalOrderThisYear', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var newTotalOrder = response;
@@ -94,7 +94,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#todaySales').click(function() {
         $.ajax({
-            url: '/admin/getTotalSalesToday', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getTotalSalesToday', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var newTotalSales = response;
@@ -107,7 +107,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#monthSales').click(function() {
         $.ajax({
-            url: '/admin/getTotalSalesThisMonth', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getTotalSalesThisMonth', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var newTotalSales = response;
@@ -120,7 +120,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#yearSales').click(function() {
         $.ajax({
-            url: '/admin/getTotalSalesThisYear', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getTotalSalesThisYear', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var newTotalSales = response;
@@ -134,7 +134,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#todayRevenue').click(function() {
         $.ajax({
-            url: '/admin/getRevenueToday', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getRevenueToday', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var revenue = response;
@@ -147,7 +147,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#thisWeekRevenue').click(function() {
         $.ajax({
-            url: '/admin/getRevenueThisWeek', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getRevenueThisWeek', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var revenue = response;
@@ -160,7 +160,7 @@ $(document).ready(function() {
 $(document).ready(function() {
     $('#thisMonthRevenue').click(function() {
         $.ajax({
-            url: '/admin/getRevenueThisMonth', // Địa chỉ máy chủ để gửi yêu cầu
+            url: '/admin/home/getRevenueThisMonth', // Địa chỉ máy chủ để gửi yêu cầu
             method: 'GET',
             success: function(response) {
                 var revenue = response;
@@ -172,7 +172,7 @@ $(document).ready(function() {
 });
 $(document).ready(function() {
     // Sử dụng jQuery hoặc JavaScript để gọi API endpoint
-    $.get('/admin/getRevenueToday', function(response) {
+    $.get('/admin/home/getRevenueToday', function(response) {
         // Xử lý kết quả từ API và cập nhật lên trang web
         $('#revenue').text(formatter.format(response));
     });

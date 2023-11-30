@@ -108,15 +108,6 @@
                             </c:when>
                           </c:choose>
                         </td>
-                        <td>
-                          <div class="btn-group">
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" href="#" onclick="performAction('Delivery')">Delivery</a>
-                              <a class="dropdown-item" href="#" onclick="performAction('Complete')">Complete</a>
-                              <a class="dropdown-item" href="#" onclick="performAction('Cancel')">Cancel</a>
-                            </div>
-                          </div>
-                        </td>
                       </tr>
                     </c:forEach>
                   </tbody>
