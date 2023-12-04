@@ -53,63 +53,54 @@
           <div class="col-12">
             <div class="card recent-sales overflow-auto">
 
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
+<%--              <div class="filter">--%>
+<%--                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>--%>
+<%--                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">--%>
+<%--                  <li class="dropdown-header text-start">--%>
+<%--                    <h6>Filter</h6>--%>
+<%--                  </li>--%>
 
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
+<%--                  <li><a class="dropdown-item" href="#">Today</a></li>--%>
+<%--                  <li><a class="dropdown-item" href="#">This Month</a></li>--%>
+<%--                  <li><a class="dropdown-item" href="#">This Year</a></li>--%>
+<%--                </ul>--%>
+<%--              </div>--%>
 
               <div class="card-body">
-                <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+<%--                <h5 class="card-title">Recent Sales <span>| Today</span></h5>--%>
 
-                <table class="table table-borderless datatable">
+                <table class="table datatable ">
                   <thead>
                   <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Phone Number</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Total Price</th>
-                    <th scope="col">Account Name</th>
-                    <th scope="col">Store</th>
-                    <th scope="col">Creation Time</th>
-                    <th scope="col">Last Update Time</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Role</th>
                     <th scope="col">Action</th>
                   </tr>
                   </thead>
                   <tbody>
-                    <c:forEach items="${ordersRepository.findAll()}" var="order">
-                      <tr>
-                        <th scope="row">${order.id}</th>
-                        <td>${order.phone}</td>
-                        <td>${order.address}</td>
-                        <td>${order.totalPrice}</td>
-                        <td>${order.account.accountDetail.name}</td>
-                        <td>${order.store.department}</td>
-                        <td>${order.createdAt}</td>
-                        <td>${order.updatedAt}</td>
-                        <td>
-                          <c:choose>
-                            <c:when test="${order.status == 'PREPARE'}">
-                              <span class="badge bg-danger">${order.status}</span>
-                            </c:when>
-                            <c:when test="${order.status == 'DELIVERY'}">
-                              <span class="badge bg-success">${order.status}</span>
-                            </c:when>
-                            <c:when test="${order.status == 'COMPLETE'}">
-                              <span class="badge bg-info">${order.status}</span>
-                            </c:when>
-                          </c:choose>
-                        </td>
-                      </tr>
-                    </c:forEach>
+                  <c:forEach items="${accountRepository.findAll()}" var="account">
+                    <tr>
+                      <th scope="row">${account.id}</th>
+                      <td>${account.email}</td>
+                      <td>
+                        <c:choose>
+                          <c:when test="${account.role == 'ADMIN'}">
+                            <span class="badge bg-danger">${account.role}</span>
+                          </c:when>
+                          <c:when test="${account.role == 'VENDOR'}">
+                            <span class="badge bg-success">${account.role}</span>
+                          </c:when>
+                          <c:when test="${account.role == 'USER'}">
+                            <span class="badge bg-info">${account.role}</span>
+                          </c:when>
+                        </c:choose>
+                      </td>
+                      <td>
+                        <button type="button" onclick="window.location.href='/admin/account/${account.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                      </td>
+                    </tr>
+                  </c:forEach>
                   </tbody>
                 </table>
 
