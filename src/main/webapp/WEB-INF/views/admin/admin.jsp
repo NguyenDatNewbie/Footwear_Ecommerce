@@ -329,7 +329,7 @@
                                     <tbody>
                                         <c:forEach items="${productRepository.findAllByProductSold()}" var="product">
                                         <tr>
-                                            <th scope="row"><a href="#"><img src="${product.images.get(0).img}" alt=""></a></th>
+<%--                                            <th scope="row"><a href="#"><img src="${product.images.get(0).img}" alt=""></a></th>--%>
                                             <td><a href="#" class="text-primary fw-bold">${product.name}</a></td>
                                             <td>${product.price}</td>
                                             <td class="fw-bold">${product.sold}</td>

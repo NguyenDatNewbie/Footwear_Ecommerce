@@ -7,18 +7,32 @@
   <ul class="sidebar-nav" id="sidebar-nav">
 
     <li class="nav-item">
-      <a class="nav-link " href="<c:url value="/admin/home"/>">
+      <a class="nav-link collapsed" href="<c:url value="/admin/home"/>">
         <i class="bi bi-grid"></i>
         <span>Dashboard</span>
       </a>
     </li><!-- End Dashboard Nav -->
 
     <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/products"/>">
+        <i class="bi bi-shop"></i>
+        <span>Products</span>
+      </a>
+    </li><!-- End Order Page Nav -->
+
+    <li class="nav-item">
       <a class="nav-link collapsed" href="<c:url value="/admin/order"/>">
-        <i class="bi bi-person"></i>
+        <i class="bi bi-journal-text"></i>
         <span>Orders</span>
       </a>
-    </li><!-- End Products Page Nav -->
+    </li><!-- End Order Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/account"/>">
+        <i class="bi bi-person"></i>
+        <span>Accounts</span>
+      </a>
+    </li><!-- End Account Page Nav -->
 
     <li class="nav-item">
       <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
