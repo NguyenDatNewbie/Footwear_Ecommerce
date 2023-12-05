@@ -10,6 +10,8 @@
     <title>Cart page</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon"
           href="assets/img/favicon.ico">
@@ -23,7 +25,6 @@
 
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
-
     <style>
         .flex-2 {
             display: flex;
@@ -112,172 +113,346 @@
             overflow: auto; /* Tạo thanh trượt khi nội dung vượt quá kích thước của phần tử */
         }
 
-        p .cart_amount {
+        .hidden {
+            display: none;
+        }
+
+        .cart_subtotal p.cart_amount_deli {
             color: red;
             font-size: 16px;
             font-weight: 600;
         }
+
+        .cart_subtotal p.cart_amount_store {
+            color: #10a702;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .ri-secure-payment-line ul li {
+            display: flex;
+        }
+
+        .ri-secure-payment-line input {
+            height: fit-content;
+            width: fit-content;
+            margin: 6px 10px 3px 0px;
+        }
+
+        .ri-secure-payment-line {
+            padding-top: 10px;
+            border-top: 2px solid black;
+        }
+
+        .align-center {
+            margin: auto;
+            max-width: 450px;
+        }
+
+        .button_back {
+            width: 450px;
+            background: #fff;
+            border-radius: 3px;
+            border: 1px solid #ff6a28;
+            color: #ff6a28;
+            display: inline-block;
+            height: 45px;
+            line-height: 45px;
+            padding: 0 16px;
+            text-transform: uppercase;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+            letter-spacing: 3px;
+            margin-top: 10px;
+        }
+
+        .button_back:hover {
+            cursor: pointer;
+            color: #ffffff;
+            background: #ff6a28;
+        }
+
+        .cart_empty {
+            margin-top: 75px;
+            margin-bottom: 300px;
+            width: fit-content;
+        }
+
+        .cart_empty span {
+            font-size: 16px;
+            font-family: auto;
+            color: black;
+        }
     </style>
 
+    <%--Popup--%>
+    <style>
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
 
+        .popup-container {
+            z-index: 99;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .close-icon {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 20px;
+            color: #555;
+        }
+
+        .popup-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .popup-buttons button {
+            margin: 0 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .yes-button {
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .no-button {
+            background-color: #f44336;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+        }
+
+        .product_thumb {
+            position: unset;
+        }
+
+        .popup-container i {
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+            color: #555;
+            padding: 5px;
+        }
+        .cart_link i{
+            font-size: 14px;
+        }
+        .cart_link i span{
+            font-size: 12px;
+        }
+    </style>
 </head>
 
 <body>
+
+
 <!-- Header Section Begin-->
 <jsp:include page="header.jsp"/>
 <!-- Header Section End -->
 
-<!--breadcrumbs area start-->
-<div class="breadcrumbs_area other_bread">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="breadcrumb_content">
-                    <ul>
-                        <li><a href="index.jsp">home</a></li>
-                        <li>/</li>
-                        <li>cart</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--breadcrumbs area end-->
 
-<!-- shopping cart area start -->
-<div class="shopping_cart_area">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="table_desc">
-                    <div class="cart_page table-responsive">
-                        <table>
-                            <thead>
-                            <tr>
-                                <th class="product_remove">Xóa</th>
-                                <th class="product_thumb">Hình ảnh</th>
-                                <th class="product_name">Sản phẩm</th>
-                                <th class="product-price">Giá</th>
-                                <th class="product_quantity">Số lượng</th>
-                                <th class="product_total">Tổng tiền(VNĐ)</th>
-                            </tr>
-                            </thead>
-                            <tbody id="t-body">
-                            </tbody>
-                        </table>
+<div id="content">
+    <!--breadcrumbs area start-->
+    <div class="breadcrumbs_area other_bread">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumb_content">
+                        <ul>
+                            <li><a href="index.jsp">home</a></li>
+                            <li>/</li>
+                            <li>cart</li>
+                        </ul>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+    <!--breadcrumbs area end-->
 
-        <form action="javascript:pay()" method="post" id="form-cart">
-            <!--coupon code area start-->
-            <div class="coupon_area">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6">
-                        <div class="coupon_code left">
-                            <h3>Thông tin giao hàng</h3>
+    <!-- shopping cart area start -->
+    <div class="shopping_cart_area">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="table_desc">
+                        <div class="cart_page table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th class="product_remove">Xóa</th>
+                                    <th class="product_thumb">Hình ảnh</th>
+                                    <th class="product_name">Sản phẩm</th>
+                                    <th class="product-price">Giá</th>
+                                    <th class="product_quantity">Số lượng</th>
+                                    <th class="product_total">Tổng tiền(VNĐ)</th>
+                                </tr>
+                                </thead>
+                                <tbody id="t-body">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                            <div class="coupon_inner">
-                                <div class="flex-2" style="margin-bottom: 15px">
-                                    <input
-                                            placeholder="Họ và tên" name="name" type="text" id="name"
-                                            required style="margin-right: 10px">
-                                    <input
-                                            placeholder="Số điện thoại nhận hàng" name="phone" type="text" id="phone"
-                                            required>
+            <form action="javascript:pay()" method="post" id="form-cart">
+                <!--coupon code area start-->
+                <div class="coupon_area">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                            <div class="coupon_code left">
+                                <h3>Thông tin giao hàng</h3>
+
+                                <div class="coupon_inner">
+                                    <div class="flex-2" style="margin-bottom: 15px">
+                                        <input
+                                                placeholder="Họ và tên" name="name" type="text" id="name"
+                                                required style="margin-right: 10px">
+                                        <input
+                                                placeholder="Số điện thoại nhận hàng" name="phone" type="text"
+                                                id="phone"
+                                                required>
+                                    </div>
+
+                                    <h4>CHỌN CÁCH THỨC NHẬN HÀNG</h4>
+
+                                    <div class="flex-2 radio" style="margin-bottom: 20px">
+                                        <div class="tab-label" onclick="openTab('tab1')">
+                                            <input type="radio" id="tab1-radio" name="tab-radio" class="radio-input">
+                                            <label>Giao tận nơi</label>
+                                            </input>
+                                        </div>
+
+                                        <div class="tab-label" onclick="openTab('tab2')">
+                                            <input type="radio" id="tab2-radio" name="tab-radio" class="radio-input">
+                                            <label for="tab2-radio">Nhận tại cửa hàng</label>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="tab-content" id="tab1">
+                                        <div class="flex-2">
+                                            <select class="form-select form-select-sm mb-3" id="city"
+                                                    aria-label=".form-select-sm" style="margin-right: 10px">
+                                                <option value="" selected>Chọn tỉnh thành</option>
+                                            </select>
+                                            <select class="form-select form-select-sm mb-3" id="district"
+                                                    aria-label=".form-select-sm">
+                                                <option value="" selected>Chọn quận huyện</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="flex-2">
+                                            <select class="form-select form-select-sm" id="ward"
+                                                    aria-label=".form-select-sm" style="margin-right: 10px">
+                                                <option value="" selected>Chọn phường xã</option>
+                                            </select>
+
+                                            <input placeholder="Địa chỉ giao hàng" name="addressDetail"
+                                                   id="addressDetail"
+                                                   type="text" required>
+                                        </div>
+                                    </div>
+                                    <div class="tab-content" id="tab2">
+                                        <div class="flex-2">
+                                            <select class="form-select form-select-sm mb-3" id="city1"
+                                                    aria-label=".form-select-sm" style="margin-right: 10px">
+                                                <option value="" selected>Chọn tỉnh thành</option>
+                                            </select>
+                                            <select class="form-select form-select-sm mb-3" id="district1"
+                                                    aria-label=".form-select-sm">
+                                                <option value="" selected>Chọn quận huyện</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="store scroll-container">
+                                            <ul id="ul-address">
+                                            </ul>
+                                        </div>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
 
-                                <h4>CHỌN CÁCH THỨC NHẬN HÀNG</h4>
-
-                                <div class="flex-2 radio" style="margin-bottom: 20px">
-                                    <div class="tab-label" onclick="openTab('tab1')">
-                                        <input type="radio" id="tab1-radio" name="tab-radio" class="radio-input">
-                                        <label>Giao tận nơi</label>
-                                        </input>
+                        <div class="col-lg-6 col-md-6">
+                            <div class="coupon_code right" id="cart-sub">
+                                <h3>Hóa đơn</h3>
+                                <div class="coupon_inner">
+                                    <div class="cart_subtotal" id="total_cart">
+                                        <p>Tổng tiền</p>
                                     </div>
+                                    <div class="cart_subtotal" id="price_deli">
+                                        <p>Phí giao hàng</p>
+                                        <p class="cart_amount_deli hidden" id="receive_deli"></p>
 
-                                    <div class="tab-label" onclick="openTab('tab2')">
-                                        <input type="radio" id="tab2-radio" name="tab-radio" class="radio-input">
-                                        <label for="tab2-radio">Nhận tại cửa hàng</label>
+                                        <p class="cart_amount_store active" id="receive_store">Miễn phí</p>
                                     </div>
-                                </div>
-
-
-                                <div class="tab-content" id="tab1">
-                                    <div class="flex-2">
-                                        <select class="form-select form-select-sm mb-3" id="city"
-                                                aria-label=".form-select-sm" style="margin-right: 10px">
-                                            <option value="" selected>Chọn tỉnh thành</option>
-                                        </select>
-                                        <select class="form-select form-select-sm mb-3" id="district"
-                                                aria-label=".form-select-sm">
-                                            <option value="" selected>Chọn quận huyện</option>
-                                        </select>
+                                    <div class="cart_subtotal" id="subtotal">
+                                        <p>Thành tiền</p>
                                     </div>
-
-                                    <div class="flex-2">
-                                        <select class="form-select form-select-sm" id="ward"
-                                                aria-label=".form-select-sm" style="margin-right: 10px">
-                                            <option value="" selected>Chọn phường xã</option>
-                                        </select>
-
-                                        <input placeholder="Địa chỉ giao hàng" name="addressDetail" id="addressDetail"
-                                               type="text" required>
-                                    </div>
-                                </div>
-                                <div class="tab-content" id="tab2">
-                                    <div class="flex-2">
-                                        <select class="form-select form-select-sm mb-3" id="city1"
-                                                aria-label=".form-select-sm" style="margin-right: 10px">
-                                            <option value="" selected>Chọn tỉnh thành</option>
-                                        </select>
-                                        <select class="form-select form-select-sm mb-3" id="district1"
-                                                aria-label=".form-select-sm">
-                                            <option value="" selected>Chọn quận huyện</option>
-                                        </select>
-
-                                    </div>
-                                    <div class="store scroll-container">
-                                        <ul id="ul-address">
+                                    <div class="ri-secure-payment-line">
+                                        <h4 style="font-size: 14px">Chọn phương thức thanh toán:</h4>
+                                        <ul id="ul-payment">
+                                            <li>
+                                                <input type="radio" name="payment" value="RECEIVE">
+                                                <div>
+                                                    <i class="fa-solid fa-money-bill"></i>
+                                                    <span>Thanh toán tại cửa hàng</span>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <input type="radio" name="payment" value="PAYPAL">
+                                                <div>
+                                                    <i class="fa-sharp fa-regular fa-money-bill"></i>
+                                                    <span>Momo</span>
+                                                </div>
+                                            </li>
                                         </ul>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                    <div class="checkout_btn">
+                                        <button type="submit" id="btn-pay">Thanh toán</button>
+                                    </div>
 
-                    <div class="col-lg-6 col-md-6">
-                        <div class="coupon_code right" id="cart-sub">
-                            <h3>Hóa đơn</h3>
-                            <div class="coupon_inner">
-                                <div class="cart_subtotal" id="total_cart">
-                                    <p>Tổng tiền</p>
-                                </div>
-                                <div class="cart_subtotal" id="price_deli">
-                                    <p>Phí giao hàng</p>
-                                </div>
-                                <div class="cart_subtotal" id="subtotal">
-                                    <p>Thành tiền</p>
-                                </div>
-                                <div class="checkout_btn">
-                                    <button type="submit">Thanh toán</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!--coupon code area end-->
+                <!--coupon code area end-->
 
-            <input name="address" id="address"
-                   type="text" style="display: none">
-        </form>
+                <input name="address" id="address"
+                       type="text" style="display: none">
+            </form>
+        </div>
     </div>
+    <!-- shopping cart area end -->
 </div>
-<!-- shopping cart area end -->
-
 
 <!--footer area start-->
 <jsp:include page="footer.jsp"/>
@@ -292,8 +467,89 @@
 <!-- Main JS -->
 <script src="<c:url value="/assets/js/main.js"/>"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+<script type="module" defer>
+    import PopupManager from 'https://cdn.jsdelivr.net/gh/jorgeabrahan/popup_library@67068b1/popup/Popup.js'
+
+    const btnClose = '<span class="material-symbols-outlined">close</span>';
+    const ConfirmationPopup = new PopupManager({btnClose});
+    var form = document.getElementById('form-cart');
+
+    if(localStorage.getItem('cart')!==null) {
+        document.getElementById("form-cart").addEventListener("submit", function (event) {
+            // Ngăn chặn hành động mặc định của sự kiện gửi
+            event.preventDefault();
+
+            const type = document.querySelector('.tab-content.active').id;
+            if (type === "tab1" && localStorage.getItem('storeValid') === null) {
+                ConfirmationPopup.display({
+                    title: 'Delete file',
+                    content: 'Are you sure you want to delete file?',
+                    buttons: {
+                        elements: [
+                            {
+                                text: 'Confirm',
+                                type: 'confirm',
+                                handler: function () {
+                                    handleConfirmClick();
+                                }
+                            },
+                            {
+                                text: 'Cancel',
+                                type: 'error',
+                                handler: () => ConfirmationPopup.close()
+                            }
+                        ]
+                    }
+                });
+            } else {
+                form.submit();
+            }
+        });
+
+        function handleConfirmClick() {
+            ConfirmationPopup.close();
+            form.submit();
+        }
+    }
+</script>
+<script>
+    function loadEmpty() {
+        document.getElementById('content').innerHTML = '<div class="shopping_cart_area" >' +
+            '<div class="container">\n' +
+            '            <div class="align-center">\n' +
+            '                <div class="cart_empty">\n' +
+            '                    <img src="https://codescandy.com/coach/rtl/assets/images/bag.svg" style="width: 400px; height: auto">\n' +
+            '                        <div style="text-align: center; margin-top: 4px;">\n' +
+            '                            <span>Không có sản phẩm trong giỏ hàng</span><br>\n' +
+            '                            <a href="/index" class="button_back">Về trang chủ</a>\n' +
+            '                        </div>\n' +
+            '                </div>\n' +
+            '            </div>\n' +
+            '        </div>' +
+            '        </div>';
+    }
+
+    function showCart() {
+        let cart = localStorage.getItem('cart');
+        if (cart !== null) {
+            $.ajax({
+                url: '/cart/getItem',
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: cart,
+                success: function (response) {
+                    document.getElementById("t-body").innerHTML = response;
+                    showStore();
+                }
+            });
+            reloadCartLength();
+        } else {
+            loadEmpty();
+        }
+    }
+</script>
 <script>
     var citis = document.getElementById("city");
     var districts = document.getElementById("district");
@@ -306,9 +562,11 @@
         responseType: "application/json",
     };
     var promise = axios(Parameter);
-    promise.then(function (result) {
-        renderCity(result.data);
-    });
+    if(localStorage.getItem('cart')!==null) {
+        promise.then(function (result) {
+            renderCity(result.data);
+        });
+    }
 
 
     function renderCity(data) {
@@ -326,7 +584,6 @@
                 }
             }
             showStore();
-
         }
 
         district1.onchange = function () {
@@ -343,6 +600,8 @@
                     district.options[district.options.length] = new Option(k.Name, k.Id);
                 }
             }
+            document.getElementById('receive_deli').textContent = "";
+            localStorage.removeItem("storeValid");
         };
         district.onchange = function () {
             ward.length = 1;
@@ -354,17 +613,33 @@
                     wards.options[wards.options.length] = new Option(w.Name, w.Id);
                 }
             }
+            document.getElementById('receive_deli').textContent = "";
+            localStorage.removeItem("storeValid");
         };
         ward.onchange = function () {
-            showOrder(10);
+            console.log(ward);
+            showOrder(10000);
+            findStore();
         }
     }
 
     function openTab(tabId) {
         document.getElementById('addressDetail').setAttribute('required', 'required');
+        var receiveDeli = document.getElementById('receive_deli');
+        var receiveStore = document.getElementById('receive_store');
+
         if (tabId === "tab2") {
-            showOrder(0);
+            receiveStore.classList.add("active");
+            receiveStore.classList.remove("hidden");
+            receiveDeli.classList.remove("active");
+            receiveDeli.classList.add("hidden");
             document.getElementById('addressDetail').removeAttribute('required');
+        }
+        if (tabId === "tab1") {
+            receiveDeli.classList.add("active");
+            receiveDeli.classList.remove("hidden");
+            receiveStore.classList.remove("active");
+            receiveStore.classList.add("hidden");
         }
 
         // Lấy tất cả các tab content
@@ -467,20 +742,6 @@
         ulElement.appendChild(newListItem);
     }
 
-    function showCart() {
-        let cart = localStorage.getItem('cart');
-        $.ajax({
-            url: '/cart/getItem',
-            type: "POST",
-            contentType: "application/json; charset=utf-8",
-            data: cart,
-            success: function (response) {
-                document.getElementById("t-body").innerHTML = response;
-                showStore();
-            }
-        });
-        reloadCartLength();
-    }
 
     function showStore() {
         let cart = localStorage.getItem('cart');
@@ -492,13 +753,15 @@
             valueCity = "";
         if (district.value == "")
             valueDistrict = "";
-        var data = JSON.stringify({carts: JSON.parse(cart), city: valueCity, district: valueDistrict});
+
+        var data = JSON.stringify({carts: JSON.parse(cart), city: valueCity, district: valueDistrict, wards: ""});
         $.ajax({
-            url: '/cart/getStore',
+            url: '/cart/getStore/STORE',
             type: "POST",
             contentType: "application/json; charset=utf-8",
             data: data,
             success: function (response) {
+                console.log(response);
                 document.getElementById('ul-address').innerHTML = '';
                 response.forEach(item => {
                     addItemToList(item);
@@ -507,24 +770,41 @@
         });
     }
 
-    window.addEventListener('load', function () {
-        showCart();
-    });
-    window.addEventListener('load', function () {
-        // Sự kiện click được gắn vào thẻ ul để theo dõi các thẻ li
-        document.getElementById('ul-address').addEventListener('click', function (event) {
-            // Kiểm tra xem phần tử được nhấp có phải là thẻ li không
-            const closestLi = event.target.closest('li');
-            if (closestLi) {
-                // Tìm thẻ input radio trong thẻ li tương ứng
-                const radioInput = closestLi.querySelector('input[type="radio"]');
-                if (radioInput) {
-                    // Gọi trực tiếp sự kiện click cho radioInput
-                    radioInput.click();
-                }
+    function findStore() {
+        let cart = localStorage.getItem('cart');
+        var city = document.getElementById('city');
+        var district = document.getElementById('district');
+        var ward = document.getElementById('ward');
+
+        var valueCity = city.options[city.selectedIndex].textContent;
+        var valueDistrict = district.options[district.selectedIndex].textContent;
+        var valueWard = ward.options[ward.selectedIndex].textContent;
+
+        if (city.value == "")
+            valueCity = "";
+        if (district.value == "")
+            valueDistrict = "";
+        if (ward.value == "")
+            valueWard = "";
+
+        var data = JSON.stringify({
+            carts: JSON.parse(cart),
+            city: valueCity,
+            district: valueDistrict,
+            wards: valueWard
+        });
+        $.ajax({
+            url: '/cart/getStore/DELIVERY',
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: data,
+            success: function (response) {
+                if (response.length > 0)
+                    localStorage.setItem("storeValid", JSON.stringify(response));
             }
         });
-    });
+    }
+
 
     function changeQuantity(cell) {
         let cart = JSON.parse(localStorage.getItem('cart'));
@@ -543,12 +823,10 @@
     }
 
 </script>
-
 <script>
     // Show Value Order
     function showOrder(cost) {
         var total_price = document.getElementById('total_cart');
-        var costDelivery = document.getElementById('price_deli');
         var total_last = document.getElementById('subtotal');
         let price = 0;
 
@@ -572,30 +850,26 @@
         valTotal.classList.add('cart_amount');
         valTotal.textContent = formatter.format(price);
 
-        const valCost = document.createElement('p');
-        valCost.classList.add('cart_amount');
-        if (cost != 0)
-            valCost.textContent = formatter.format(cost);
-        else {
-            valCost.textContent = "Miễn phí";
-            valCost.style.color = "#10a702";
-            valCost.style.fontSize = "14px";
-        }
 
         const valTotalLast = document.createElement('p');
         valTotalLast.classList.add('cart_amount');
         valTotalLast.textContent = formatter.format(price + cost);
 
         total_price.appendChild(valTotal);
-        costDelivery.appendChild(valCost);
+        var costHtml = document.getElementById("receive_deli");
+        var costHtml1 = document.getElementById("receive_store");
+
+        costHtml.textContent = formatter.format(cost);
         total_last.appendChild(valTotalLast);
     }
 
     function pay() {
         const type = document.querySelector('.tab-content.active').id;
         let cart = localStorage.getItem('cart');
+        let store = localStorage.getItem('storeValid');
+        var paymentOption = document.querySelector('input[name="payment"]:checked');
 
-        // const store =
+
         if (type === "tab2") {
             if (document.getElementById("ul-address").children) {
                 // var selectedElement = document.querySelector('#ul-address.selected');
@@ -603,36 +877,143 @@
                 if (selectedRadioButton) {
                     var status = selectedRadioButton.parentElement.querySelector('span').textContent;
                     var statusValue = status != 'Còn hàng' ? '0' : '1';
-                    var name = document.getElementById('name').value;
-                    var phone = document.getElementById('phone').value;
-
                     var orders = {
-                        name: name,
-                        phone: phone
+                        name: document.getElementById('name').value,
+                        phone: document.getElementById('phone').value
                     }
-
-                    var orderCombine ={
-                        orders:orders,
-                        carts: JSON.parse(cart)
+                    let storeValid = [{
+                        status: statusValue,
+                        store: {
+                            id: selectedRadioButton.value
+                        }
+                    }]
+                    var orderCombine = {
+                        orders: orders,
+                        carts: JSON.parse(cart),
+                        storeValid: storeValid
                     }
-                    console.log(orderCombine);
-                    console.log(JSON.stringify(orderCombine));
 
                     $.ajax({
-                        url: '/cart/payment/receive/'+selectedRadioButton.value+'/'+statusValue,
+                        url: '/cart/payment/STORE/' + paymentOption.value,
                         type: "POST",
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify(orderCombine),
                         success: function (response) {
-                            if(response!="success"){
+                            if (response != "success") {
                                 window.location.href = "/sign-in-up"
                             }
                             localStorage.removeItem('cart');
+                            localStorage.removeItem('storeValid');
+                            window.location.reload();
                         }
                     });
                 }
-            } else console.log(1);
+            }
+
+        }// End ReceiveStore
+        else {
+            var city = document.getElementById('city');
+            var district = document.getElementById('district');
+            var ward = document.getElementById('district');
+            var detail = document.getElementById('addressDetail').value;
+
+            var valueCity = city.options[city.selectedIndex].textContent;
+            var valueDistrict = district.options[district.selectedIndex].textContent;
+            var valueWard = ward.options[ward.selectedIndex].textContent;
+
+            var address="";
+            if (detail != "")
+                address += detail + ", "
+            if (ward != "")
+                address += valueWard + ", "
+            if (district != "")
+                address += valueDistrict + ", "
+            if (city != "")
+                address += valueCity;
+            var orders = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                address: address
+            }
+            var storeValid = null;
+            if(localStorage.getItem('storeValid')!==null)
+                storeValid = JSON.parse(localStorage.getItem('storeValid'));
+            console.log("store",store === null ? [] : store);
+            orderCombine = {
+                orders: orders,
+                carts: JSON.parse(cart),
+                storeValid: storeValid !== null ? storeValid : []
+            }
+            console.log(orderCombine);
+            $.ajax({
+                url: '/cart/payment/DELIVERY/' + paymentOption.value,
+                type: "POST",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(orderCombine),
+                success: function (response) {
+                    if (response != "success") {
+                        window.location.href = "/sign-in-up"
+                    }
+                    localStorage.removeItem('cart');
+                    localStorage.removeItem('storeValid');
+                    window.location.reload();
+                }
+            });
         }
+    }
+</script>
+<script>
+    function getDistance(origin,destination){
+        $.ajax({
+            url: '/getDistances/'+origin+'/'+destination,
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (error){
+                console.log(error);
+            }
+        });
+    }
+    // getDistance('Hồ Chí Minh','Hà Nội');
+</script>
+
+<%--Xử lý sự kiện khi trang load xong--%>
+<script>
+    showCart();
+    if (localStorage.getItem('cart') !== null) {
+        window.addEventListener('load', function () {
+
+            localStorage.removeItem("storeValid");
+            // Sự kiện click được gắn vào thẻ ul để theo dõi các thẻ li
+            document.getElementById('ul-address').addEventListener('click', function (event) {
+                // Kiểm tra xem phần tử được nhấp có phải là thẻ li không
+                const closestLi = event.target.closest('li');
+                if (closestLi) {
+                    // Tìm thẻ input radio trong thẻ li tương ứng
+                    const radioInput = closestLi.querySelector('input[type="radio"]');
+                    if (radioInput) {
+                        // Gọi trực tiếp sự kiện click cho radioInput
+                        radioInput.click();
+                    }
+                }
+            });
+
+            // Sự kiện click được gắn vào thẻ ul để theo dõi các thẻ li
+            document.getElementById('ul-payment').addEventListener('click', function (event) {
+                // Kiểm tra xem phần tử được nhấp có phải là thẻ li không
+                const closestLi = event.target.closest('li');
+                if (closestLi) {
+                    // Tìm thẻ input radio trong thẻ li tương ứng
+                    const radioInput = closestLi.querySelector('input[type="radio"]');
+                    if (radioInput) {
+                        // Gọi trực tiếp sự kiện click cho radioInput
+                        radioInput.click();
+                    }
+                }
+            });
+        });
     }
 </script>
 </body>

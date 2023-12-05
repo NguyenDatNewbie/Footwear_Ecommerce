@@ -5,12 +5,14 @@ import com.reidshop.Model.Entity.Account;
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Entity.Store;
 import com.reidshop.Model.Enum.OrderStatus;
-import com.reidshop.Model.Enum.TypeReceive;
+import com.reidshop.Model.Enum.PaymentType;
+import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Model.Request.OrderCombineRequest;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
+import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
-import com.reidshop.Service.IReceiveService;
+import com.reidshop.Service.IProductOutOfStockService;
 import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,10 @@ public class OrdersServiceImpl implements IOrdersService {
     AccountRepository accountRepository;
 
     @Autowired
-    IReceiveService receiveService;
+    IProductOutOfStockService productOutOfStockService;
+
+    @Autowired
+    IOrderItemService orderItemService;
 
 
     public OrdersServiceImpl(OrdersRepository ordersRepository) {
@@ -122,22 +127,42 @@ public class OrdersServiceImpl implements IOrdersService {
         return ordersRepository.findOrderIdsByWeek();
     }
 
-    public void savePaymentReceive(OrderCombineRequest orderCombineRequest, Long storeId, int type, HttpServletRequest request){
+    @Override
+    public void savePaymentReceive(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request){
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
 
         Orders orders = orderCombineRequest.getOrders();
         Account account = accountRepository.findByEmail(email).orElse(null);
-        Store store = new Store();
-        store.setId(storeId);
         orders.setAccount(account);
-        orders.setStore(store);
-        orders.setCreatedAt(Date.valueOf(LocalDate.now()));
-        orders.setTotalPrice(0);
-        orders.setStatus(OrderStatus.WAIT);
-        orders.setTypeReceive(TypeReceive.STORE);
+        Store store = new Store();
+        store.setId(orderCombineRequest.getStoreValid().get(0).getStore().getId());
+        // Nhận tại store hoặc sản phẩm hết hàng
+        if (receiveType==ReceiveType.STORE || orderCombineRequest.getStoreValid().get(0).getStatus()==0)
+        {
+            orders.setStore(store);
+            orders.setTotalPrice(0);
+            orders.setStatus(OrderStatus.WAIT);
+            orders.setReceiveType(receiveType);
+            orders.setPaymentType(paymentType);
+            orders.setCreatedAt(Date.valueOf(LocalDate.now()));
+            // Hết hàng status = 0 add 7 ngày còn hàng = 1
+            orders.setLimitReceiveAt(Date.valueOf(LocalDate.now().plusDays(orderCombineRequest.getStoreValid().get(0).getStatus()==1 ? 1 : 7)));
+            Orders complete = ordersRepository.save(orders);
+            productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
+        }
+        else{
+            orders.setStore(store);
+            orders.setTotalPrice(0);
+            orders.setStatus(OrderStatus.PREPARE);
+            orders.setReceiveType(ReceiveType.DELIVERY);
+            orders.setCreatedAt(Date.valueOf(LocalDate.now()));
+            Orders complete = ordersRepository.save(orders);
+            complete.setTotalPrice(orderItemService.save(orderCombineRequest,orders));
+            ordersRepository.save(complete);
+        }
 
-        Orders complete = ordersRepository.save(orders);
-        receiveService.save(orderCombineRequest.getCarts(),storeId,type,complete);
     }
+
+
 }

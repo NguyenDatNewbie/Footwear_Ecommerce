@@ -1,6 +1,8 @@
+
 (function ($) {
     "use strict";
-    
+
+
     new WOW().init();  
     /*---background image---*/
 	function dataBackgroundImage() {

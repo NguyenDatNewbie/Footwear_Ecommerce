@@ -1,6 +1,8 @@
 package com.reidshop.Service;
 
 
+import com.reidshop.Model.Enum.PaymentType;
+import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Model.Request.OrderCombineRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -18,16 +20,12 @@ public interface IOrdersService {
     double totalSalesOfThisYear();
     Long countOrdersOfMonth(int year, int month);
     Long countOrderByDate(Date date);
-
     List<Integer> findAllOrderToday();
     List<Integer> findAllOrderOfThisWeek();
     double totalPriceOfThisWeek();
-
     List<Integer> findAllOrderOfThisMonth();
-
     List<Double> listTotalPriceOfThisWeek();
     List<Object[]> findOrderIdsByWeek();
 
-
-    void savePaymentReceive(OrderCombineRequest orderCombineRequest, Long storeId, int type, HttpServletRequest request);
+    void savePaymentReceive(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request);
 }

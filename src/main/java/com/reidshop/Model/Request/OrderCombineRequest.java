@@ -9,4 +9,8 @@ import java.util.List;
 public class OrderCombineRequest {
     Orders orders;
     List<CartRequest> carts;
+    List<StoreValidRequest>  storeValid;
+    String city;
+    String district;
+    String ward;
 }

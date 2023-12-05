@@ -26,8 +26,4 @@ public class OrderItem {
 
     @Column
     double price;
-
-    @ManyToOne
-    @JoinColumn(name = "stock_id")
-    Stock stock;
 }
