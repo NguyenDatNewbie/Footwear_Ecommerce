@@ -1,14 +1,16 @@
 package com.reidshop.Controller.User;
 
+import com.reidshop.Model.Request.StoreValidRequest;
 import com.reidshop.Model.Response.DistanceResponse;
+import com.reidshop.Model.Response.StoreValidResponse;
+import com.reidshop.Service.Handle.DistanceService;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
@@ -23,7 +25,8 @@ import java.util.List;
 
 @RestController
 public class DistanceMatrixController {
-
+    @Autowired
+    DistanceService distanceService;
     @GetMapping("/getDistances/{origin}/{destination}")
     public ResponseEntity<String> getDistances(@PathVariable String origin,@PathVariable String destination) {
         final String apiKey = "AIzaSyAUic2ta4mUKXuPpbszvDGMy1D8FosuFm8"; // Thay YOUR_API_KEY bằng khóa API của bạn
@@ -54,5 +57,15 @@ public class DistanceMatrixController {
             message = "Đã xảy ra lỗi khi tìm khoảng cách từ " + origin + " đến " + destination + ": " + e.getMessage();
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(message);
         }
+    }
+
+    @PostMapping("/getCostShip/{ward}/{district}/{city}")
+    public ResponseEntity<Double> getCost(@RequestBody List<StoreValidRequest> storeValidRequests, @PathVariable String city,
+                                          @PathVariable String district,@PathVariable String ward) {
+        if(ward=="" || ward==null){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body((double)0);
+        }
+        double cost = distanceService.calCostShip(storeValidRequests,city,district,ward);
+        return ResponseEntity.status(HttpStatus.OK).body(cost);
     }
 }

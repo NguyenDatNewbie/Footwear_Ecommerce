@@ -10,6 +10,7 @@ import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Model.Request.OrderCombineRequest;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
+import com.reidshop.Service.Handle.DistanceService;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
 import com.reidshop.Service.IProductOutOfStockService;
@@ -38,7 +39,8 @@ public class OrdersServiceImpl implements IOrdersService {
 
     @Autowired
     IOrderItemService orderItemService;
-
+    @Autowired
+    DistanceService distanceService;
 
     public OrdersServiceImpl(OrdersRepository ordersRepository) {
         this.ordersRepository = ordersRepository;
@@ -145,6 +147,11 @@ public class OrdersServiceImpl implements IOrdersService {
             orders.setStatus(OrderStatus.WAIT);
             orders.setReceiveType(receiveType);
             orders.setPaymentType(paymentType);
+            orders.setCostShip(0);
+            if(orderCombineRequest.getStoreValid().get(0).getStatus()==0){
+                double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
+                orders.setCostShip(cost);
+            }
             orders.setCreatedAt(Date.valueOf(LocalDate.now()));
             // Hết hàng status = 0 add 7 ngày còn hàng = 1
             orders.setLimitReceiveAt(Date.valueOf(LocalDate.now().plusDays(orderCombineRequest.getStoreValid().get(0).getStatus()==1 ? 1 : 7)));
@@ -157,6 +164,8 @@ public class OrdersServiceImpl implements IOrdersService {
             orders.setStatus(OrderStatus.PREPARE);
             orders.setReceiveType(ReceiveType.DELIVERY);
             orders.setCreatedAt(Date.valueOf(LocalDate.now()));
+            double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
+            orders.setCostShip(cost);
             Orders complete = ordersRepository.save(orders);
             complete.setTotalPrice(orderItemService.save(orderCombineRequest,orders));
             ordersRepository.save(complete);

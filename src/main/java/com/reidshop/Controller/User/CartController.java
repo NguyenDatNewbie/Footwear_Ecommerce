@@ -1,5 +1,7 @@
 package com.reidshop.Controller.User;
 
+import com.reidshop.Model.Cookie.CookieHandle;
+import com.reidshop.Model.Entity.Account;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Model.Request.CartRequest;
@@ -11,6 +13,7 @@ import com.reidshop.Service.Handle.DistanceService;
 import com.reidshop.Service.ICartService;
 import com.reidshop.Service.IOrdersService;
 import com.reidshop.Service.IStoreService;
+import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -41,6 +44,11 @@ public class CartController {
     IOrdersService ordersService;
     @Autowired
     DistanceService distanceService;
+    @Autowired
+    JwtService jwtService;
+    @Autowired
+    AccountRepository accountRepository;
+
     Locale locale = new Locale("vi","VN");
 
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
@@ -69,6 +77,13 @@ public class CartController {
     @PostMapping("/payment/{receiveType}/{payment}")
     @ResponseBody
     ResponseEntity<?> payment(@RequestBody OrderCombineRequest orderCombineRequest, HttpServletRequest request,@PathVariable ReceiveType receiveType,@PathVariable PaymentType payment){
+
+        String token = CookieHandle.getCookieValue(request, "token");
+        String email = jwtService.extractUsername(token);
+        Account account = accountRepository.findByEmail(email).orElse(null);
+        if(account==null)
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("failed");
+
         if(receiveType==ReceiveType.DELIVERY) {
             List<StoreValidRequest> storeValidRequests = new ArrayList<>();
             if(storeValidRequests.size()>0)

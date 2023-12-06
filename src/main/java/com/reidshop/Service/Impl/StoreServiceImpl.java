@@ -53,7 +53,6 @@ public class StoreServiceImpl implements IStoreService {
         List<Store> stores = storeRepository.searchAllByDepartment(search);
         List<StoreValidResponse> storeValid = new ArrayList<>();
         List<StoreValidResponse> indexValid;
-
         for (int index = 0; index < requestList.size(); index++) {
             CartRequest cart = requestList.get(index);
             indexValid = new ArrayList<>();
@@ -81,6 +80,7 @@ public class StoreServiceImpl implements IStoreService {
                 }
             }
             storeValid = indexValid;
+
         }
         if(receiveType==ReceiveType.STORE)
             return showAllStore(storeValid, stores);
@@ -97,7 +97,7 @@ public class StoreServiceImpl implements IStoreService {
                 if(city!=null && !city.isEmpty())
                     return findAllStoreIsStock(requestList,"","","",ReceiveType.DELIVERY);
             }
-            return storeValid; // Không tìm thấy store nào còn hàng
+            return storeValid; // Không tìm thấy store theo dia chi nào còn hàng
         }
     }
 
