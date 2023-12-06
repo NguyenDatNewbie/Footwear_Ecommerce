@@ -32,6 +32,9 @@ public class Orders {
     double totalPrice;
 
     @Column
+    double costShip;
+
+    @Column
     @Enumerated(EnumType.STRING)
     OrderStatus status;
 

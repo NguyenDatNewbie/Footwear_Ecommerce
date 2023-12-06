@@ -26,6 +26,16 @@
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
+        .cart_link a i span {
+            font-size: 12px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 13px;
+            /*font-family: "Times New Roman";*/
+        }
+
         .flex-2 {
             display: flex;
             align-items: center; /* Căn giữa theo chiều dọc */
@@ -186,86 +196,7 @@
         }
     </style>
 
-    <%--Popup--%>
-    <style>
-        .overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
 
-        .popup-container {
-            z-index: 99;
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            position: relative;
-        }
-
-        .close-icon {
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            font-size: 20px;
-            color: #555;
-        }
-
-        .popup-buttons {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px;
-        }
-
-        .popup-buttons button {
-            margin: 0 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        .yes-button {
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-        }
-
-        .no-button {
-            background-color: #f44336;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-        }
-
-        .product_thumb {
-            position: unset;
-        }
-
-        .popup-container i {
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 16px;
-            color: #555;
-            padding: 5px;
-        }
-        .cart_link i{
-            font-size: 14px;
-        }
-        .cart_link i span{
-            font-size: 12px;
-        }
-    </style>
 </head>
 
 <body>
@@ -355,7 +286,7 @@
                                         </div>
                                     </div>
 
-
+                                    <div id="error-message" class="error-message"></div>
                                     <div class="tab-content" id="tab1">
                                         <div class="flex-2">
                                             <select class="form-select form-select-sm mb-3" id="city"
@@ -379,12 +310,15 @@
                                                    type="text" required>
                                         </div>
                                     </div>
+
+                                    <div id="radio-error-message" class="error-message"></div>
                                     <div class="tab-content" id="tab2">
                                         <div class="flex-2">
                                             <select class="form-select form-select-sm mb-3" id="city1"
                                                     aria-label=".form-select-sm" style="margin-right: 10px">
                                                 <option value="" selected>Chọn tỉnh thành</option>
                                             </select>
+
                                             <select class="form-select form-select-sm mb-3" id="district1"
                                                     aria-label=".form-select-sm">
                                                 <option value="" selected>Chọn quận huyện</option>
@@ -420,7 +354,7 @@
                                         <h4 style="font-size: 14px">Chọn phương thức thanh toán:</h4>
                                         <ul id="ul-payment">
                                             <li>
-                                                <input type="radio" name="payment" value="RECEIVE">
+                                                <input type="radio" name="payment" value="RECEIVE" checked>
                                                 <div>
                                                     <i class="fa-solid fa-money-bill"></i>
                                                     <span>Thanh toán tại cửa hàng</span>
@@ -469,42 +403,88 @@
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+<script>
+    function validateSelect() {
+        var selectCity = document.getElementById('city');
+        var selectDistrict = document.getElementById('district');
+        var selectWard = document.getElementById('ward');
+        let message = "";
+        let result = "";
+        if (selectCity.value === "")
+            message += "thành phố ";
+        if (selectDistrict.value === "")
+            message += "huyện ";
+        if (selectWard.value === "")
+            message += "xã ";
+        if (message !== "")
+            result = "Vui lòng chọn " + message;
+
+        return result;
+    }
+
+    function validateRadio() {
+        var radioButtons = document.getElementsByName("option");
+        var isChecked = false;
+
+        for (var i = 0; i < radioButtons.length; i++) {
+            if (radioButtons[i].checked) {
+                isChecked = true;
+                break;
+            }
+        }
+
+        var errorMessageElement = document.getElementById("radio-error-message");
+
+        if (!isChecked) {
+            errorMessageElement.textContent = "Vui lòng chọn cửa hàng muốn đến nhận";
+            return false;
+        }
+        return true;
+    }
+
+</script>
 <script type="module" defer>
     import PopupManager from 'https://cdn.jsdelivr.net/gh/jorgeabrahan/popup_library@67068b1/popup/Popup.js'
 
-    const btnClose = '<span class="material-symbols-outlined">close</span>';
+    const btnClose = '<i style="font-size: 22px;color: red;" class="fa-regular fa-circle-xmark"></i>';
     const ConfirmationPopup = new PopupManager({btnClose});
     var form = document.getElementById('form-cart');
 
-    if(localStorage.getItem('cart')!==null) {
+    if (localStorage.getItem('cart') !== null) {
         document.getElementById("form-cart").addEventListener("submit", function (event) {
             // Ngăn chặn hành động mặc định của sự kiện gửi
             event.preventDefault();
-
             const type = document.querySelector('.tab-content.active').id;
-            if (type === "tab1" && localStorage.getItem('storeValid') === null) {
-                ConfirmationPopup.display({
-                    title: 'Delete file',
-                    content: 'Are you sure you want to delete file?',
-                    buttons: {
-                        elements: [
-                            {
-                                text: 'Confirm',
-                                type: 'confirm',
-                                handler: function () {
-                                    handleConfirmClick();
-                                }
-                            },
-                            {
-                                text: 'Cancel',
-                                type: 'error',
-                                handler: () => ConfirmationPopup.close()
-                            }
-                        ]
-                    }
-                });
+            let validate = validateSelect();
+            if (type === "tab1" && validate !== "")
+                document.getElementById('error-message').textContent = validate;
+            else if (type === "tab2" && validateRadio() === false) {
             } else {
-                form.submit();
+                if (type === "tab1" && localStorage.getItem('storeValid') === null) {
+                    ConfirmationPopup.display({
+                        title: '<h4 style="color: blue;font-weight: 500; font-size: 1.4rem">Thông báo</h4>',
+                        content: '<span style="color: black;">Sản phẩm của cửa hàng chưa thể đáp ứng đủ số lượng yêu cầu.<br>Nếu quý khách đồng ý đợi chúng tôi một thời gian chúng tôi sẽ nhập đủ số lượng sản phẩm quý khách yêu cầu.<br> Nhân viên chúng tôi sẽ gọi điện tư vấn với quý khách.</span>',
+                        buttons: {
+                            elements: [
+                                {
+                                    text: 'Đồng ý',
+                                    type: 'confirm',
+                                    handler: function () {
+                                        handleConfirmClick();
+                                    }
+                                },
+                                {
+                                    text: 'Hủy',
+                                    type: 'error',
+                                    handler: () => ConfirmationPopup.close()
+                                }
+                            ]
+                        }
+
+                    });
+                } else {
+                    form.submit();
+                }
             }
         });
 
@@ -549,6 +529,46 @@
             loadEmpty();
         }
     }
+
+    function calCostShip() {
+        var city = document.getElementById('city');
+        var district = document.getElementById('district');
+        var ward = document.getElementById('ward');
+
+
+        var valueCity = city.options[city.selectedIndex].textContent;
+        var valueDistrict = district.options[district.selectedIndex].textContent;
+        var valueWard = ward.options[ward.selectedIndex].textContent;
+        if (city.value == "")
+            valueCity = "";
+        if (district.value == "")
+            valueDistrict = "";
+        if (ward.value == "")
+            valueWard = "";
+
+        return new Promise((resolve, reject) => {
+            var store = localStorage.getItem('storeValid');
+
+            if (ward.value === "" || ward.value === null) {
+                return resolve(0);
+            } else {
+                $.ajax({
+                    url: '/getCostShip/' + valueWard + '/' + valueDistrict + '/' + valueCity,
+                    type: "POST",
+                    contentType: "application/json; charset=utf-8",
+                    data: store !== null ? store : [],
+                    success: function (response) {
+                        return resolve(response);
+                    },
+                    error: function (error) {
+                        reject(error);
+                    }
+
+                });
+            }
+        });
+
+    }
 </script>
 <script>
     var citis = document.getElementById("city");
@@ -562,7 +582,7 @@
         responseType: "application/json",
     };
     var promise = axios(Parameter);
-    if(localStorage.getItem('cart')!==null) {
+    if (localStorage.getItem('cart') !== null) {
         promise.then(function (result) {
             renderCity(result.data);
         });
@@ -617,8 +637,7 @@
             localStorage.removeItem("storeValid");
         };
         ward.onchange = function () {
-            console.log(ward);
-            showOrder(10000);
+            document.getElementById('error-message').textContent = "";
             findStore();
         }
     }
@@ -629,6 +648,7 @@
         var receiveStore = document.getElementById('receive_store');
 
         if (tabId === "tab2") {
+            showOrder(0);
             receiveStore.classList.add("active");
             receiveStore.classList.remove("hidden");
             receiveDeli.classList.remove("active");
@@ -636,6 +656,9 @@
             document.getElementById('addressDetail').removeAttribute('required');
         }
         if (tabId === "tab1") {
+            calCostShip()
+                .then(cost => showOrder(cost))
+                .catch(error => console.log(error));
             receiveDeli.classList.add("active");
             receiveDeli.classList.remove("hidden");
             receiveStore.classList.remove("active");
@@ -799,8 +822,12 @@
             contentType: "application/json; charset=utf-8",
             data: data,
             success: function (response) {
-                if (response.length > 0)
+                if (response.length > 0) {
                     localStorage.setItem("storeValid", JSON.stringify(response));
+                    calCostShip()
+                        .then(cost => showOrder(cost))
+                        .catch(error => console.log(error));
+                }
             }
         });
     }
@@ -829,6 +856,8 @@
         var total_price = document.getElementById('total_cart');
         var total_last = document.getElementById('subtotal');
         let price = 0;
+        if (cost === null)
+            cost = 0;
 
         const formatter = new Intl.NumberFormat('vi-VN', {
             style: 'currency',
@@ -857,9 +886,9 @@
 
         total_price.appendChild(valTotal);
         var costHtml = document.getElementById("receive_deli");
-        var costHtml1 = document.getElementById("receive_store");
 
-        costHtml.textContent = formatter.format(cost);
+        if (cost != 0)
+            costHtml.textContent = formatter.format(cost);
         total_last.appendChild(valTotalLast);
     }
 
@@ -902,9 +931,11 @@
                             if (response != "success") {
                                 window.location.href = "/sign-in-up"
                             }
-                            localStorage.removeItem('cart');
-                            localStorage.removeItem('storeValid');
-                            window.location.reload();
+                            else {
+                                localStorage.removeItem('cart');
+                                localStorage.removeItem('storeValid');
+                                window.location.reload();
+                            }
                         }
                     });
                 }
@@ -921,12 +952,12 @@
             var valueDistrict = district.options[district.selectedIndex].textContent;
             var valueWard = ward.options[ward.selectedIndex].textContent;
 
-            var address="";
+            var address = "";
             if (detail != "")
                 address += detail + ", "
-            if (ward != "")
+            if (ward !== "")
                 address += valueWard + ", "
-            if (district != "")
+            if (district !== "")
                 address += valueDistrict + ", "
             if (city != "")
                 address += valueCity;
@@ -936,9 +967,8 @@
                 address: address
             }
             var storeValid = null;
-            if(localStorage.getItem('storeValid')!==null)
+            if (localStorage.getItem('storeValid') !== null)
                 storeValid = JSON.parse(localStorage.getItem('storeValid'));
-            console.log("store",store === null ? [] : store);
             orderCombine = {
                 orders: orders,
                 carts: JSON.parse(cart),
@@ -954,28 +984,31 @@
                     if (response != "success") {
                         window.location.href = "/sign-in-up"
                     }
-                    localStorage.removeItem('cart');
-                    localStorage.removeItem('storeValid');
-                    window.location.reload();
+                    else {
+                        localStorage.removeItem('cart');
+                        localStorage.removeItem('storeValid');
+                        window.location.reload();
+                    }
                 }
             });
         }
     }
 </script>
 <script>
-    function getDistance(origin,destination){
+    function getDistance(origin, destination) {
         $.ajax({
-            url: '/getDistances/'+origin+'/'+destination,
+            url: '/getDistances/' + origin + '/' + destination,
             type: "GET",
             contentType: "application/json; charset=utf-8",
             success: function (response) {
                 console.log(response);
             },
-            error: function (error){
+            error: function (error) {
                 console.log(error);
             }
         });
     }
+
     // getDistance('Hồ Chí Minh','Hà Nội');
 </script>
 
@@ -996,6 +1029,7 @@
                     if (radioInput) {
                         // Gọi trực tiếp sự kiện click cho radioInput
                         radioInput.click();
+                        showOrder(0);
                     }
                 }
             });

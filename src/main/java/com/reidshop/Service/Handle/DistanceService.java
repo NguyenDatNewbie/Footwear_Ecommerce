@@ -65,7 +65,32 @@ public class DistanceService {
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        System.out.println(distanceValue);
         return distanceValue;
+    }
+
+    public double calCostShip(List<StoreValidRequest> storeValidRequests,String city,String district, String ward){
+        String address = "";
+        if(city!=null && !city.isEmpty()) {
+            address = city;
+            if(district!=null && !district.isEmpty()) {
+                address = district + ", " + city;
+                if(ward!=null && !ward.isEmpty())
+                    address = ward+", " + district + ", " + city;
+            }
+        }
+        StoreValidRequest min = getStoreDistanceMin(storeValidRequests,address);
+        Long distance = getDistanceValue(min.getStore().getDepartment(),address);
+        if(distance==null)
+            distance= Long.valueOf(0);
+        if(distance<=2500){
+            return 25000;
+        }
+        if(distance<5000)
+            return 30000;
+        if(distance<10000)
+            return 35000;
+        if(distance<15000) // 30km
+            return 3*distance;
+        return 50000;
     }
 }
