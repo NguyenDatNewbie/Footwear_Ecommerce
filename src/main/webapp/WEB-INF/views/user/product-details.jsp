@@ -212,7 +212,7 @@
         }
 
         .success {
-            font-size: 14px;
+            font-size: 16px;
             background-color: #4CAF50;
             color: white;
             border-radius: 5px;
@@ -222,6 +222,7 @@
             top: 10px;
             right: 10px;
             z-index: 999;
+            font-family: "Emoji";
             animation: slideIn 0.5s, slideOut 0.5s 1.5s forwards;
         }
 

@@ -194,6 +194,54 @@
             font-family: auto;
             color: black;
         }
+
+        .hidden {
+            display: none;
+        }
+
+        .success {
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+            font-family: "Emoji";
+            animation: slideIn 0.5s, slideOut 0.5s 1.5s forwards;
+        }
+
+
+        .success i {
+            margin-right: 5px; /* Khoảng cách giữa biểu tượng và văn bản */
+        }
+
+        @keyframes slideIn {
+            from {
+                top: -50px;
+                opacity: 0;
+            }
+            to {
+                top: 10px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                top: 10px;
+                opacity: 1;
+            }
+            to {
+                top: -50px;
+                opacity: 0;
+            }
+        }
+
+        .popup-buttons{gap: 5.5rem;justify-content: center;}
     </style>
 
 
@@ -206,6 +254,9 @@
 <jsp:include page="header.jsp"/>
 <!-- Header Section End -->
 
+<div id="messageBox" class="hidden success">
+    <p id="messageContent"><i class="fas fa-check-circle"></i>Đặt hàng thành công</p>
+</div>
 
 <div id="content">
     <!--breadcrumbs area start-->
@@ -851,6 +902,16 @@
 
 </script>
 <script>
+    function showMessage(){
+        let messageBox = document.getElementById("messageBox");
+        messageBox.classList.remove("hidden");
+        setTimeout(function () {
+            messageBox.classList.add("hidden");
+            window.location.reload();
+        }, 2000);
+
+
+    }
     // Show Value Order
     function showOrder(cost) {
         var total_price = document.getElementById('total_cart');
@@ -934,8 +995,11 @@
                             else {
                                 localStorage.removeItem('cart');
                                 localStorage.removeItem('storeValid');
-                                window.location.reload();
+                                showMessage();
                             }
+                        },
+                        error: function (error){
+                            console.log("errorPay",error);
                         }
                     });
                 }
@@ -974,7 +1038,6 @@
                 carts: JSON.parse(cart),
                 storeValid: storeValid !== null ? storeValid : []
             }
-            console.log(orderCombine);
             $.ajax({
                 url: '/cart/payment/DELIVERY/' + paymentOption.value,
                 type: "POST",
@@ -987,8 +1050,11 @@
                     else {
                         localStorage.removeItem('cart');
                         localStorage.removeItem('storeValid');
-                        window.location.reload();
+                        showMessage();
                     }
+                },
+                error: function (error){
+                    console.log("errorPay",error);
                 }
             });
         }

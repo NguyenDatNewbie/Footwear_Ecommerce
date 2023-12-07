@@ -30,4 +30,6 @@ public class Inventory {
     @ManyToOne
     @JoinColumn(name = "stock_id")
     Stock stock;
+
+
 }

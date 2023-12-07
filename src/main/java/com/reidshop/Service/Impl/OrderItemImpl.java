@@ -33,6 +33,10 @@ public class OrderItemImpl implements IOrderItemService {
         orderItem.setPrice(price);
         orderItem.setQuantity(quantity);
         orderItemRepository.save(orderItem);
+
+        inventory.setQuantity(inventory.getQuantity()-quantity);
+        inventoryRepository.save(inventory);
+
     }
 
     @Override
@@ -47,6 +51,10 @@ public class OrderItemImpl implements IOrderItemService {
             orderItem.setPrice(product.getPrice()*(1-product.getPromotion()/100.0));
             orderItem.setQuantity(cartRequest.getQuantity());
             orderItemRepository.save(orderItem);
+
+            inventory.setQuantity(inventory.getQuantity()-cartRequest.getQuantity());
+            inventoryRepository.save(inventory);
+
             totalPrice += orderItem.getPrice()*orderItem.getQuantity();
         }
         return totalPrice;

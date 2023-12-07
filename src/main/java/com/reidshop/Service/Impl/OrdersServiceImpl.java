@@ -167,10 +167,10 @@ public class OrdersServiceImpl implements IOrdersService {
             double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
             orders.setCostShip(cost);
             Orders complete = ordersRepository.save(orders);
-            complete.setTotalPrice(orderItemService.save(orderCombineRequest,orders));
+            double totalPrice = orderItemService.save(orderCombineRequest,orders);
+            complete.setTotalPrice(totalPrice);
             ordersRepository.save(complete);
         }
-
     }
 
 

@@ -85,11 +85,11 @@ public class CartController {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("failed");
 
         if(receiveType==ReceiveType.DELIVERY) {
-            List<StoreValidRequest> storeValidRequests = new ArrayList<>();
+            List<StoreValidRequest> storeValidRequests = orderCombineRequest.getStoreValid();
             if(storeValidRequests.size()>0)
-                storeValidRequests.add(distanceService.getStoreDistanceMin(storeValidRequests,orderCombineRequest.getOrders().getAddress()));
+                storeValidRequests.add(distanceService.getStoreDistanceMin(storeValidRequests,orderCombineRequest.getOrders().getAddress(),1));
             else
-                storeValidRequests.add(distanceService.getStoreDistanceMin(storeService.findAll(),orderCombineRequest.getOrders().getAddress()));
+                storeValidRequests.add(distanceService.getStoreDistanceMin(storeService.findAll(),orderCombineRequest.getOrders().getAddress(),1));
 
             orderCombineRequest.setStoreValid(storeValidRequests);
         }

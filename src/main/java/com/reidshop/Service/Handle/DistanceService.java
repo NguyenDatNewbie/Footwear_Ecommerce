@@ -20,10 +20,13 @@ public class DistanceService {
     @Autowired
     IStoreService storeService;
     
-    public StoreValidRequest getStoreDistanceMin(List<StoreValidRequest> stores, String origin){
+    public StoreValidRequest getStoreDistanceMin(List<StoreValidRequest> stores, String origin,int status){
         StoreValidRequest min = stores.get(0)!=null ? stores.get(0) : new StoreValidRequest();
         for(int i =1;i<stores.size();i++)
         {
+            if(stores.get(i).getStatus()!=status)
+                continue;
+
             Long storeMin = getDistanceValue(origin, min.getStore().getDepartment());
             Long storeI = getDistanceValue(origin,stores.get(i).getStore().getDepartment());
             if(storeI==null)
@@ -32,11 +35,14 @@ public class DistanceService {
                 min=stores.get(i);
                 continue;
             }
-            if(storeMin>storeI)
-            {
+
+            if(storeMin>storeI && min.getStatus()==0)
                 min = stores.get(i);
-            }
+            else if(min.getStatus()==0 && stores.get(i).getStatus()==1)
+                min = stores.get(i);
         }
+        if(min.getStatus()!=1 && status==1)
+            return getStoreDistanceMin(stores,origin,0);
         return min;
     }
     
@@ -78,7 +84,7 @@ public class DistanceService {
                     address = ward+", " + district + ", " + city;
             }
         }
-        StoreValidRequest min = getStoreDistanceMin(storeValidRequests,address);
+        StoreValidRequest min = getStoreDistanceMin(storeValidRequests,address,1);
         Long distance = getDistanceValue(min.getStore().getDepartment(),address);
         if(distance==null)
             distance= Long.valueOf(0);
