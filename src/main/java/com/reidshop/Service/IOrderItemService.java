@@ -2,6 +2,7 @@ package com.reidshop.Service;
 
 import com.reidshop.Model.Entity.Inventory;
 import com.reidshop.Model.Entity.Orders;
+import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Request.OrderCombineRequest;
 
 public interface IOrderItemService {
@@ -10,4 +11,5 @@ public interface IOrderItemService {
     void save(Inventory inventory, int quantity, double price, Orders orders);
 
     double save(OrderCombineRequest item, Orders orders);
+
 }

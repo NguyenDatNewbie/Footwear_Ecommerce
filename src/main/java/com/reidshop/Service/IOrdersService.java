@@ -1,6 +1,7 @@
 package com.reidshop.Service;
 
 
+import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Model.Request.OrderCombineRequest;
@@ -28,4 +29,6 @@ public interface IOrdersService {
     List<Object[]> findOrderIdsByWeek();
 
     void savePaymentReceive(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request);
+
+    void UpdateOrderStatus(Long orderId, OrderStatus orderStatus);
 }
