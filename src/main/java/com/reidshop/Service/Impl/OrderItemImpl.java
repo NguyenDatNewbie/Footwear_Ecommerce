@@ -8,6 +8,7 @@ import com.reidshop.Model.Request.CartRequest;
 import com.reidshop.Model.Request.OrderCombineRequest;
 import com.reidshop.Reponsitory.InventoryRepository;
 import com.reidshop.Reponsitory.OrderItemRepository;
+import com.reidshop.Reponsitory.ProductRepository;
 import com.reidshop.Service.IOrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,8 @@ public class OrderItemImpl implements IOrderItemService {
     OrderItemRepository orderItemRepository;
     @Autowired
     InventoryRepository inventoryRepository;
-
+    @Autowired
+    ProductRepository productRepository;
     @Override
     public double totalPriceOriginalOrders(int orderId) {
         return orderItemRepository.totalPriceOriginalOrders(orderId);
@@ -34,9 +36,12 @@ public class OrderItemImpl implements IOrderItemService {
         orderItem.setQuantity(quantity);
         orderItemRepository.save(orderItem);
 
+
         inventory.setQuantity(inventory.getQuantity()-quantity);
         inventoryRepository.save(inventory);
-
+        Product product = inventory.getSize().getProduct();
+        product.setSold(product.getSold()+quantity);
+        productRepository.save(product);
     }
 
     @Override
@@ -54,6 +59,8 @@ public class OrderItemImpl implements IOrderItemService {
 
             inventory.setQuantity(inventory.getQuantity()-cartRequest.getQuantity());
             inventoryRepository.save(inventory);
+            product.setSold(product.getSold()+cartRequest.getQuantity());
+            productRepository.save(product);
 
             totalPrice += orderItem.getPrice()*orderItem.getQuantity();
         }
