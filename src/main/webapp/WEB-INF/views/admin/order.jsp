@@ -74,39 +74,76 @@
                   <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Phone Number</th>
+                    <th scope="col">Name</th>
                     <th scope="col">Address</th>
                     <th scope="col">Total Price</th>
-                    <th scope="col">Account Name</th>
                     <th scope="col">Store</th>
                     <th scope="col">Creation Time</th>
-                    <th scope="col">Last Update Time</th>
+<%--                    <th scope="col">Payment Type</th>--%>
+                    <th scope="col">Receive Type</th>
                     <th scope="col">Status</th>
                     <th scope="col">Action</th>
                   </tr>
                   </thead>
                   <tbody>
-                    <c:forEach items="${ordersRepository.findAll()}" var="order">
+                    <c:forEach items="${orders}" var="order">
                       <tr>
                         <th scope="row">${order.id}</th>
                         <td>${order.phone}</td>
+                        <td>${order.name}</td>
                         <td>${order.address}</td>
-                        <td>${order.totalPrice}</td>
-                        <td>${order.account.accountDetail.name}</td>
+                        <td>${formatVND.format(order.totalPrice)}</td>
                         <td>${order.store.department}</td>
                         <td>${order.createdAt}</td>
-                        <td>${order.updatedAt}</td>
+<%--                        <td>--%>
+<%--                          <c:choose>--%>
+<%--                            <c:when test="${order.paymentType == 'RECEIVE'}">--%>
+<%--                              <span class="badge text-success">${order.paymentType}</span>--%>
+<%--                            </c:when>--%>
+<%--                            <c:when test="${order.paymentType == 'MOMO'}">--%>
+<%--                              <span class="badge text-danger">${order.paymentType}</span>--%>
+<%--                            </c:when>--%>
+<%--                            <c:when test="${order.paymentType == 'PAYPAL'}">--%>
+<%--                              <span class="badge text-info">${order.paymentType}</span>--%>
+<%--                            </c:when>--%>
+<%--                          </c:choose>--%>
+<%--                        </td>--%>
                         <td>
                           <c:choose>
-                            <c:when test="${order.status == 'PREPARE'}">
-                              <span class="badge bg-danger">${order.status}</span>
+                            <c:when test="${order.receiveType == 'DELIVERY'}">
+                              <span class="badge bg-info">${order.receiveType}</span>
                             </c:when>
-                            <c:when test="${order.status == 'DELIVERY'}">
-                              <span class="badge bg-success">${order.status}</span>
-                            </c:when>
-                            <c:when test="${order.status == 'COMPLETE'}">
-                              <span class="badge bg-info">${order.status}</span>
+                            <c:when test="${order.receiveType == 'STORE'}">
+                              <span class="badge bg-light text-dark">${order.receiveType}</span>
                             </c:when>
                           </c:choose>
+                        </td>
+                        <td>
+                          <c:choose>
+                            <c:when test="${order.status == 'WAIT'}">
+                              <span class="badge bg-secondary">${order.status}</span>
+                            </c:when>
+                            <c:when test="${order.status == 'PREPARE'}">
+                              <span class="badge bg-warning">${order.status}</span>
+                            </c:when>
+                            <c:when test="${order.status == 'ALREADY'}">
+                              <span class="badge bg-primary">${order.status}</span>
+                            </c:when>
+                            <c:when test="${order.status == 'DELIVERY'}">
+                              <span class="badge bg-info">${order.status}</span>
+                            </c:when>
+                            <c:when test="${order.status == 'COMPLETE'}">
+                              <span class="badge bg-success">${order.status}</span>
+                            </c:when>
+                            <c:when test="${order.status == 'CANCEL'}">
+                              <span class="badge bg-danger">${order.status}</span>
+                            </c:when>
+                          </c:choose>
+                        </td>
+                        <td>
+                          <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                          <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
+                          <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
                         </td>
                       </tr>
                     </c:forEach>

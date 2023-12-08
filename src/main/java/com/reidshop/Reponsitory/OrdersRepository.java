@@ -74,6 +74,8 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
 
 
     // User
-
+    //List order theo account_id
+    @Query("SELECT o FROM Orders o WHERE o.account.id = :accountId")
+    List<Orders> findAllOrderByAccountId(@Param("accountId") Long accountId);
 
 }

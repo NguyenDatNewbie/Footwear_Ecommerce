@@ -173,5 +173,12 @@ public class OrdersServiceImpl implements IOrdersService {
         }
     }
 
+    @Override
+    public void UpdateOrderStatus(Long orderId, OrderStatus newStatus) {
+        Orders order = ordersRepository.findById(orderId).orElseThrow();
+        order.setStatus(newStatus);
+        ordersRepository.save(order);
+    }
+
 
 }
