@@ -22,7 +22,6 @@ public class EvaluateServiceImpl implements IEvaluateServiceImpl {
             sum += evaluateList.get(i).getRate();
         }
         double avg = (double) sum/size;
-        System.out.println(avg);
 
         double impair = avg - (int)avg;
         if(impair>0.5){
@@ -34,7 +33,6 @@ public class EvaluateServiceImpl implements IEvaluateServiceImpl {
         else {
             avg = 0;
         }
-        System.out.println(avg);
         return avg;
     }
 

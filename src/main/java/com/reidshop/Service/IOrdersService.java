@@ -28,7 +28,7 @@ public interface IOrdersService {
     List<Double> listTotalPriceOfThisWeek();
     List<Object[]> findOrderIdsByWeek();
 
-    void savePaymentReceive(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request);
+    void savePayment(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request);
 
     void UpdateOrderStatus(Long orderId, OrderStatus orderStatus);
 }

@@ -130,7 +130,7 @@ public class OrdersServiceImpl implements IOrdersService {
     }
 
     @Override
-    public void savePaymentReceive(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request){
+    public void savePayment(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request){
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
 

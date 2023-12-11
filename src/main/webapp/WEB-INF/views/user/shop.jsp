@@ -10,6 +10,8 @@
     <title>Shop</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="../../assets/img/favicon.ico">
 
@@ -394,7 +396,9 @@
 
         if(thisPage != 1){
             let prev = document.createElement('li');
-            prev.innerText = '<<';
+            let icon = document.createElement('i');
+            icon.classList.add('fas','fa-angle-double-left');
+            prev.appendChild(icon);
             prev.setAttribute('onclick', "changePage(" + (thisPage - 1) + ")");
             document.querySelector('.listPage').appendChild(prev);
         }
@@ -411,7 +415,9 @@
 
         if(thisPage != count){
             let next = document.createElement('li');
-            next.innerText = '>>';
+            let icon = document.createElement('i');
+            icon.classList.add('fas','fa-angle-double-right');
+            next.appendChild(icon);
             next.setAttribute('onclick', "changePage(" + (thisPage + 1) + ")");
             document.querySelector('.listPage').appendChild(next);
         }

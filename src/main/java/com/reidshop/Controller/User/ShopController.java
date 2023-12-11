@@ -59,6 +59,26 @@ public class ShopController {
         return "user/shop";
     }
 
+    @GetMapping("")
+    String get(ModelMap modelMap){
+        products = productRepository.findAll();
+        productsSelect = productService.selectTop(products,0,12);
+//        Category category = categoryRepository.findCategoriesById(brandId);
+//        List<Category> categories = categoryService.familyCategoryByChildren(category);
+        modelMap.addAttribute("formatVND",formatVND);
+
+//        modelMap.addAttribute("currentCategory",category);
+//        modelMap.addAttribute("categories",categories);
+        modelMap.addAttribute("categoryService",categoryService);
+        modelMap.addAttribute("categoryRepository",categoryRepository);
+
+        modelMap.addAttribute("products",productsSelect);
+        modelMap.addAttribute("productRepository",productRepository);
+
+        modelMap.addAttribute("sizes",productService.sizeProduct(products));
+        return "user/shop";
+    }
+
     @GetMapping({"/{categoryId}/sort/{option}"})
     ResponseEntity<List<Product>> getAllSort(@PathVariable Long categoryId,@PathVariable int option){
         if(option == 1) {
