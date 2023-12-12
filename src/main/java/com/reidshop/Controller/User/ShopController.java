@@ -7,6 +7,7 @@ import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.ProductRepository;
 import com.reidshop.Service.ICategoryService;
 import com.reidshop.Service.IProductService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,74 +36,70 @@ public class ShopController {
     @Autowired
     ICategoryService categoryService;
     Locale locale = new Locale("vi","VN");
-    List<Product> products = new ArrayList<>();
+//    List<Product> products = new ArrayList<>();
     List<Product> productsSelect = new ArrayList<>();
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
 
 
-    @GetMapping("/{brandId}")
-    String Brand(ModelMap modelMap,@PathVariable Long brandId){
-        products = productRepository.findAllByCategory(brandId);
-        productsSelect = productService.selectTop(products,0,12);
-        Category category = categoryRepository.findCategoriesById(brandId);
-        List<Category> categories = categoryService.familyCategoryByChildren(category);
-        modelMap.addAttribute("formatVND",formatVND);
-
-        modelMap.addAttribute("currentCategory",category);
-        modelMap.addAttribute("categories",categories);
-        modelMap.addAttribute("categoryService",categoryService);
-        modelMap.addAttribute("categoryRepository",categoryRepository);
-
-        modelMap.addAttribute("products",productsSelect);
-        modelMap.addAttribute("productRepository",productRepository);
-
-        modelMap.addAttribute("sizes",productService.sizeProduct(products));
-        return "user/shop";
-    }
+//    @GetMapping("/{brandId}")
+//    String Brand(ModelMap modelMap,@PathVariable Long brandId){
+//        products = productRepository.findAllByCategory(brandId);
+//        Category category = categoryRepository.findCategoriesById(brandId);
+//        modelMap.addAttribute("formatVND",formatVND);
+//
+//        modelMap.addAttribute("currentCategory",category);
+//        modelMap.addAttribute("categoryService",categoryService);
+//        modelMap.addAttribute("categoryRepository",categoryRepository);
+//        modelMap.addAttribute("products",products);
+//        modelMap.addAttribute("productRepository",productRepository);
+//        return "user/shop";
+//    }
 
     @GetMapping("")
     String get(ModelMap modelMap){
-        products = productRepository.findAll();
-        productsSelect = productService.selectTop(products,0,12);
-//        Category category = categoryRepository.findCategoriesById(brandId);
-//        List<Category> categories = categoryService.familyCategoryByChildren(category);
+        List<Product> products = productRepository.findAll();
         modelMap.addAttribute("formatVND",formatVND);
-
-//        modelMap.addAttribute("currentCategory",category);
-//        modelMap.addAttribute("categories",categories);
         modelMap.addAttribute("categoryService",categoryService);
         modelMap.addAttribute("categoryRepository",categoryRepository);
-
-        modelMap.addAttribute("products",productsSelect);
+        modelMap.addAttribute("products",products);
         modelMap.addAttribute("productRepository",productRepository);
-
-        modelMap.addAttribute("sizes",productService.sizeProduct(products));
         return "user/shop";
     }
 
-    @GetMapping({"/{categoryId}/sort/{option}"})
-    ResponseEntity<List<Product>> getAllSort(@PathVariable Long categoryId,@PathVariable int option){
-        if(option == 1) {
-            products = productService.sortByProductSold(products);
+    @GetMapping({"/filter"})
+    @ResponseBody
+    ResponseEntity<List<Product>> filter(@RequestParam(value = "categoryId",defaultValue = "0") long categoryId,
+                                             @RequestParam(value = "sort",defaultValue = "0") int option,
+                                             @RequestParam(value = "sizes",required = false) List<String> sizes,
+                                             @RequestParam(value = "colors",required = false) List<String> colors,
+                                            @RequestParam("min") double min, @RequestParam("max") double max)
+    {
+        List<Product>  products = getNullableCoursesFiltered(categoryId,colors,sizes);
+        products = productService.filterRange(products,min,max);
+        if(option!=0) {
+            if (option == 1)
+                products = productService.sortByProductSold(products);
+            else if (option == 2)
+                products = productService.sortByPriceDESC(products);
+            else if (option == 3)
+                products = productService.sortByPriceASC(products);
+            else if (option == 4)
+                products = productService.sortByNameAToZ(products);
+            else
+                products = productService.sortByNameZtoA(products);
         }
-        else if(option==2)
-            products = productService.sortByPriceDESC(products);
-        else if(option==3)
-            products = productService.sortByPriceASC(products);
-        else if(option==4)
-            products = productService.sortByNameAToZ(products);
-        else
-            products = productService.sortByNameZtoA(products);
 
         return new ResponseEntity<>(products,HttpStatus.OK);
     }
 
-    @GetMapping({"/{categoryId}/filterPrice/{min}/{max}"})
-    ResponseEntity<List<Product>> filterPrice(@PathVariable Long categoryId,@PathVariable double min,@PathVariable double max){
-        products = productService.filterRange(categoryId,min,max);
-        return new ResponseEntity<>(products,HttpStatus.OK);
+    public List<Product> getNullableCoursesFiltered(Long categoryId,List<String> colors,List<String> sizes) {
+        if(colors == null) {
+            colors = Arrays.asList("DUMMYVALUE");
+        }
+        if(sizes == null) {
+            sizes = Arrays.asList("DUMMYVALUE");
+        }
+        return productRepository.getProductsByMulti(categoryId, colors, sizes);
     }
-
-
 
 }
