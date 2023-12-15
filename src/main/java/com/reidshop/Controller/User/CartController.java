@@ -15,6 +15,7 @@ import com.reidshop.Service.IOrdersService;
 import com.reidshop.Service.IStoreService;
 import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -23,9 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Controller
 @RequestMapping("/cart")
@@ -76,24 +75,36 @@ public class CartController {
 
     @PostMapping("/payment/{receiveType}/{payment}")
     @ResponseBody
-    ResponseEntity<?> payment(@RequestBody OrderCombineRequest orderCombineRequest, HttpServletRequest request,@PathVariable ReceiveType receiveType,@PathVariable PaymentType payment){
-
+    ResponseEntity<?> payment(@RequestBody OrderCombineRequest orderCombineRequest, HttpServletRequest request, @PathVariable ReceiveType receiveType, @PathVariable PaymentType payment, HttpSession session){
+        Map<String, String> responseData = new HashMap<>();
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(null);
-        if(account==null)
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("failed");
-
-        if(receiveType==ReceiveType.DELIVERY) {
+        if (receiveType == ReceiveType.DELIVERY) {
             List<StoreValidRequest> storeValidRequests = orderCombineRequest.getStoreValid();
-            if(storeValidRequests.size()>0)
-                storeValidRequests.add(distanceService.getStoreDistanceMin(storeValidRequests,orderCombineRequest.getOrders().getAddress(),1));
+            if (storeValidRequests.size() > 0)
+                storeValidRequests.add(distanceService.getStoreDistanceMin(storeValidRequests, orderCombineRequest.getOrders().getAddress(), 1));
             else
-                storeValidRequests.add(distanceService.getStoreDistanceMin(storeService.findAll(),orderCombineRequest.getOrders().getAddress(),1));
+                storeValidRequests.add(distanceService.getStoreDistanceMin(storeService.findAll(), orderCombineRequest.getOrders().getAddress(), 1));
 
             orderCombineRequest.setStoreValid(storeValidRequests);
         }
-        ordersService.savePaymentReceive(orderCombineRequest, receiveType,payment,request);
-        return ResponseEntity.status(HttpStatus.OK).body("success");
+
+        if(payment==PaymentType.RECEIVE) {
+            if (account == null)
+                return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("failed");
+            ordersService.savePayment(orderCombineRequest, receiveType, payment, request);
+            responseData.put("url", "/cart?message=success");
+            responseData.put("status", "success");
+        }
+        else if(payment==PaymentType.VNPAY){
+            // Luu do thong tin order vao session
+            session.setAttribute("orderCombine",orderCombineRequest);
+//            session.setMaxInactiveInterval(20); // 20 phut
+            OrderCombineRequest orderCombineRequest1 = (OrderCombineRequest) session.getAttribute("orderCombine");
+            responseData.put("url", "/payment/vnpay?receive="+receiveType+"&price=1200000");
+            responseData.put("status", "wait");
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(responseData);
     }
 }

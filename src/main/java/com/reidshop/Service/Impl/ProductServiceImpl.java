@@ -146,8 +146,7 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	@Override
-	public List<Product> filterRange(Long categoryId, double min, double max){
-		List<Product> products = productRepository.findAllByCategory(categoryId);
+	public List<Product> filterRange(List<Product> products, double min, double max){
 		List<Product> result = new ArrayList<>();
 		double price;
 		for(int i =0;i<products.size();i++){
@@ -157,7 +156,7 @@ public class ProductServiceImpl implements IProductService {
 				result.add(products.get(i));
 		}
 
-		return sortByPriceDESC(result);
+		return result;
 	}
 
 	@Override

@@ -214,7 +214,9 @@
             animation: slideIn 0.5s, slideOut 0.5s 1.5s forwards;
         }
 
-
+        #cart-sub h3{
+            letter-spacing: 2px;
+        }
         .success i {
             margin-right: 5px; /* Khoảng cách giữa biểu tượng và văn bản */
         }
@@ -248,7 +250,26 @@
 </head>
 
 <body>
-
+<script>
+    // Hàm để lấy giá trị của tham số từ URL
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+        var payment = getParameterByName('payment');
+        if(payment==="success"){
+            localStorage.removeItem('cart');
+            localStorage.removeItem('storeValid');
+            window.location.href="/cart?message=success";
+        }
+    });
+</script>
 
 <!-- Header Section Begin-->
 <jsp:include page="header.jsp"/>
@@ -407,15 +428,15 @@
                                             <li>
                                                 <input type="radio" name="payment" value="RECEIVE" checked>
                                                 <div>
-                                                    <i class="fa-solid fa-money-bill"></i>
+                                                    <i class="fa-solid fa-money-bill" style="width: 20px;font-size: 15px"></i>
                                                     <span>Thanh toán tại cửa hàng</span>
                                                 </div>
                                             </li>
                                             <li>
-                                                <input type="radio" name="payment" value="PAYPAL">
+                                                <input type="radio" name="payment" value="VNPAY">
                                                 <div>
-                                                    <i class="fa-sharp fa-regular fa-money-bill"></i>
-                                                    <span>Momo</span>
+                                                    <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" width="20px" height="20px">
+                                                    <span>Thanh toán bằng Vnpay</span>
                                                 </div>
                                             </li>
                                         </ul>
@@ -896,7 +917,10 @@
         let cart = JSON.parse(localStorage.getItem('cart'));
         let cellIndex = cell.parentNode.parentNode;
         cart.splice(cellIndex.rowIndex - 1, 1);
-        localStorage.setItem('cart', JSON.stringify(cart));
+        if(cart.length>0)
+            localStorage.setItem('cart', JSON.stringify(cart));
+        else
+            localStorage.removeItem('cart');
         showCart();
     }
 
@@ -907,10 +931,7 @@
         messageBox.classList.remove("hidden");
         setTimeout(function () {
             messageBox.classList.add("hidden");
-            window.location.reload();
         }, 2000);
-
-
     }
     // Show Value Order
     function showOrder(cost) {
@@ -982,6 +1003,7 @@
                         carts: JSON.parse(cart),
                         storeValid: storeValid
                     }
+                    console.log('/cart/payment/DELIVERY/' + paymentOption.value);
 
                     $.ajax({
                         url: '/cart/payment/STORE/' + paymentOption.value,
@@ -989,13 +1011,16 @@
                         contentType: "application/json; charset=utf-8",
                         data: JSON.stringify(orderCombine),
                         success: function (response) {
-                            if (response != "success") {
-                                window.location.href = "/sign-in-up"
+                            if (response.status == "wait") {
+                                window.location.href = response.url;
                             }
-                            else {
+                            else if(response.status=="success") {
                                 localStorage.removeItem('cart');
                                 localStorage.removeItem('storeValid');
-                                showMessage();
+                                window.location.href = response.url;
+                            }
+                            else {
+                                window.location.href = "/sign-in-up"
                             }
                         },
                         error: function (error){
@@ -1044,13 +1069,16 @@
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(orderCombine),
                 success: function (response) {
-                    if (response != "success") {
-                        window.location.href = "/sign-in-up"
+                    if (response.status == "wait") {
+                        window.location.href = response.url;
                     }
-                    else {
+                    else if(response.status=="success") {
                         localStorage.removeItem('cart');
                         localStorage.removeItem('storeValid');
-                        showMessage();
+                        window.location.href = response.url;
+                    }
+                    else {
+                        window.location.href = "/sign-in-up"
                     }
                 },
                 error: function (error){
@@ -1081,9 +1109,24 @@
 <%--Xử lý sự kiện khi trang load xong--%>
 <script>
     showCart();
+    function reloadData(name,phone,receiveType,paymentType){
+
+    }
+    window.addEventListener('load', function () {
+        var messageFromURL = getParameterByName('message');
+        if (messageFromURL === "success") {
+            showMessage();
+        }
+        var paymentURL = getParameterByName('payment');
+        if(paymentURL === "failed"){
+            var h3Element = document.getElementById('cart-sub').querySelector('h3');
+            h3Element.textContent = "Hóa đơn thanh toán không thành công";
+            h3Element.style.backgroundColor = " #BC3434";
+        }
+    });
+
     if (localStorage.getItem('cart') !== null) {
         window.addEventListener('load', function () {
-
             localStorage.removeItem("storeValid");
             // Sự kiện click được gắn vào thẻ ul để theo dõi các thẻ li
             document.getElementById('ul-address').addEventListener('click', function (event) {

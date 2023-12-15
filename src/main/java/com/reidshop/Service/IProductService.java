@@ -25,7 +25,7 @@ public interface IProductService {
 
 	List<Integer> sizeProduct(List<Product> products);
 
-    List<Product> filterRange(Long categoryId, double min, double max);
+    List<Product> filterRange(List<Product> products, double min, double max);
 
     List<Product> findNewProduct(int quantityProduct);
 
