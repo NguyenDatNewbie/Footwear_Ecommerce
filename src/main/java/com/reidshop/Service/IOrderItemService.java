@@ -12,4 +12,5 @@ public interface IOrderItemService {
 
     double save(OrderCombineRequest item, Orders orders);
 
+    double totalPriceOfOrderId(Long orderId);   //Tính total price của 1 order
 }

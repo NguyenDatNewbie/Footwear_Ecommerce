@@ -12,6 +12,8 @@ import com.reidshop.Service.IOrderItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderItemImpl implements IOrderItemService {
     @Autowired
@@ -23,6 +25,7 @@ public class OrderItemImpl implements IOrderItemService {
     public double totalPriceOriginalOrders(int orderId) {
         return orderItemRepository.totalPriceOriginalOrders(orderId);
     }
+
 
 
     @Override
@@ -58,6 +61,16 @@ public class OrderItemImpl implements IOrderItemService {
             totalPrice += orderItem.getPrice()*orderItem.getQuantity();
         }
         return totalPrice;
+    }
+
+    @Override
+    public double totalPriceOfOrderId(Long orderId) {
+        List<OrderItem> itemList = orderItemRepository.findAllItemByOrderId(orderId);
+        double priceOrder = 0;
+        for(OrderItem item : itemList){
+            priceOrder += (item.getPrice()*item.getQuantity());
+        }
+        return priceOrder;
     }
 
 }

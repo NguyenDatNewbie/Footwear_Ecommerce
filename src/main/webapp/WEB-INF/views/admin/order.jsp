@@ -53,102 +53,572 @@
           <div class="col-12">
             <div class="card recent-sales overflow-auto">
 
-              <div class="filter">
-                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                  <li class="dropdown-header text-start">
-                    <h6>Filter</h6>
-                  </li>
-
-                  <li><a class="dropdown-item" href="#">Today</a></li>
-                  <li><a class="dropdown-item" href="#">This Month</a></li>
-                  <li><a class="dropdown-item" href="#">This Year</a></li>
-                </ul>
-              </div>
-
               <div class="card-body">
-                <h5 class="card-title">Recent Sales <span>| Today</span></h5>
-
-                <table class="table table-borderless datatable">
-                  <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Phone Number</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Address</th>
-                    <th scope="col">Total Price</th>
-                    <th scope="col">Store</th>
-                    <th scope="col">Creation Time</th>
-<%--                    <th scope="col">Payment Type</th>--%>
-                    <th scope="col">Receive Type</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                    <c:forEach items="${orders}" var="order">
+                <h5 class="card-title">Management Orders <span>| Admin</span></h5>
+                <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
+                  <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100 active" id="all-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-all" type="button" role="tab" aria-controls="home" aria-selected="true">All Order</button>
+                  </li>
+                  <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100" id="wait-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-wait" type="button" role="tab" aria-controls="profile" aria-selected="false">WAIT</button>
+                  </li>
+                  <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100" id="prepare-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-prepare" type="button" role="tab" aria-controls="contact" aria-selected="false">PREPARE</button>
+                  </li>
+                  <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100" id="already-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-already" type="button" role="tab" aria-controls="contact" aria-selected="false">ALREADY</button>
+                  </li>
+                  <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100" id="delivery-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-delivery" type="button" role="tab" aria-controls="contact" aria-selected="false">DELIVERY</button>
+                  </li>
+                  <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100" id="complete-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-complete" type="button" role="tab" aria-controls="contact" aria-selected="false">COMPLETE</button>
+                  </li>
+                  <li class="nav-item flex-fill" role="presentation">
+                    <button class="nav-link w-100" id="cancel-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-cancel" type="button" role="tab" aria-controls="contact" aria-selected="false">CANCEL</button>
+                  </li>
+                </ul>
+                <div class="tab-content pt-2" id="borderedTabJustifiedContent">
+                  <div class="tab-pane fade show active" id="bordered-justified-all" role="tabpanel" aria-labelledby="all-tab">
+                    <table class="table table-borderless datatable">
+                      <thead>
                       <tr>
-                        <th scope="row">${order.id}</th>
-                        <td>${order.phone}</td>
-                        <td>${order.name}</td>
-                        <td>${order.address}</td>
-                        <td>${formatVND.format(order.totalPrice)}</td>
-                        <td>${order.store.department}</td>
-                        <td>${order.createdAt}</td>
-<%--                        <td>--%>
-<%--                          <c:choose>--%>
-<%--                            <c:when test="${order.paymentType == 'RECEIVE'}">--%>
-<%--                              <span class="badge text-success">${order.paymentType}</span>--%>
-<%--                            </c:when>--%>
-<%--                            <c:when test="${order.paymentType == 'MOMO'}">--%>
-<%--                              <span class="badge text-danger">${order.paymentType}</span>--%>
-<%--                            </c:when>--%>
-<%--                            <c:when test="${order.paymentType == 'PAYPAL'}">--%>
-<%--                              <span class="badge text-info">${order.paymentType}</span>--%>
-<%--                            </c:when>--%>
-<%--                          </c:choose>--%>
-<%--                        </td>--%>
-                        <td>
-                          <c:choose>
-                            <c:when test="${order.receiveType == 'DELIVERY'}">
-                              <span class="badge bg-info">${order.receiveType}</span>
-                            </c:when>
-                            <c:when test="${order.receiveType == 'STORE'}">
-                              <span class="badge bg-light text-dark">${order.receiveType}</span>
-                            </c:when>
-                          </c:choose>
-                        </td>
-                        <td>
-                          <c:choose>
-                            <c:when test="${order.status == 'WAIT'}">
-                              <span class="badge bg-secondary">${order.status}</span>
-                            </c:when>
-                            <c:when test="${order.status == 'PREPARE'}">
-                              <span class="badge bg-warning">${order.status}</span>
-                            </c:when>
-                            <c:when test="${order.status == 'ALREADY'}">
-                              <span class="badge bg-primary">${order.status}</span>
-                            </c:when>
-                            <c:when test="${order.status == 'DELIVERY'}">
-                              <span class="badge bg-info">${order.status}</span>
-                            </c:when>
-                            <c:when test="${order.status == 'COMPLETE'}">
-                              <span class="badge bg-success">${order.status}</span>
-                            </c:when>
-                            <c:when test="${order.status == 'CANCEL'}">
-                              <span class="badge bg-danger">${order.status}</span>
-                            </c:when>
-                          </c:choose>
-                        </td>
-                        <td>
-                          <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                          <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
-                          <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                        </td>
+                        <th scope="col">ID</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Store</th>
+                        <th scope="col">Creation Time</th>
+                        <th scope="col">Receive Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
                       </tr>
-                    </c:forEach>
-                  </tbody>
-                </table>
+                      </thead>
+                      <tbody>
+                      <c:forEach items="${orders}" var="order">
+                        <tr>
+                          <th scope="row">${order.id}</th>
+                          <td>${order.phone}</td>
+                          <td>${order.name}</td>
+                          <td>${order.address}</td>
+                          <td>${formatVND.format(order.totalPrice)}</td>
+                          <td>${order.store.department}</td>
+                          <td>${order.createdAt}</td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.receiveType == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.receiveType}</span>
+                              </c:when>
+                              <c:when test="${order.receiveType == 'STORE'}">
+                                <span class="badge bg-light text-dark">${order.receiveType}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'WAIT'}">
+                                <span class="badge bg-secondary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'PREPARE'}">
+                                <span class="badge bg-warning">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'ALREADY'}">
+                                <span class="badge bg-primary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'COMPLETE'}">
+                                <span class="badge bg-success">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <span class="badge bg-danger">${order.status}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:when>
+                              <c:otherwise>
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:otherwise>
+                            </c:choose>
+                          </td>
+                        </tr>
+                      </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="tab-pane fade" id="bordered-justified-wait" role="tabpanel" aria-labelledby="wait-tab">
+                    <table class="table table-borderless datatable">
+                      <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Store</th>
+                        <th scope="col">Creation Time</th>
+                        <th scope="col">Receive Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <c:forEach items="${ordersRepository.findAllOrderWait()}" var="order">
+                        <tr>
+                          <th scope="row">${order.id}</th>
+                          <td>${order.phone}</td>
+                          <td>${order.name}</td>
+                          <td>${order.address}</td>
+                          <td>${formatVND.format(order.totalPrice)}</td>
+                          <td>${order.store.department}</td>
+                          <td>${order.createdAt}</td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.receiveType == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.receiveType}</span>
+                              </c:when>
+                              <c:when test="${order.receiveType == 'STORE'}">
+                                <span class="badge bg-light text-dark">${order.receiveType}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'WAIT'}">
+                                <span class="badge bg-secondary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'PREPARE'}">
+                                <span class="badge bg-warning">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'ALREADY'}">
+                                <span class="badge bg-primary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'COMPLETE'}">
+                                <span class="badge bg-success">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <span class="badge bg-danger">${order.status}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:when>
+                              <c:otherwise>
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:otherwise>
+                            </c:choose>
+                          </td>
+                        </tr>
+                      </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="tab-pane fade" id="bordered-justified-prepare" role="tabpanel" aria-labelledby="prepare-tab">
+                    <table class="table table-borderless datatable">
+                      <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Store</th>
+                        <th scope="col">Creation Time</th>
+                        <th scope="col">Receive Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <c:forEach items="${ordersRepository.findAllOrderPrepare()}" var="order">
+                        <tr>
+                          <th scope="row">${order.id}</th>
+                          <td>${order.phone}</td>
+                          <td>${order.name}</td>
+                          <td>${order.address}</td>
+                          <td>${formatVND.format(order.totalPrice)}</td>
+                          <td>${order.store.department}</td>
+                          <td>${order.createdAt}</td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.receiveType == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.receiveType}</span>
+                              </c:when>
+                              <c:when test="${order.receiveType == 'STORE'}">
+                                <span class="badge bg-light text-dark">${order.receiveType}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'WAIT'}">
+                                <span class="badge bg-secondary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'PREPARE'}">
+                                <span class="badge bg-warning">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'ALREADY'}">
+                                <span class="badge bg-primary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'COMPLETE'}">
+                                <span class="badge bg-success">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <span class="badge bg-danger">${order.status}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:when>
+                              <c:otherwise>
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:otherwise>
+                            </c:choose>
+                          </td>
+                        </tr>
+                      </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="tab-pane fade" id="bordered-justified-already" role="tabpanel" aria-labelledby="already-tab">
+                    <table class="table table-borderless datatable">
+                      <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Store</th>
+                        <th scope="col">Creation Time</th>
+                        <th scope="col">Receive Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <c:forEach items="${ordersRepository.findAllOrderAlready()}" var="order">
+                        <tr>
+                          <th scope="row">${order.id}</th>
+                          <td>${order.phone}</td>
+                          <td>${order.name}</td>
+                          <td>${order.address}</td>
+                          <td>${formatVND.format(order.totalPrice)}</td>
+                          <td>${order.store.department}</td>
+                          <td>${order.createdAt}</td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.receiveType == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.receiveType}</span>
+                              </c:when>
+                              <c:when test="${order.receiveType == 'STORE'}">
+                                <span class="badge bg-light text-dark">${order.receiveType}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'WAIT'}">
+                                <span class="badge bg-secondary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'PREPARE'}">
+                                <span class="badge bg-warning">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'ALREADY'}">
+                                <span class="badge bg-primary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'COMPLETE'}">
+                                <span class="badge bg-success">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <span class="badge bg-danger">${order.status}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:when>
+                              <c:otherwise>
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:otherwise>
+                            </c:choose>
+                          </td>
+                        </tr>
+                      </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="tab-pane fade" id="bordered-justified-delivery" role="tabpanel" aria-labelledby="delivery-tab">
+                    <table class="table table-borderless datatable">
+                      <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Store</th>
+                        <th scope="col">Creation Time</th>
+                        <th scope="col">Receive Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <c:forEach items="${ordersRepository.findAllOrderDelivery()}" var="order">
+                        <tr>
+                          <th scope="row">${order.id}</th>
+                          <td>${order.phone}</td>
+                          <td>${order.name}</td>
+                          <td>${order.address}</td>
+                          <td>${formatVND.format(order.totalPrice)}</td>
+                          <td>${order.store.department}</td>
+                          <td>${order.createdAt}</td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.receiveType == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.receiveType}</span>
+                              </c:when>
+                              <c:when test="${order.receiveType == 'STORE'}">
+                                <span class="badge bg-light text-dark">${order.receiveType}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'WAIT'}">
+                                <span class="badge bg-secondary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'PREPARE'}">
+                                <span class="badge bg-warning">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'ALREADY'}">
+                                <span class="badge bg-primary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'COMPLETE'}">
+                                <span class="badge bg-success">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <span class="badge bg-danger">${order.status}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:when>
+                              <c:otherwise>
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:otherwise>
+                            </c:choose>
+                          </td>
+                        </tr>
+                      </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="tab-pane fade" id="bordered-justified-complete" role="tabpanel" aria-labelledby="complete-tab">
+                    <table class="table table-borderless datatable">
+                      <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Store</th>
+                        <th scope="col">Creation Time</th>
+                        <th scope="col">Receive Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <c:forEach items="${ordersRepository.findAllOrderComplete()}" var="order">
+                        <tr>
+                          <th scope="row">${order.id}</th>
+                          <td>${order.phone}</td>
+                          <td>${order.name}</td>
+                          <td>${order.address}</td>
+                          <td>${formatVND.format(order.totalPrice)}</td>
+                          <td>${order.store.department}</td>
+                          <td>${order.createdAt}</td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.receiveType == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.receiveType}</span>
+                              </c:when>
+                              <c:when test="${order.receiveType == 'STORE'}">
+                                <span class="badge bg-light text-dark">${order.receiveType}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'WAIT'}">
+                                <span class="badge bg-secondary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'PREPARE'}">
+                                <span class="badge bg-warning">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'ALREADY'}">
+                                <span class="badge bg-primary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'COMPLETE'}">
+                                <span class="badge bg-success">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <span class="badge bg-danger">${order.status}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:when>
+                              <c:otherwise>
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:otherwise>
+                            </c:choose>
+                          </td>
+                        </tr>
+                      </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                  <div class="tab-pane fade" id="bordered-justified-cancel" role="tabpanel" aria-labelledby="cancel-tab">
+                    <table class="table table-borderless datatable">
+                      <thead>
+                      <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Phone</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Store</th>
+                        <th scope="col">Creation Time</th>
+                        <th scope="col">Receive Type</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <c:forEach items="${ordersRepository.findAllOrderCancel()}" var="order">
+                        <tr>
+                          <th scope="row">${order.id}</th>
+                          <td>${order.phone}</td>
+                          <td>${order.name}</td>
+                          <td>${order.address}</td>
+                          <td>${formatVND.format(order.totalPrice)}</td>
+                          <td>${order.store.department}</td>
+                          <td>${order.createdAt}</td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.receiveType == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.receiveType}</span>
+                              </c:when>
+                              <c:when test="${order.receiveType == 'STORE'}">
+                                <span class="badge bg-light text-dark">${order.receiveType}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'WAIT'}">
+                                <span class="badge bg-secondary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'PREPARE'}">
+                                <span class="badge bg-warning">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'ALREADY'}">
+                                <span class="badge bg-primary">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'DELIVERY'}">
+                                <span class="badge bg-info">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'COMPLETE'}">
+                                <span class="badge bg-success">${order.status}</span>
+                              </c:when>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <span class="badge bg-danger">${order.status}</span>
+                              </c:when>
+                            </c:choose>
+                          </td>
+                          <td>
+                            <c:choose>
+                              <c:when test="${order.status == 'CANCEL'}">
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:when>
+                              <c:otherwise>
+                                <button type="button" onclick="window.location.href='/admin/account/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                <button type="button" onclick="window.location.href='/admin/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
+                                <button type="button" onclick="window.location.href='/admin/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
+                              </c:otherwise>
+                            </c:choose>
+                          </td>
+                        </tr>
+                      </c:forEach>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
 
               </div>
             </div>
