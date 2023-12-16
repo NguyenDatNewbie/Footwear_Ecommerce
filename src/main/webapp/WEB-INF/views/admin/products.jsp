@@ -33,7 +33,75 @@
 
   <!-- Template Main CSS File -->
   <link href="/admin/assets/css/style.css" rel="stylesheet">
+  <style>
+    /* The container */
+    .container-color {
+      display: block;
+      position: relative;
+      padding-left: 35px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      font-size: 22px;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
 
+    /* Hide the browser's default checkbox */
+    .container-color input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+
+    /* Create a custom checkbox */
+    .checkmark {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 25px;
+      width: 25px;
+      background-color: #eee;
+      border: 1px solid #000;
+    }
+
+
+    /* Create the checkmark/indicator (hidden when not checked) */
+    .checkmark:after {
+      content: "";
+      position: absolute;
+      display: none;
+    }
+
+    /* Show the checkmark when checked */
+    .container-color.active input:checked ~ .checkmark:after {
+      display: block;
+    }
+
+    /* Style the checkmark/indicator */
+    .container-color.active .checkmark:after {
+      left: 7px;
+      top: 1px;
+      width: 10px;
+      height: 17px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg);
+    }
+    .container-color p{
+      display: none;
+    }
+    .form-check{
+      padding-right: 10px;
+      font-size: 15px;
+    }
+
+  </style>
 </head>
 
 <body>
@@ -59,32 +127,120 @@
               <div class="card-body">
                 <h5 class="card-title">All Product <span>| </span></h5>
                 <!-- Basic Modal -->
-                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#basicModal">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">
                   New Product
                 </button>
-                <div class="modal fade" id="basicModal" tabindex="-1">
-                  <div class="modal-dialog modal-dialog-centered ">
+                <div class="modal fade" id="ExtralargeModal" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered modal-xl">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title">Add New Product</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <form class="row g-3" action="<c:url value="/admin/products/addNewProduct"/> " method="post">
+                        <form class="row g-3" action="<c:url value="/admin/products/addNewProduct"/> " method="post" enctype="multipart/form-data">
                           <div class="col-md-12">
+                            <span class="card-title" style="font-size: 1em; margin-left: 5px;">Product Name</span>
                             <input type="text" class="form-control" placeholder="Product Name" value="${product.name}" id="name" name="name">
                           </div>
-                          <div class="col-md-6">
-                            <input type="text" class="form-control" placeholder="Price" value="${product.price}" id="price" name="price">
+                          <div class="col-md-4">
+                            <div class="col-md-12">
+                              <span class="card-title" style="font-size: 1em; margin-left: 5px;">Price</span>
+                              <input type="text" class="form-control" placeholder="Price" value="${product.price}" id="price" name="price">
+                            </div>
                           </div>
-                          <div class="col-md-6">
+                          <div class="col-md-4">
+                            <span class="card-title" style="font-size: 1em; margin-left: 5px;">Promotion</span>
                             <input type="text" class="form-control" placeholder="Promotion" value="${product.promotion}" id="promotion" name="promotion">
                           </div>
-                          <div class="col-12">
-                            <input type="text" class="form-control" placeholder="Description" value="${product.description}" id="description" name="description">
+                          <div class="col-md-4">
+                            <span class="card-title" style="font-size: 1em; margin-left: 5px;">Category</span>
+                            <div class="mb-0">
+                              <select class="form-select" name="category">
+                                <c:forEach items="${categories}" var="category">
+                                  <option value="${category.id}" id="category_id">${category.name}</option>
+                                </c:forEach>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="col-md-6" style="margin-bottom: 10px">
+                            <div class="widget_list color" style="margin-left: 5px;">
+                              <span class="card-title" style="font-size: 1em;">Color</span>
+                              <div style="display: flex">
+                                <label class="container-color" data-value="White">
+                                  <input type="checkbox">
+                                  <span class="checkmark" style="background-color: #DEE9F2"></span>
+                                  <p>White</p>
+                                </label>
+                                <label class="container-color" data-value="Black">
+                                  <input type="checkbox">
+                                  <span class="checkmark" style="background-color: black"></span>
+                                  <p>Black</p>
+                                </label>
+                                <label class="container-color" data-value="Grey">
+                                  <input type="checkbox">
+                                  <span class="checkmark" style="background-color: #95ABBD"></span>
+                                  <p>Grey</p>
+                                </label>
+                                <label class="container-color" data-value="Green">
+                                  <input type="checkbox">
+                                  <span class="checkmark" style="background-color: green"></span>
+                                  <p>Green</p>
+                                </label>
+                                <label class="container-color" data-value="Red">
+                                  <input type="checkbox">
+                                  <span class="checkmark" style="background-color: red"></span>
+                                  <p>Red</p>
+                                </label>
+                                <label class="container-color" data-value="Orange">
+                                  <input type="checkbox">
+                                  <span class="checkmark" style="background-color: #F57B1B"></span>
+                                  <p>Orange</p>
+                                </label>
+                              </div>
+                            </div>
+                          </div>
+                          <input type="hidden" name="color" id="color" value="White">
+                          <div class="col-md-6" style="margin-bottom: 10px">
+                            <div class="widget_list color" style="margin-left: 5px;">
+                              <span class="card-title" style="font-size: 1em;">Size</span>
+                              <div style="display: flex">
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input sizeCheckbox" value="38">
+                                  <label class="form-check-label">38</label>
+                                </div>
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input sizeCheckbox" value="39">
+                                  <label class="form-check-label">39</label>
+                                </div>
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input sizeCheckbox" value="40">
+                                  <label class="form-check-label">40</label>
+                                </div>
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input sizeCheckbox" value="41">
+                                  <label class="form-check-label">41</label>
+                                </div>
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input sizeCheckbox" value="42">
+                                  <label class="form-check-label">42</label>
+                                </div>
+                                <div class="form-check">
+                                  <input type="checkbox" class="form-check-input sizeCheckbox" value="43">
+                                  <label class="form-check-label">43</label>
+                                </div>
+                                <input type="hidden" id="selectedSizesInput" name="selectedSizes" value="">
+                              </div>
+                            </div>
                           </div>
                           <div class="col-12">
-                            <input type="number" class="form-control" placeholder="Category ID" value="${product.category.id}" id="category_id" name="category" />
+                            <span class="card-title" style="font-size: 1em; margin-left: 5px;">Description</span>
+                            <textarea class="form-control" placeholder="Description" value="${product.description}" id="description" name="description" style="height: 100px;"></textarea>
+                          </div>
+                          <div class="col-12 upload-image">
+                            <span class="card-title" style="font-size: 1em; margin-left: 5px;">Images</span>
+                            <input type="file" id="image-file" name="image-file" multiple/>
+                            <img id="uploaded-image" />
                           </div>
                           <div class="text-center">
                             <button type="submit" class="btn btn-primary">Add</button>
@@ -153,7 +309,52 @@
 
 <!-- Template Main JS File -->
 <script src="/admin/assets/js/main.js"></script>
+<script>
+  //Màu
+  document.addEventListener("DOMContentLoaded", function () {
+    // Lắng nghe sự kiện click cho tất cả các phần tử có lớp "filter"
+    var filterButtons = document.querySelectorAll(".container-color");
+    filterButtons.forEach(function (button) {
+      button.addEventListener("click", function () {
+        if(button.parentElement.classList.contains('active'))
+          button.parentElement.classList.remove('active');
+        else{
+          button.parentElement.classList.add('active');
+          var color = button.getAttribute('data-value');
+          document.getElementById('color').value = color;
+          console.log("Color: ", color);
+        }
+      });
+    });
+  });
 
+  document.addEventListener("DOMContentLoaded", function () {
+    var sizeCheckboxes = document.querySelectorAll('.sizeCheckbox');
+    var selectedSizesInput = document.getElementById('selectedSizesInput');
+
+    // Thêm sự kiện 'change' cho mỗi checkbox lựa chọn
+    sizeCheckboxes.forEach(function (checkbox) {
+      checkbox.addEventListener('change', updateSelectedOptions);
+    });
+
+    function updateSelectedOptions() {
+      // Tạo một mảng để lưu trữ giá trị của các checkbox lựa chọn được chọn
+      var selectedOptionsArray = [];
+
+      // Kiểm tra trạng thái của từng checkbox lựa chọn và thêm giá trị vào mảng
+      sizeCheckboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+          selectedOptionsArray.push(checkbox.value);
+        }
+      });
+
+      // Hiển thị danh sách trong phần tử selectedOptions
+      selectedSizesInput.value = selectedOptionsArray.join(',');
+      console.log(selectedOptionsArray);
+    }
+
+  });
+</script>
 </body>
 
 </html>
