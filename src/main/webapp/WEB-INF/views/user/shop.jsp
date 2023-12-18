@@ -168,7 +168,9 @@
             color: #ff6a28;
             cursor: pointer;
         }
-        .brand-sidebar:hover > p > span, .brand-sidebar.active > p > span  {
+        .brand-sidebar:hover > p > span,
+        .brand-sidebar.active > p > span
+        {
             background: #ff6a28;
             color: #fff;
         }
@@ -200,6 +202,51 @@
         .widget_list {
             margin-bottom: 30px;
         }
+        .sidebar_widget > ul > li > p {
+            padding-bottom: 0;
+        }
+        .sidebar_widget ul li{
+            position: relative;
+        }
+        .sidebar_widget ul li ul input{
+            display: none;
+        }
+        .brand-sidebar p{
+            margin: 0px;
+        }
+        .sidebar_widget ul li{
+            margin-bottom: 10px;
+        }
+        .sidebar_widget ul li ul {
+            display:none;
+            position:absolute;
+            background:#fff;
+            z-index: 2;
+            left: 100%;
+            top: 0;
+            min-width: 200px;
+            font-weight: 500;
+            color: black;
+            box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+        }
+        .sidebar_widget ul li ul li{
+            padding: 8px;
+            margin: 0px;
+        }
+        .sidebar_widget ul li ul li:hover p{
+            cursor: pointer;
+            color: #ff6a28;
+        }
+
+        /*.sidebar_widget ul li ul li {*/
+        /*    width:100%;*/
+        /*    border-bottom:1px solid rgba(255,255,255,.3);*/
+        /*}*/
+
+        .sidebar_widget ul li:hover ul{
+            display:block;
+        }
+
     </style>
 </head>
 
@@ -232,18 +279,16 @@
                             <ul style="font-size: 14px" class="ul_menu">
                                 <c:forEach var="category" items="${categoryRepository.findAll()}">
                                     <li class="brand-sidebar">
-                                        <p>${category.name}<span>${productRepository.findAllByCategory(category.id).size()}</span><input value="${category.id}"></p>
-                                    </li>
+                                        <p title="${category.name}">${category.name}<span>${productRepository.findAllByCategoryAndIsParent(category.id).size()}</span><input value="${category.id}"></p>
                                         <c:if test="${categoryRepository.familyByParent(category.id).size()>0}">
-                                            <ul  class="ul_menu_children">
+                                            <ul class="ul_menu_children">
                                                 <c:forEach var="categoryChildren" items="${categoryRepository.familyByParent(category.id)}">
-                                                <li><a href="./${categoryChildren.id}"><span>${categoryChildren.name}</span></a>
+                                                    <li class="brand-sidebar"><p title="${categoryChildren.name}">${categoryChildren.name}</p><input value="${categoryChildren.id}"></li>
                                                     </c:forEach>
                                             </ul>
                                         </c:if>
                                     </li>
                                 </c:forEach>
-
                             </ul>
 
                         </div>
@@ -305,9 +350,7 @@
                     <!--shop wrapper start-->
                     <!--shop toolbar start-->
                     <div class="shop_title">
-                       <c:if test="${currentCategory.name!=null}">
-                           <h1>${currentCategory.name}</h1>
-                       </c:if>
+                           <h1></h1>
                     </div>
                     <div class="shop_toolbar_wrapper">
                         <div class="shop_toolbar_btn">
@@ -423,7 +466,7 @@
 ============================================ -->
 
 <!-- Plugins JS -->
-<script src="<c:url value="/user/assets/js/plugins.js"/>"></script>
+<script src="<c:url value="/assets/js/plugins.js"/>"></script>
 
 <!-- Main JS -->
 <script src="<c:url value="/assets/js/main.js"/> "></script>
@@ -510,21 +553,6 @@
 
 </script>
 <script type="text/javascript">
-    function Sort(type){
-        var option = type.value;
-        <%--var products = ${convertToJson(products)};--%>
-        // console.log(products);
-        $.ajax({
-            url: location.href+"/sort/"+option,
-            type: "Get",
-            contentType: "application/json; charset=utf-8",
-            // data: JSON.stringify(products),
-            success: function (data){
-                displayProduct(data);
-            }
-
-        });
-    }
 
     function getText(list){
         var result = ""
@@ -562,7 +590,7 @@
         if(colorQuery!="")
             query+="colors="+colorQuery;
         $.ajax({
-            url: location.href+"/filter",
+            url: "/shop/filter",
             type: "Get",
             contentType: "application/json; charset=utf-8",
             data: query,
@@ -683,6 +711,7 @@
                     box.classList.remove("active");
                 });
                 button.parentElement.classList.add('active');
+                document.querySelector('.shop_title h1').textContent = button.title;
                 filterAll();
 
             });
@@ -694,10 +723,11 @@
             boxes.forEach(function (box) {
                 if(box.querySelector(".checkmark")) {
                     box.querySelector('span').click();
-                    console.log(box);
                 }
                 else
                 box.classList.remove("active");
+
+                document.querySelector('.shop_title h1').textContent = "";
             });
             const VND = new Intl.NumberFormat('vi-VN', {
                 style: 'currency',

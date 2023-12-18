@@ -226,10 +226,26 @@
             animation: slideIn 0.5s, slideOut 0.5s 1.5s forwards;
         }
 
+        .warning {
+            font-size: 16px;
+            background-color: #FFD65F;
+            color: white;
+            border: 3px solid #FEC212;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+            font-family: "Emoji";
+            animation: slideIn 0.5s, slideOut 0.5s 1.5s forwards;
+        }
 
         .success i {
             margin-right: 5px; /* Khoảng cách giữa biểu tượng và văn bản */
         }
+
 
         @keyframes slideIn {
             from {
@@ -270,8 +286,9 @@
 <jsp:include page="header.jsp"/>
 
 <div id="messageBox" class="hidden success">
-    <p id="messageContent"><i class="fas fa-check-circle"></i>Thêm sản phẩm thành công</p>
+
 </div>
+
 <!--product details start-->
 <div class="product_details" style="margin-top: 20px">
     <div class="container">
@@ -360,7 +377,7 @@
                         <div class="product_variant quantity">
                             <div class="number">
                                 <span class="minus">-</span>
-                                <input id="number_text" type="text" value="1"/>
+                                <input id="number_text" type="text" value="1" readonly/>
                                 <span class="plus">+</span>
                             </div>
                             <button class="button" type="submit">add to cart</button>
@@ -860,24 +877,44 @@
         if (storage)
             cart = JSON.parse(storage);
         let quantity = parseInt(document.getElementById("number_text").value);
-        var size = document.querySelector('.box_size.active').textContent;
-
-        let item = cart.find(c => c.id == id && c.size == size)
-        if (item) {
-            item.quantity += quantity;
-        } else {
-            cart.push({id: id,size: size, quantity: quantity});
+        if(document.querySelector('.box_size.active')==null){
+            showMessageBox(1);
         }
-        localStorage.setItem('cart', JSON.stringify(cart));
+        else if(quantity > 0) {
+            var size = document.querySelector('.box_size.active').textContent;
+            let item = cart.find(c => c.id == id && c.size == size);
+            if (item) {
+                item.quantity += quantity;
+            } else {
+                cart.push({id: id, size: size, quantity: quantity});
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showMessageBox(0);
+        }
+
+        reloadCartLength();
+    }
+    function showMessageBox(type){
         let messageBox = document.getElementById("messageBox");
+        if(messageBox.classList.contains("warning"))
+            messageBox.classList.remove("warning")
+        if(messageBox.classList.contains("success"))
+            messageBox.classList.remove("success")
+        if(type==0){
+            messageBox.classList.add("success");
+            messageBox.innerHTML = '<p><i class="fas fa-check-circle" style="margin-right: 3px"></i> Thêm sản phẩm thành công</p>';
+        }
+        else {
+            messageBox.classList.add("warning");
+            messageBox.innerHTML = '<p><i class="fas fa-exclamation" style="margin-right: 3px"></i> Vui lòng chọn kích thước</p>';
+        }
+
         messageBox.classList.remove("hidden");
         setTimeout(function () {
             messageBox.classList.add("hidden");
         }, 2000);
 
-        reloadCartLength();
     }
-
     function changeSize(element) {
         // Loại bỏ lớp "active" từ tất cả các hộp
         var boxes = document.querySelectorAll(".box_size");

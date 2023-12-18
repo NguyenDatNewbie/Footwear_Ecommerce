@@ -48,24 +48,6 @@
             display: none;
         }
 
-        .error {
-            font-weight: bold;
-            height: 52px;
-            font-size: 14px;
-            background-color: #FED2D2;
-            color: red;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            border: 3px solid red;
-            padding: 15px;
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 999;
-            animation: slideIn 0.5s, slideOut 0.5s 1.5s forwards;
-        }
-
-
         .error i {
             margin-right: 12px; /* Khoảng cách giữa biểu tượng và văn bản */
         }
@@ -88,11 +70,57 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        @keyframes slideIn {
+            from {
+                top: -50px;
+                opacity: 0;
+            }
+            to {
+                top: 10px;
+                opacity: 1;
+            }
+        }
 
+        @keyframes slideOut {
+            from {
+                top: 10px;
+                opacity: 1;
+            }
+            to {
+                top: -50px;
+                opacity: 0;
+            }
+        }
+        .warning {
+            font-size: 16px;
+            background-color: #FEF6DF;
+            color: #F4D110;
+            border: 3px solid #FED253;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+            font-family: "Emoji";
+            animation: slideIn 0.5s, slideOut 0.5s 1.5s forwards;
+        }
+        .hidden {
+            display: none;
+        }
+        #messageBox p{
+            margin: 0;
+        }
     </style>
 </head>
 
 <body>
+<div id="messageBox" class="hidden warning">
+    <p><i class="fas fa-exclamation" style="margin-right: 3px"></i>Email chưa được đăng ký</p>
+</div>
+
+
 <div class="backgroundGradient">
     <div class="container">
         <div class="row justify-content-md-center">
@@ -127,6 +155,31 @@
 </div>
 
 </div>
+<script>
+    // Hàm để lấy giá trị của tham số từ URL
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    function showMessage(){
+        let messageBox = document.getElementById("messageBox");
+        messageBox.classList.remove("hidden");
+        setTimeout(function () {
+            messageBox.classList.add("hidden");
+        }, 2000);
+    }
+    window.addEventListener('load', function (){
+        var messageFromURL = getParameterByName('message');
+        if (messageFromURL === "failed") {
+            showMessage();
+        }
+    })
+</script>
 </body>
 
 </html>

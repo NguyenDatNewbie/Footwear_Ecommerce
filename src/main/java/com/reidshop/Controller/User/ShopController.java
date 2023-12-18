@@ -36,25 +36,7 @@ public class ShopController {
     @Autowired
     ICategoryService categoryService;
     Locale locale = new Locale("vi","VN");
-//    List<Product> products = new ArrayList<>();
-    List<Product> productsSelect = new ArrayList<>();
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
-
-
-//    @GetMapping("/{brandId}")
-//    String Brand(ModelMap modelMap,@PathVariable Long brandId){
-//        products = productRepository.findAllByCategory(brandId);
-//        Category category = categoryRepository.findCategoriesById(brandId);
-//        modelMap.addAttribute("formatVND",formatVND);
-//
-//        modelMap.addAttribute("currentCategory",category);
-//        modelMap.addAttribute("categoryService",categoryService);
-//        modelMap.addAttribute("categoryRepository",categoryRepository);
-//        modelMap.addAttribute("products",products);
-//        modelMap.addAttribute("productRepository",productRepository);
-//        return "user/shop";
-//    }
-
     @GetMapping("")
     String get(ModelMap modelMap){
         List<Product> products = productRepository.findAll();
@@ -90,6 +72,17 @@ public class ShopController {
         }
 
         return new ResponseEntity<>(products,HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    String search(@RequestParam("query") String query,ModelMap modelMap){
+        List<Product> products = productRepository.searchProduct(query);
+        modelMap.addAttribute("formatVND",formatVND);
+        modelMap.addAttribute("categoryService",categoryService);
+        modelMap.addAttribute("categoryRepository",categoryRepository);
+        modelMap.addAttribute("products",products);
+        modelMap.addAttribute("productRepository",productRepository);
+        return "user/shop";
     }
 
     public List<Product> getNullableCoursesFiltered(Long categoryId,List<String> colors,List<String> sizes) {

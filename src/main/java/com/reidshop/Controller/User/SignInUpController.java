@@ -9,6 +9,7 @@ import com.reidshop.Service.IEmailService;
 import com.reidshop.exception.ValidationHandle;
 import com.reidshop.security.JwtService;
 import jakarta.mail.MessagingException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -47,6 +48,11 @@ public class SignInUpController {
         return "user/login";
     }
 
+    @GetMapping("/logout")
+    public ModelAndView logout(@RequestParam("back") String urlBack, HttpServletResponse response, HttpServletRequest request){
+        CookieHandle.RemoveCookies(request,response);
+        return new ModelAndView("redirect:/"+urlBack);
+    }
 
     @PostMapping("/register")
     public ModelAndView registration(@Valid @ModelAttribute("request") RegisterRequest request,
@@ -81,8 +87,8 @@ public class SignInUpController {
     public ModelAndView login(@ModelAttribute("request") RegisterRequest request, ModelMap modelMap, HttpServletResponse response) {
         try {
             response.addCookie(CookieHandle.createCookie("token",token.generateToken(request.getEmail(),request.getPassword())));
-
-            return new ModelAndView("redirect:/index");
+            response.addCookie(CookieHandle.createCookieNotAuthentication("isLogin","true"));
+            return new ModelAndView("redirect:/");
         } catch (BadCredentialsException exception)
         {
             modelMap.addAttribute("loginError", "Email hoặc password không hợp lệ");

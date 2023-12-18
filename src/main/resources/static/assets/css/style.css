@@ -7136,7 +7136,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   text-transform: capitalize;
   margin-bottom: 16px;
   font-weight: 600;
-  color: #242424;
+  /*color: #242424;*/
 }
 @media only screen and (min-width: 768px) and (max-width: 991px) {
   .widgets_container h3 {
@@ -7153,7 +7153,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   display: block;
   font-weight: 400;
   line-height: 30px;
-  color: #747474;
+  /*color: #747474;*/
 }
 .footer_menu ul li a:hover {
   color: #ff6a28;
@@ -12874,5 +12874,5 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   text-transform: capitalize;
   color: #ffffff;
 }
-
 /*# sourceMappingURL=style.css.map */
+

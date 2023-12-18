@@ -745,8 +745,7 @@
             }
         }); 
     }, 2000);
-    
-    
+
     /*shop grid activation*/
     $('.shop_toolbar_btn > button').on('click', function (e) {
 		e.preventDefault();

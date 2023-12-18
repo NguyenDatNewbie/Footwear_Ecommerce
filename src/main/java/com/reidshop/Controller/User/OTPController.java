@@ -60,9 +60,10 @@ public class OTPController {
                 RegisterRequest request = (RegisterRequest) session.getAttribute("register");
                 accountService.save(request);
                 response.addCookie(CookieHandle.createCookie("token",jwtService.generateToken(request.getEmail())));
+                response.addCookie(CookieHandle.createCookieNotAuthentication("isLogin","true"));
                 session.removeAttribute("otp");
                 session.removeAttribute("register");
-                return new ModelAndView("redirect:/index");
+                return new ModelAndView("redirect:/");
             }
             else if(type.equals("resetPassword")){
                 session.removeAttribute("otp");
