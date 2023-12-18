@@ -1,10 +1,15 @@
 package com.reidshop.Controller.Admin;
 
 import com.reidshop.Model.Entity.AccountDetail;
+import com.reidshop.Model.Entity.OrderItem;
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Enum.OrderStatus;
+import com.reidshop.Model.Enum.PaymentType;
+import com.reidshop.Model.Enum.ReceiveType;
+import com.reidshop.Reponsitory.OrderItemRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
 import com.reidshop.Reponsitory.ProductRepository;
+import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.Impl.OrdersServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +32,10 @@ public class ManagerOrderController {
 
     @Autowired
     OrdersServiceImpl ordersService;
+    @Autowired
+    OrderItemRepository orderItemRepository;
+    @Autowired
+    IOrderItemService orderItemService;
 
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
@@ -62,16 +71,33 @@ public class ManagerOrderController {
     @GetMapping("updateStatus/{orderId}")
     public ModelAndView updateOrderStatus(ModelMap model, @PathVariable("orderId") Long orderId) {
         Optional<Orders> opt = ordersRepository.findById(orderId);
-
+        double priceOfOrder = orderItemService.totalPriceOfOrderId(orderId);
+        boolean btnUpdateDisabled = false;
         if (opt.isPresent()){
             Orders order = opt.get();
             OrderStatus status = order.getStatus();
-            switch (status) {
-                case WAIT -> ordersService.UpdateOrderStatus(orderId, OrderStatus.PREPARE);
-                case PREPARE -> ordersService.UpdateOrderStatus(orderId, OrderStatus.ALREADY);
-                case ALREADY -> ordersService.UpdateOrderStatus(orderId, OrderStatus.DELIVERY);
-                case DELIVERY -> ordersService.UpdateOrderStatus(orderId, OrderStatus.COMPLETE);
+            ReceiveType receiveType = order.getReceiveType();
+            if (status == OrderStatus.CANCEL || status == OrderStatus.COMPLETE){
+                btnUpdateDisabled = true;
             }
+            if (receiveType == ReceiveType.DELIVERY){
+                switch (status) {
+                    case WAIT -> ordersService.UpdateOrderStatus(orderId, OrderStatus.PREPARE);
+                    case PREPARE -> ordersService.UpdateOrderStatus(orderId, OrderStatus.DELIVERY);
+                    case DELIVERY -> {
+                        ordersService.UpdateOrderStatus(orderId, OrderStatus.COMPLETE);
+                        double totalPrice = order.getCostShip() + priceOfOrder;
+                        order.setTotalPrice(totalPrice);
+                        ordersRepository.save(order);
+                    }
+                }
+            } else {
+                switch (status) {
+                    case WAIT -> ordersService.UpdateOrderStatus(orderId, OrderStatus.ALREADY);
+                    case ALREADY -> ordersService.UpdateOrderStatus(orderId, OrderStatus.COMPLETE);
+                }
+            }
+            model.addAttribute("btnUpdateDisabled",btnUpdateDisabled);
             return new ModelAndView("forward:/admin/order", model);
         }
         return new ModelAndView("redirect:/admin/order", model);

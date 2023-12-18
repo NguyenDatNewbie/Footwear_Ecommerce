@@ -126,18 +126,25 @@ public class AdminController {
     //Sales
     @GetMapping("/getTotalSalesToday")
     @ResponseBody
-    public Double getTotalSalesToday() {
+    public Optional<Double> getTotalSalesToday() {
         // Thực hiện logic để lấy giá trị mới từ dịch vụ hoặc địa điểm bạn muốn
-        double result = ordersService.totalSalesOfToday();
+        Optional<Double> result = Optional.of(ordersService.totalSalesOfToday());
 
+        if (!result.isPresent()) {
+            // Trả về giá trị mặc định
+            return Optional.of(0.0);
+        }
         return result;
     }
     @GetMapping("/getTotalSalesThisMonth")
     @ResponseBody
-    public Double getTotalSalesThisMonth() {
+    public  Optional<Double> getTotalSalesThisMonth() {
         // Thực hiện logic để lấy giá trị mới từ dịch vụ hoặc địa điểm bạn muốn
-        double result = ordersService.totalSalesOfThisMonth();
-
+        Optional<Double> result = Optional.of(ordersService.totalSalesOfThisMonth());
+        if (!result.isPresent()) {
+            // Trả về giá trị mặc định
+            return Optional.of(0.0);
+        }
         return result;
     }
     @GetMapping("/getTotalSalesThisYear")
@@ -153,8 +160,10 @@ public class AdminController {
     @GetMapping("/getRevenueToday")
     @ResponseBody
     public Double getRevenueToday(){
-
         List<Integer> orderIdList = ordersService.findAllOrderToday();
+        if (orderIdList == null || orderIdList.isEmpty()) {
+            return 0.0; // Return 0 if no orders found
+        }
         double salesToday = ordersService.totalSalesOfToday();
         double originalPrice = 0;
         for (int i = 0; i < orderIdList.size(); i++){
@@ -169,7 +178,9 @@ public class AdminController {
     public Double getRevenueThisWeek(){
         //List order of this week
         List<Integer> listId = ordersService.findAllOrderOfThisWeek();
-
+        if (listId == null || listId.isEmpty()) {
+            return 0.0; // Return 0 if no orders found
+        }
         //Doanh số thu được trong 1 tuần
         double salesThisWeek = ordersService.totalPriceOfThisWeek();
 
@@ -188,6 +199,9 @@ public class AdminController {
     public Double getRevenueThisMonth(){
         //List order of this month
         List<Integer> listId = ordersService.findAllOrderOfThisMonth();
+        if (listId == null || listId.isEmpty()) {
+            return 0.0; // Return 0 if no orders found
+        }
         //Doanh số thu được trong 1 month
         double salesThisMonth = ordersService.totalSalesOfThisMonth();
 

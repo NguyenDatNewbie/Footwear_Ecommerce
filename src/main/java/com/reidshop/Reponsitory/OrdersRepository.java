@@ -43,14 +43,14 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     double totalSalesOfThisYear();
 
     //Lấy tất cả order_id trong ngày
-    @Query("SELECT o.id FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE")
+    @Query("SELECT o.id FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE AND o.status = 'COMPLETE'")
     List<Integer> findAllOrderToday();
 
     //lấy order_id trong 1 tuần
-    @Query("SELECT o.id FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1)")
+    @Query("SELECT o.id FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) AND o.status = 'COMPLETE'")
     List<Integer> findAllOrderOfThisWeek();
     //tổng doanh số trong tuần hiện tại
-    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1)")
+    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) AND o.status = 'COMPLETE'")
     double totalPriceOfThisWeek();
 
     //Lấy order_id trong 1 tháng
@@ -78,4 +78,22 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     @Query("SELECT o FROM Orders o WHERE o.account.id = :accountId")
     List<Orders> findAllOrderByAccountId(@Param("accountId") Long accountId);
 
+    //List order WAIT
+    @Query("SELECT o FROM Orders o WHERE o.status = 'WAIT'")
+    List<Orders> findAllOrderWait();
+    //List order PREPARE
+    @Query("SELECT o FROM Orders o WHERE o.status = 'PREPARE'")
+    List<Orders> findAllOrderPrepare();
+    //List order ALREADY
+    @Query("SELECT o FROM Orders o WHERE o.status = 'ALREADY'")
+    List<Orders> findAllOrderAlready();
+    //List order DELIVERY
+    @Query("SELECT o FROM Orders o WHERE o.status = 'DELIVERY'")
+    List<Orders> findAllOrderDelivery();
+    //List order COMPLETE
+    @Query("SELECT o FROM Orders o WHERE o.status = 'COMPLETE'")
+    List<Orders> findAllOrderComplete();
+    //List order CANCEL
+    @Query("SELECT o FROM Orders o WHERE o.status = 'CANCEL'")
+    List<Orders> findAllOrderCancel();
 }
