@@ -1,21 +1,20 @@
 package com.reidshop.Controller.Admin;
 
-import com.reidshop.Model.Entity.Account;
-import com.reidshop.Model.Entity.AccountDetail;
-import com.reidshop.Model.Entity.OrderItem;
-import com.reidshop.Model.Entity.Orders;
-import com.reidshop.Reponsitory.AccountDetailRepository;
-import com.reidshop.Reponsitory.AccountRepository;
-import com.reidshop.Reponsitory.OrderItemRepository;
-import com.reidshop.Reponsitory.OrdersRepository;
+import com.reidshop.Model.Entity.*;
+import com.reidshop.Model.Enum.ROLE;
+import com.reidshop.Reponsitory.*;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.List;
@@ -34,6 +33,11 @@ public class ManagerAccountController {
     OrdersRepository ordersRepository;
     @Autowired
     OrderItemRepository orderItemRepository;
+    @Autowired
+    StoreRepository storeRepository;
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
     @RequestMapping("")
@@ -80,5 +84,49 @@ public class ManagerAccountController {
             return new ModelAndView("admin/orderDetail", model);
         }
         return new ModelAndView("redirect:/admin/account", model);
+    }
+
+    @Transactional
+    @PostMapping("addNewAccountVendor")
+    public ModelAndView addNewAccountVendor(ModelMap modelMap,
+                                            @Valid @ModelAttribute("account") Account account,
+                                            @RequestParam("addressDepartment") String addressDepartment,
+                                            BindingResult result) throws IOException {
+        if(result.hasErrors()){
+            System.out.println(result);
+            return new ModelAndView("admin/account");
+        }
+        System.out.println(addressDepartment);
+        Optional<Account> opt = accountRepository.findByEmail(account.getEmail());
+        try {
+            if (opt.isPresent()){
+                System.out.println("Đã tồn tại email");
+                modelMap.addAttribute("errorMessage", "The email already exists. Please use a different email.");
+
+                modelMap.addAttribute("account", new Account());
+                modelMap.addAttribute("accountRepository", accountRepository);
+                modelMap.addAttribute("accountDetailRepository", accountDetailRepository);
+                return new ModelAndView("forward:/admin/account", modelMap);
+            }
+            else {
+                account.setRole(ROLE.VENDOR);
+                account.setPassword(passwordEncoder.encode((account.getPassword())));
+                accountRepository.save(account);
+
+                //Add Store:
+                Store newStore = new Store();
+                newStore.setAccount(account);
+                newStore.setDepartment(addressDepartment);
+                storeRepository.save(newStore);
+
+                modelMap.addAttribute("successMessage", "Register Account For Vendor Successfully.");
+                modelMap.addAttribute("account", new Account());
+                modelMap.addAttribute("accountRepository", accountRepository);
+                modelMap.addAttribute("accountDetailRepository", accountDetailRepository);
+                return new ModelAndView("forward:/admin/account", modelMap);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

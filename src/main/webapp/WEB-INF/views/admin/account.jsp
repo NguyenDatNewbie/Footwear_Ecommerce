@@ -53,21 +53,88 @@
           <div class="col-12">
             <div class="card recent-sales overflow-auto">
 
-<%--              <div class="filter">--%>
-<%--                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>--%>
-<%--                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">--%>
-<%--                  <li class="dropdown-header text-start">--%>
-<%--                    <h6>Filter</h6>--%>
-<%--                  </li>--%>
-
-<%--                  <li><a class="dropdown-item" href="#">Today</a></li>--%>
-<%--                  <li><a class="dropdown-item" href="#">This Month</a></li>--%>
-<%--                  <li><a class="dropdown-item" href="#">This Year</a></li>--%>
-<%--                </ul>--%>
-<%--              </div>--%>
-
               <div class="card-body">
-<%--                <h5 class="card-title">Recent Sales <span>| Today</span></h5>--%>
+                <h5 class="card-title">All Account</h5>
+                <c:if test="${not empty successMessage}">
+                  <div class="alert alert-primary bg-primary text-light border-0 alert-dismissible fade show" role="alert">
+                      ${successMessage}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                </c:if>
+                <c:if test="${not empty errorMessage}">
+                  <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                    ${errorMessage}
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                </c:if>
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">
+                  Add Account Vendor
+                </button>
+                <div class="modal fade" id="ExtralargeModal" tabindex="-1">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title">Register Account Vendor</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form class="row g-3 needs-validation" novalidate action="<c:url value="/admin/account/addNewAccountVendor"/> " method="post" onsubmit="return validateForm()">
+                          <div class="col-12">
+                            <label class="form-label">Department Address</label>
+                            <div class="tab-content" id="tab1">
+                              <div class="flex-2">
+                                <select class="form-select form-select-sm mb-3" id="city"
+                                        aria-label=".form-select-sm" style="margin-right: 10px">
+                                  <option value="" selected>Chọn tỉnh thành</option>
+                                </select>
+                                <select class="form-select form-select-sm mb-3" id="district"
+                                        aria-label=".form-select-sm">
+                                  <option value="" selected>Chọn quận huyện</option>
+                                </select>
+                              </div>
+
+                              <div class="flex-2">
+                                <select class="form-select form-select-sm" id="ward"
+                                        aria-label=".form-select-sm" style="margin-right: 10px">
+                                  <option value="" selected>Chọn phường xã</option>
+                                </select>
+
+                                <input placeholder="Địa chỉ chi tiết" name="addressDetail"
+                                       id="addressDetail"
+                                       type="text" required style="margin-top: 10px; " class="form-control">
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="col-12">
+                            <label for="email" class="form-label">Email Register</label>
+                            <div class="input-group has-validation">
+                              <span class="input-group-text" id="inputGroupPrepend">@</span>
+                              <input type="email" class="form-control" placeholder="Email address" value="${account.email}" id="email" name="email" required>
+                              <div class="invalid-feedback">Please enter a valid Email address!</div>
+                            </div>
+                          </div>
+
+                          <div class="col-12">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" placeholder="Password" value="${account.password}" id="password" name="password" required oninput="validatePassword()">
+                            <div class="invalid-feedback" id="passwordError">Please enter a valid password!</div>
+                          </div>
+
+                          <div class="col-12">
+                            <label for="rePassword" class="form-label">Re-enter Password</label>
+                            <input type="password" name="rePassword" class="form-control" placeholder="Re-enter Password" id="rePassword" required oninput="validateRePassword()">
+                            <div class="invalid-feedback" id="passwordMismatch">Passwords do not match!</div>
+                          </div>
+                          <input type="text" hidden="hidden" name="addressDepartment" id="addressDepartment">
+                          <div class="col-12">
+                            <button class="btn btn-success w-100" type="submit" onclick="prepareCombinedValues()">Create Account</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- End Basic Modal-->
 
                 <table class="table datatable ">
                   <thead>
@@ -130,7 +197,125 @@
 
 <!-- Template Main JS File -->
 <script src="/admin/assets/js/main.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
+
+<script>
+  function validateForm() {
+    var password = document.getElementById("password").value;
+    var rePassword = document.getElementById("rePassword");
+    var mismatchMessage = document.getElementById("passwordMismatch");
+
+    if (password !== rePassword.value) {
+      mismatchMessage.style.display = "block";
+      return false;
+    } else {
+      mismatchMessage.style.display = "none";
+      return true;
+    }
+  }
+
+  function validatePassword() {
+    var passwordInput = document.getElementById("password");
+    var passwordError = document.getElementById("passwordError");
+
+    // Đặt các điều kiện của bạn ở đây
+    var minLength = 8;
+    var hasUpperCase = /[A-Z]/.test(passwordInput.value);
+    var hasLowerCase = /[a-z]/.test(passwordInput.value);
+    var hasSpecialCharacter = /[!@#$%^&*(),.?":{}|<>]/.test(passwordInput.value);
+
+    if (
+            passwordInput.value.length < minLength ||
+            !hasUpperCase ||
+            !hasLowerCase ||
+            !hasSpecialCharacter
+    ) {
+      passwordError.style.display = "block";
+      passwordInput.classList.add("is-invalid");
+    } else {
+      passwordError.style.display = "none";
+      passwordInput.classList.remove("is-invalid");
+    }
+  }
+
+  function validateRePassword() {
+    var password = document.getElementById("password").value;
+    var rePasswordInput = document.getElementById("rePassword");
+    var passwordMismatchMessage = document.getElementById("passwordMismatch");
+
+    if (password !== rePasswordInput.value) {
+      passwordMismatchMessage.style.display = "block";
+      rePasswordInput.setCustomValidity("Passwords do not match!"); // Bắt người dùng nhập lại
+    } else {
+      passwordMismatchMessage.style.display = "none";
+      rePasswordInput.setCustomValidity(""); // Đặt trạng thái hợp lệ
+    }
+  }
+</script>
+
+<script>
+  var citis = document.getElementById("city");
+  var districts = document.getElementById("district");
+  var wards = document.getElementById("ward");
+  var Parameter = {
+    url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+    method: "GET",
+    responseType: "application/json",
+  };
+  var promise = axios(Parameter);
+  promise.then(function (result) {
+    renderCity(result.data);
+  });
+
+  function renderCity(data) {
+    for (const x of data) {
+      citis.options[citis.options.length] = new Option(x.Name, x.Id);
+    }
+    citis.onchange = function () {
+      district.length = 1;
+      ward.length = 1;
+      if(this.value != ""){
+        const result = data.filter(n => n.Id === this.value);
+
+        for (const k of result[0].Districts) {
+          district.options[district.options.length] = new Option(k.Name, k.Id);
+        }
+      }
+    };
+    district.onchange = function () {
+      ward.length = 1;
+      const dataCity = data.filter((n) => n.Id === citis.value);
+      if (this.value != "") {
+        const dataWards = dataCity[0].Districts.filter(n => n.Id === this.value)[0].Wards;
+
+        for (const w of dataWards) {
+          wards.options[wards.options.length] = new Option(w.Name, w.Id);
+        }
+      }
+    };
+  }
+</script>
+
+<script>
+  function prepareCombinedValues() {
+    var city = document.getElementById('city');
+    var district = document.getElementById('district');
+    var ward = document.getElementById('district');
+    var detail = document.getElementById('addressDetail').value;
+
+    var valueCity = city.options[city.selectedIndex].textContent;
+    var valueDistrict = district.options[district.selectedIndex].textContent;
+    var valueWard = ward.options[ward.selectedIndex].textContent;
+
+
+    var addressDepartment = detail + ", " + valueWard + ", " + valueDistrict + ", " + valueCity;
+
+    // Cập nhật giá trị của thẻ input hidden
+    document.getElementById("addressDepartment").value = addressDepartment;
+    console.log(document.getElementById("addressDepartment").value);
+  }
+</script>
 </body>
 
 </html>
