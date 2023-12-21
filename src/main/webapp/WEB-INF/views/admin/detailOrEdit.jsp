@@ -33,6 +33,16 @@
 
   <!-- Template Main CSS File -->
   <link href="/admin/assets/css/style.css" rel="stylesheet">
+  <style>
+    .form-check {
+      padding-right: 10px;
+      font-size: 15px;
+    }
+
+    .selected-size {
+      background-color: yellow; /* Màu nền của checkbox khi được chọn */
+    }
+  </style>
 
 </head>
 <body>
@@ -46,7 +56,7 @@
   <section class="section dashboard">
     <div class="row">
       <div class="row justify-content-center">
-        <div class="col-md-6">
+        <div class="col-md-12">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Product Detail</h5>
@@ -58,23 +68,69 @@
               <input hidden="hidden" type="text" class="form-control" placeholder="Product ID" value="${product.id}" id="id" name="id">
             </div>
             <div class="col-md-12">
+              <span class="card-title" style="font-size: 1em; margin-left: 5px;">Product Name</span>
               <input type="text" class="form-control" placeholder="Product Name" value="${product.name}" id="name" name="name">
             </div>
-            <div class="col-md-6">
-              <input type="text" class="form-control" placeholder="Price" value="${product.price}" id="price" name="price">
+            <div class="col-md-4">
+              <div class="col-md-12">
+                <span class="card-title" style="font-size: 1em; margin-left: 5px;">Price</span>
+                <input type="text" class="form-control" placeholder="Price" value="${product.price}" id="price" name="price">
+              </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
+              <span class="card-title" style="font-size: 1em; margin-left: 5px;">Promotion</span>
               <input type="text" class="form-control" placeholder="Promotion" value="${product.promotion}" id="promotion" name="promotion">
             </div>
+            <div class="col-md-4">
+              <span class="card-title" style="font-size: 1em; margin-left: 5px;">Category</span>
+              <div class="mb-0">
+                <select class="form-select" name="category">
+                  <c:forEach items="${categories}" var="category">
+                    <option value="${category.id}" id="category_id"
+                            <c:if test="${category.id eq product.category.id}">
+                              selected
+                            </c:if>>${category.name}</option>
+                  </c:forEach>
+                </select>
+              </div>
+            </div>
             <div class="col-12">
+              <span class="card-title" style="font-size: 1em; margin-left: 5px;">Description</span>
               <input type="text" class="form-control" placeholder="Description" value="${product.description}" id="description" name="description">
             </div>
-            <div class="col-12">
-              <input type="number" class="form-control" placeholder="Category ID" value="${product.category.id}" id="category_id" name="category" />
+<%--            Size--%>
+            <div class="col-md-6" style="margin-bottom: 10px">
+              <div class="widget_list color" style="margin-left: 5px;">
+                <span class="card-title" style="font-size: 1em;">Size</span>
+                <div style="display: flex">
+                  <c:forEach items="${allSizes}" var="size">
+                    <div class="form-check">
+                      <input type="checkbox" class="form-check-input sizeCheckbox ${sizeCheckedMap[size] ? 'selected-size' : ''}"
+                             value="${size}" id="size${size}" ${sizeCheckedMap[size] ? 'checked' : ''}>
+                      <label class="form-check-label" for="size${size}">${size}</label>
+                    </div>
+                  </c:forEach>
+                  <input type="hidden" id="selectedSizesInput" name="selectedSizes" value="">
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-12">
+              <span class="card-title" style="font-size: 1em; margin-left: 5px;">Image</span>
+              <div class="mb-0">
+                <c:forEach items="${imagesPro}" var="image">
+                  <img src="${image.img}" class="img-fluid rounded-start" style="width: 200px; height: 200px; margin-right: 10px; margin-top: 10px;">
+                </c:forEach>
+              </div>
+            </div>
+            <div class="col-12 upload-image">
+              <input type="file" id="image-file" name="image-file" multiple/>
+              <img id="uploaded-image" />
             </div>
             <div class="text-center">
-              <button type="submit" class="btn btn-primary">Update Product</button>
-              <button type="reset" class="btn btn-secondary">List Product</button>
+              <button type="submit" class="btn btn-success">Update Product</button>
+              <button type="reset" class="btn btn-secondary" id="listProductBtn">Cancel</button>
             </div>
           </form><!-- End No Labels Form -->
 
@@ -100,6 +156,39 @@
 
 <!-- Template Main JS File -->
 <script src="/admin/assets/js/main.js"></script>
+<script>
+  document.getElementById('listProductBtn').addEventListener('click', function () {
+    window.location.href = "/admin/products";
+  });
+
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var sizeCheckboxes = document.querySelectorAll('.sizeCheckbox');
+    var selectedSizesInput = document.getElementById('selectedSizesInput');
+
+    // Thêm sự kiện 'change' cho mỗi checkbox lựa chọn
+    sizeCheckboxes.forEach(function (checkbox) {
+      checkbox.addEventListener('change', updateSelectedOptions);
+    });
+
+    function updateSelectedOptions() {
+      // Tạo một mảng để lưu trữ giá trị của các checkbox lựa chọn được chọn
+      var selectedOptionsArray = [];
+
+      // Kiểm tra trạng thái của từng checkbox lựa chọn và thêm giá trị vào mảng
+      sizeCheckboxes.forEach(function (checkbox) {
+        if (checkbox.checked) {
+          selectedOptionsArray.push(checkbox.value);
+        }
+      });
+
+      // Hiển thị danh sách trong phần tử selectedOptions
+      selectedSizesInput.value = selectedOptionsArray.join(',');
+      console.log(selectedOptionsArray);
+    }
+
+  });
+</script>
 
 </body>
 
