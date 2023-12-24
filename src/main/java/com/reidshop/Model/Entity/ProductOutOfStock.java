@@ -12,11 +12,9 @@ public class ProductOutOfStock {
     @Column(name = "wait_import_id")
     Long id;
 
-    @Column
-    Long productId;
-
-    @Column
-    String size;
+    @ManyToOne
+    @JoinColumn(name = "size_id")
+    Size size;
 
     @Column
     int quantity;

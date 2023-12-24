@@ -1,6 +1,8 @@
 package com.reidshop.Service;
 
 
+import com.reidshop.Model.Entity.Evaluate;
+import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
@@ -30,5 +32,9 @@ public interface IOrdersService {
 
     void savePayment(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request);
 
+    void rateSave(Evaluate evaluate, long orderId);
+
     void UpdateOrderStatus(Long orderId, OrderStatus orderStatus);
+
+    List<Orders> findOrdersByAccountAndStatus(Long id, String status);
 }

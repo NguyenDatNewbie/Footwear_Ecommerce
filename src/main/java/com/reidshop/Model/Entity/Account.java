@@ -28,5 +28,4 @@ public class Account {
 
     @OneToOne(mappedBy = "account")
     AccountDetail accountDetail;
-
 }

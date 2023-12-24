@@ -574,7 +574,7 @@
 
                                     <div class="quick_button">
                                         <a href="#" data-toggle="modal" data-target="#modal_box-${product.id}"
-                                           title="quick_view">Xem nhanh</a>
+                                           >Xem nhanh</a>
                                     </div>
 
                                     <div class="product_sale">

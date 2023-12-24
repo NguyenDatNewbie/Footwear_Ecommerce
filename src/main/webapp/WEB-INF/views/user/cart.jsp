@@ -575,7 +575,7 @@
             '                    <img src="https://codescandy.com/coach/rtl/assets/images/bag.svg" style="width: 400px; height: auto">\n' +
             '                        <div style="text-align: center; margin-top: 4px;">\n' +
             '                            <span>Không có sản phẩm trong giỏ hàng</span><br>\n' +
-            '                            <a href="/index" class="button_back">Về trang chủ</a>\n' +
+            '                            <a href="/" class="button_back">Về trang chủ</a>\n' +
             '                        </div>\n' +
             '                </div>\n' +
             '            </div>\n' +

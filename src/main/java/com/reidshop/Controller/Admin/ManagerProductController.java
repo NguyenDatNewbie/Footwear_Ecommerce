@@ -72,12 +72,12 @@ public class ManagerProductController {
 
         //Xử lý hình ảnh, lưu vào cloud dinary
 
-        Image image = new Image();
         System.out.println(imageFiles);
         try {
             for (MultipartFile imageFile : imageFiles){
                 Map r = this.cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
                 String img = (String) r.get("secure_url");
+                Image image = new Image();
                 image.setImg(img);
                 image.setProduct(product);
                 imageRepository.save(image);

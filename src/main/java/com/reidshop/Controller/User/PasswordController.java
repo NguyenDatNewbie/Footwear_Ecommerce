@@ -1,6 +1,5 @@
 package com.reidshop.Controller.User;
 
-import com.jogamp.common.net.Uri;
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.Account;
 import com.reidshop.Model.Request.RegisterRequest;
@@ -23,7 +22,7 @@ import java.net.URLEncoder;
 
 @Controller
 @RequestMapping("/password")
-public class PaswordController {
+public class PasswordController {
     @Autowired
     IAccountService accountService;
     @Autowired
@@ -56,6 +55,7 @@ public class PaswordController {
             Account account = accountRepository.findByEmail(sessionAttribute.getEmail()).orElse(null);
             if (account != null) {
                 account.setPassword(passwordEncoder.encode((request.getPassword())));
+                System.out.println(account.getPassword());
                 accountRepository.save(account);
                 response.addCookie(CookieHandle.createCookie("token", jwtService.generateToken(request.getEmail())));
                 session.removeAttribute("register");

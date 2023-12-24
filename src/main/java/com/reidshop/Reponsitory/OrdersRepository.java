@@ -2,6 +2,7 @@ package com.reidshop.Reponsitory;
 
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Entity.Size;
+import com.reidshop.Model.Enum.OrderStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -96,4 +97,11 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     //List order CANCEL
     @Query("SELECT o FROM Orders o WHERE o.status = 'CANCEL'")
     List<Orders> findAllOrderCancel();
+    @Query("select o from Orders o where o.account.id=?1 ORDER BY o.id DESC")
+    List<Orders> findOrdersByAccount(Long id);
+    @Query("select o from Orders o where o.account.id=?1 and o.status= ?2 ORDER BY o.id DESC")
+    List<Orders> findOrdersByAccountAndStatus(Long id, OrderStatus status);
+
+    @Query("select o from Orders o where o.account.id=?1 and o.receiveType='STORE' ORDER BY o.id DESC")
+    List<Orders> findOrdersByAccountReceive(Long id);
 }

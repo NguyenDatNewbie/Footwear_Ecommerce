@@ -80,4 +80,13 @@ public class OrderItemImpl implements IOrderItemService {
         return priceOrder;
     }
 
+    @Override
+    public void reInventory(Long orderId){
+        List<OrderItem> itemList = orderItemRepository.findAllItemByOrderId(orderId);
+        for (OrderItem item: itemList) {
+            item.getInventory().setQuantity(item.getQuantity()+item.getInventory().getQuantity());
+            inventoryRepository.save(item.getInventory());
+        }
+    }
+
 }

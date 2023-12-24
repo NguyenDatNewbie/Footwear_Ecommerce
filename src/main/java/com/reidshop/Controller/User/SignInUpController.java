@@ -2,6 +2,7 @@ package com.reidshop.Controller.User;
 
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.Account;
+import com.reidshop.Model.Enum.ROLE;
 import com.reidshop.Model.Request.RegisterRequest;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Service.IAccountService;
@@ -86,8 +87,19 @@ public class SignInUpController {
     @PostMapping("/login")
     public ModelAndView login(@ModelAttribute("request") RegisterRequest request, ModelMap modelMap, HttpServletResponse response) {
         try {
+            Account account= accountRepository.findByEmail(request.getEmail()).orElse(null);
+            if(account==null){
+                modelMap.addAttribute("loginError", "Email chưa được đăng ký");
+                modelMap.addAttribute("requestLogin", request);
+                modelMap.addAttribute("isLogin", true);
+                return new ModelAndView("user/login");
+            }
             response.addCookie(CookieHandle.createCookie("token",token.generateToken(request.getEmail(),request.getPassword())));
             response.addCookie(CookieHandle.createCookieNotAuthentication("isLogin","true"));
+            if(account.getRole()== ROLE.ADMIN )
+                return new ModelAndView("redirect:/admin/home");
+            else if(account.getRole() == ROLE.VENDOR)
+                return new ModelAndView("redirect:/");
             return new ModelAndView("redirect:/");
         } catch (BadCredentialsException exception)
         {
