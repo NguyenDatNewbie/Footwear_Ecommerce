@@ -36,9 +36,9 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     @Query("SELECT SUM(p.totalPrice) FROM Orders p\n")
     double revenueAll();
     //Tổng doanh thu theo ngày
-    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE")
+    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE AND o.status = 'COMPLETE'")
     double totalSalesOfToday();
-    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')")
+    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE (FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')) AND o.status = 'COMPLETE'")
     double totalSalesOfThisMonth();
     @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE)")
     double totalSalesOfThisYear();
@@ -55,7 +55,7 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     double totalPriceOfThisWeek();
 
     //Lấy order_id trong 1 tháng
-    @Query("SELECT o.id FROM Orders o WHERE FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')")
+    @Query("SELECT o.id FROM Orders o WHERE (FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')) AND o.status = 'COMPLETE'")
     List<Integer> findAllOrderOfThisMonth();
 
     //List total_price của các order trong tuần
