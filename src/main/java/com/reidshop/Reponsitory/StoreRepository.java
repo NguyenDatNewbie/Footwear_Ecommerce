@@ -12,4 +12,6 @@ import java.util.List;
 public interface StoreRepository extends JpaRepository<Store,Long> {
     @Query("SELECT s FROM Store s WHERE s.department LIKE CONCAT('%', :department, '%') OR :department IS NULL OR :department = ''")
     List<Store> searchAllByDepartment(@Param("department") String department);
+    @Query("SELECT s FROM Store s WHERE s.account.id=?1")
+    Store searchAllByAccountId(long accountId);
 }

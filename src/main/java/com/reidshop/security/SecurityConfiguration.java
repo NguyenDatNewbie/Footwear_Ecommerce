@@ -42,6 +42,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/cart/payment/*/**").authenticated()
                         .requestMatchers("/admin/assets/vendor/**").permitAll()
+                        .requestMatchers("/admin/assets/**").permitAll()
                         .requestMatchers("/admin/*/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
 
