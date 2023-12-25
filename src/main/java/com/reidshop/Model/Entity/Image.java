@@ -24,5 +24,4 @@ public class Image {
     public Long getProduct() {
         return product.id;
     }
-
 }
