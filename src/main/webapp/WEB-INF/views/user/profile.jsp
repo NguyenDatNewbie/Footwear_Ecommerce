@@ -115,6 +115,53 @@
                 opacity: 0;
             }
         }
+        #profile-head {
+            position: relative;
+        }
+
+        #profile-image {
+            border-radius: 50%;
+            height: 200px;
+            width: 200px;
+            position: relative;
+            z-index: 1;
+            transition: filter 0.3s;
+        }
+
+        #profile-image:hover {
+            filter: blur(1px);
+        }
+
+        #edit-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: none;
+            z-index: 2;
+            transition: opacity 0.3s;
+        }
+
+        #profile-head:hover #edit-icon {
+            display: block;
+        }
+
+        .col-md-8.upload-image {
+            position: relative;
+        }
+
+        .col-md-8.upload-image input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
     </style>
 
 </head>
@@ -140,14 +187,24 @@
             <div class="col-md-4 mb-3">
                 <div class="card">
                     <div class="card-body">
-                        <div class="d-flex flex-column align-items-center text-center"
-                             id="profile-head">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3033/3033143.png" width="150">
-                            <div class="mt-3">
-                                <h4>${info.accountDetail.name}</h4>
+                        <form action="/profile/update-img-profile" method="post" enctype="multipart/form-data">
+                            <div class="d-flex flex-column align-items-center text-center"
+                                 id="profile-head">
+                                <input hidden="hidden" type="text" class="form-control" value="${info.id}" id="accountid" name="accountid">
+                                <c:if test="${empty info.accountDetail.image}">
+                                    <img src="https://cdn-icons-png.flaticon.com/512/3033/3033143.png" width="150" style="border-radius: 50%; height: 200px; width: 200px;" id="profile-image">
+                                </c:if>
+                                <c:if test="${not empty info.accountDetail.image}">
+                                    <img src="${info.accountDetail.image}" width="150" style="border-radius: 50%; height: 200px; width: 200px;" id="profile-image">
+                                </c:if>
+                                <i class="fa fa-pencil" id="edit-icon"></i>
+                                <div class="mt-3">
+                                    <h4>${info.accountDetail.name}</h4>
+                                </div>
+                                <input type="file" id="image-file" name="image-file" hidden="hidden"/>
+                                <button class="btn btn-info" style="background-color: lightsalmon" type="submit">Cập nhật hình ảnh</button>
                             </div>
-                            <button class="btn btn-info" style="background-color: blue">Update Image</button>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -311,6 +368,54 @@
         }
     })
 
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var profileImage = document.getElementById("profile-image");
+        var editIcon = document.getElementById("edit-icon");
+        var fileInput = document.getElementById("image-file");
+
+        profileImage.addEventListener("click", function () {
+            fileInput.click();
+        });
+
+        editIcon.addEventListener("click", function () {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener("change", function (event) {
+            var selectedFile = event.target.files[0];
+
+            if (selectedFile) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    profileImage.src = e.target.result;
+                };
+
+                reader.readAsDataURL(selectedFile);
+            }
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var profileImage = document.getElementById("profile-image");
+        var defaultImageSrc = "https://cdn-icons-png.flaticon.com/512/3033/3033143.png";
+
+        // Kiểm tra xem ảnh có tồn tại hay không khi trang được tải lên
+        if (!imageExists("${info.accountDetail.image}")) {
+            // Nếu không tồn tại, đặt src là giá trị mặc định
+            profileImage.src = defaultImageSrc;
+        }
+
+        function imageExists(imageUrl) {
+            var http = new XMLHttpRequest();
+            http.open('HEAD', imageUrl, false);
+            http.send();
+            return http.status != 404;
+        }
+    });
 </script>
 </body>
 
