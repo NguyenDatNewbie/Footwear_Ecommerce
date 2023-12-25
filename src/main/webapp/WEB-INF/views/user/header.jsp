@@ -38,21 +38,8 @@
                         </ul>
                     </div>
                     <div class="search_bar">
-                        <form action="#">
-                            <select class="select_option" name="select" id="categori">
-                                <option selected value="1">All Categories</option>
-                                <option  value="2">Accessories</option>
-                                <option  value="3">Bridge</option>
-                                <option  value="4">Hub</option>
-                                <option  value="5">Repeater</option>
-                                <option  value="6">Switch</option>
-                                <option  value="7">Video Games</option>
-                                <option  value="8">PlayStation 3</option>
-                                <option  value="9">PlayStation 4</option>
-                                <option  value="10">Xbox 360</option>
-                                <option  value="11">Xbox One</option>
-                            </select>
-                            <input placeholder="Search entire store here..." type="text">
+                        <form action="javascript:search()">
+                            <input placeholder="Search entire store here..." type="text" >
                             <button type="submit"><i class="ion-ios-search-strong"></i></button>
                         </form>
                     </div>
@@ -183,25 +170,10 @@
         <div class="container-fluid">
             <div class="row align-items-center">
                 <div class="col-lg-7 col-md-12">
-                    <div class="welcome_text">
-                        <ul>
-                            <li><span>Free Delivery:</span> Take advantage of our time to save event</li>
-                            <li><span>Free Returns *</span> Satisfaction guaranteed</li>
-                        </ul>
-                    </div>
                 </div>
                 <div class="col-lg-5 col-md-12">
-                    <div class="top_right text-right">
-                        <ul>
-                            <li class="top_links"><a href="#">My Account <i class="ion-chevron-down"></i></a>
-                                <ul class="dropdown_links">
-                                    <li><a href="wishlist.html">My Wish List </a></li>
-                                    <li><a href="my-account.html">My Account </a></li>
-                                    <li><a href="#">Sign In</a></li>
-                                    <li><a href="compare.html">Compare Products  </a></li>
-                                </ul>
-                            </li>
-                        </ul>
+                    <div class="top_right text-right" id="account">
+
                     </div>
                 </div>
             </div>
@@ -216,15 +188,15 @@
                 <div class="row align-items-center">
                     <div class="col-lg-4">
                         <div class="search_bar">
-                            <form action="#">
-                                <input placeholder="Search entire store here..." type="text">
+                            <form action="javascript:search()">
+                                <input placeholder="Search entire store here..." type="text" id="searchName">
                                 <button type="submit"><i class="ion-ios-search-strong"></i></button>
                             </form>
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="logo">
-                            <a href="index.jsp"><img src="<c:url value="/user/assets/img/logo/logo.png" />" ></a>
+                            <a href="index.jsp"><img src="<c:url value="/assets/img/logo/logo.png" />" ></a>
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -236,109 +208,7 @@
                     </div>
                 </div>
             </div>
-            <div class="horizontal_menu">
-                <div class="left_menu">
-                    <div class="main_menu">
-                        <nav>
-                            <ul>
-                                <li class="active"><a href="index.jsp">Home <i class="fa fa-angle-down"></i></a>
-                                    <ul class="sub_menu">
-                                        <li><a href="index.jsp">Home 1</a></li>
-                                        <li><a href="index-2.html">Home 2</a></li>
-                                        <li><a href="index-3.html">Home 3</a></li>
-                                        <li><a href="index-4.html">Home 4</a></li>
-                                        <li><a href="index-5.html">Home 5</a></li>
-                                        <li><a href="index-6.html">Home 6</a></li>
-                                        <li><a href="index-7.html">Home 7</a></li>
-                                        <li><a href="index-8.html">Home 8</a></li>
-                                    </ul>
-                                </li>
-                                <li class="mega_items"><a href="shop.html">shop <i class="fa fa-angle-down"></i></a>
-                                    <ul class="mega_menu">
-                                        <li><a href="#">Shop Layouts</a>
-                                            <ul>
-                                                <li><a href="shop-fullwidth.html">Full Width</a></li>
-                                                <li><a href="shop-fullwidth-list.html">Full Width list</a></li>
-                                                <li><a href="shop-right-sidebar.html">Right Sidebar </a></li>
-                                                <li><a href="shop-right-sidebar-list.html"> Right Sidebar list</a></li>
-                                                <li><a href="shop-list.html">List View</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">other Pages</a>
-                                            <ul>
-                                                <li><a href="portfolio.html">portfolio</a></li>
-                                                <li><a href="portfolio-details.html">portfolio details</a></li>
-                                                <li><a href="cart.html">cart</a></li>
-                                                <li><a href="checkout.html">Checkout</a></li>
-                                                <li><a href="my-account.html">my account</a></li>
 
-
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">Product Types</a>
-                                            <ul>
-                                                <li><a href="product-details.jsp">product details</a></li>
-                                                <li><a href="product-sidebar.html">product sidebar</a></li>
-                                                <li><a href="product-gallery.html">product gallery</a></li>
-                                                <li><a href="product-grouped.html">product grouped</a></li>
-                                                <li><a href="variable-product.html">product variable</a></li>
-
-                                            </ul>
-                                        </li>
-                                        <li><a href="#">collection</a>
-                                            <ul>
-                                                <li><a href="shop.html">Handbag</a></li>
-                                                <li><a href="shop.html">Accessories</a></li>
-                                                <li><a href="shop.html">Clothing</a></li>
-                                                <li><a href="shop.html">Shoes</a></li>
-                                                <li><a href="shop.html">Check Trousers</a></li>
-
-                                            </ul>
-                                        </li>
-                                        <li class="banner_menu"><a href="#"><img src="<c:url value="/user/assets/img/bg/banner1.jpg"/>"></a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="blog.html">blog <i class="fa fa-angle-down"></i></a>
-                                    <ul class="sub_menu pages">
-                                        <li><a href="blog-details.html">blog details</a></li>
-                                        <li><a href="blog-sidebar.html">blog  Sidebar</a></li>
-                                        <li><a href="blog-fullwidth.html">blog fullwidth</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="#">pages <i class="fa fa-angle-down"></i></a>
-                                    <ul class="sub_menu pages">
-                                        <li><a href="about.html">About Us</a></li>
-                                        <li><a href="services.html">services</a></li>
-                                        <li><a href="faq.html">Frequently Questions</a></li>
-                                        <li><a href="login.jsp">login</a></li>
-                                        <li><a href="my-account.html">my account</a></li>
-                                        <li><a href="wishlist.html">Wishlist</a></li>
-                                        <li><a href="404.html">Error 404</a></li>
-                                        <li><a href="compare.html">compare</a></li>
-                                        <li><a href="privacy-policy.html">privacy policy</a></li>
-                                        <li><a href="coming-soon.html">coming soon</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-                <div class="logo_container">
-                    <a href="index.jsp"><img src="<c:url value="/user/assets/img/logo/logo.png"/>" ></a>
-                </div>
-                <div class="right_menu">
-                    <div class="main_menu">
-                        <nav>
-                            <ul>
-                                <li><a href="#">Specials</a></li>
-                                <li><a href="#">Sneaker</a></li>
-                                <li><a href="about.html">About us</a></li>
-                                <li><a href="contact.html">Contact Us</a></li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
     <!--header middel end-->
@@ -352,8 +222,8 @@
                         <div class="main_menu">
                             <nav>
                                 <ul>
-                                    <li class="active"><a href="<c:url value="/index"/>">Trang chủ </a></li>
-                                    <li><a href="<c:url value="/shop/1"/>">Sản phẩm</a></li>
+                                    <li class="active"><a href="<c:url value="/"/>">Trang chủ </a></li>
+                                    <li><a href="<c:url value="/shop"/>">Sản phẩm</a></li>
                                     <li><a href="#">Về chúng tôi<i class="fa fa-angle-down"></i></a>
                                         <ul class="sub_menu pages">
                                             <li><a href="about.html">About Us</a></li>
@@ -392,5 +262,61 @@
         document.getElementById("cart_link").textContent = cart.length.toString();
         document.getElementById("cart_link2").textContent = cart.length.toString();
     }
+    function search(){
+        window.location.href = "/shop/search?query="+document.getElementById("searchName").value;
+    }
+    function resetActive(){
+        var li  = document.querySelectorAll('.main_menu nav ul .active');
+        li.forEach(function (box) {
+            box.classList.remove("active");
+        });
+        console.log(li);
+        li  = document.querySelectorAll('.main_menu nav ul li');
+        console.log(li);
+        if(window.location.href.includes("shop")){
+            li[1].classList.add('active');
+        }
+        else li[0].classList.add('active');
+    }
+
+    // Hàm để lấy giá trị của một cookie
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                return cookie.substring(name.length + 1);
+            }
+        }
+        return null;
+    }
+    function checkAccount(){
+        var login = getCookie("isLogin");
+        var showAccount = document.getElementById("account");
+        if(login!=null)
+        {
+            var ul = document.createElement('ul');
+            showAccount.append(ul);
+            showAccount.querySelector('ul').innerHTML = '<li class="top_links"><a href="#">My Account <i class="ion-chevron-down"></i></a>\n' +
+                '                        <ul class="dropdown_links">\n' +
+                '                            <li><a id="logout" href="/logout?back=/">Đăng xuất</a></li>\n' +
+                '                            <li><a href="my-account.html">My Account </a></li>\n' +
+                '                            <li><a href="#">Sign In</a></li>\n' +
+                '                            <li><a href="compare.html">Compare Products  </a></li>\n' +
+                '                        </ul>\n' +
+                '                    </li>';
+            document.getElementById('logout').href = "/reset?back="+window.location.pathname;
+
+        }
+        else {
+            var link = document.createElement('a')
+            link.href = '/sign-in-up';
+            link.textContent = 'Sign In';
+            showAccount.append(link);
+        }
+    }
+
     reloadCartLength();
+    resetActive();
+    checkAccount();
 </script>

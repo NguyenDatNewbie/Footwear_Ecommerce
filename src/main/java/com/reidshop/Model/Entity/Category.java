@@ -16,5 +16,4 @@ public class Category {
     String name;
     @Column
     Long parent;
-
 }

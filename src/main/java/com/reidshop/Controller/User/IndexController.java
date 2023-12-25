@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Locale;
 
 @Controller
-@RequestMapping("/index")
+@RequestMapping("/")
 public class IndexController {
     @Autowired
     ProductRepository productRepository;

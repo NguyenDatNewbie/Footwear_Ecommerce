@@ -8,13 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Sign In/Sign Up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
     <!-- Font Icon -->
     <link rel="stylesheet"
-          href="<c:url value="/user/login/fonts/material-icon/css/material-design-iconic-font.min.css"/>">
+          href="<c:url value="/assets/login/fonts/material-icon/css/material-design-iconic-font.min.css"/>">
 
     <!-- Main css -->
-    <link rel="stylesheet" href="<c:url value="/user/login/css/style.css"/>">
+    <link rel="stylesheet" href="<c:url value="/assets/login/css/style.css"/>">
 
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/assets/img/favicon.ico"/>">
 
@@ -64,11 +65,51 @@
         .form-group span {
 
         }
+        @keyframes slideIn {
+            from {
+                top: -50px;
+                opacity: 0;
+            }
+            to {
+                top: 10px;
+                opacity: 1;
+            }
+        }
 
+        @keyframes slideOut {
+            from {
+                top: 10px;
+                opacity: 1;
+            }
+            to {
+                top: -50px;
+                opacity: 0;
+            }
+        }
+        .success {
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 999;
+            font-family: "Emoji";
+            animation: slideIn 0.5s, slideOut 0.5s 1.5s forwards;
+        }
+        .hidden{
+            display: none;
+        }
     </style>
 </head>
 <body>
 <div>
+    <div id="messageBox" class="hidden success">
+
+    </div>
     <jsp:include page="header.jsp"/>
 
     <div class="main">
@@ -126,7 +167,7 @@
                         </form>
                     </div>
                     <div class="signup-image">
-                        <figure><img src="<c:url value="/user/login/images/signup-image.jpg"/>" alt="sing up image">
+                        <figure><img src="<c:url value="/assets/login/images/signup-image.jpg"/>" alt="sing up image">
                         </figure>
                         <a class="signup-image-link" id="onSignIn">Tôi đã có tài khoản</a>
                     </div>
@@ -139,7 +180,7 @@
             <div class="container">
                 <div class="signin-content">
                     <div class="signin-image">
-                        <figure><img src="<c:url value="/user/login/images/signin-image.jpg"/>" alt="sing up image">
+                        <figure><img src="<c:url value="/assets/login/images/signin-image.jpg"/>" alt="sing up image">
                         </figure>
                         <div style="display:flex; justify-content: center"><a class="signup-image-link" id="onSignUp">Đăng ký tài khoản</a>
                             <strong style="margin: 0px 5px">/</strong>
@@ -189,10 +230,35 @@
 <!-- JS -->
 <!-- Plugins JS -->
 <!-- Plugins JS -->
-<script src="<c:url value="user/assets/js/plugins.js"/>"></script>
+<script src="<c:url value="/assets/js/plugins.js"/>"></script>
 
 <!-- Main JS -->
-<script src="<c:url value="user/assets/js/main.js"/>"></script>
+<script src="<c:url value="/assets/js/main.js"/>"></script>
+<script>
+    // Hàm để lấy giá trị của tham số từ URL
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+    function showMessage(messageFromURL){
+        let messageBox = document.getElementById("messageBox");
+        messageBox.innerHTML = '<p style="color: #fff"><i class="fas fa-check-circle" style="margin-right: 3px"></i>'+messageFromURL+'</p>';
+        messageBox.classList.remove("hidden");
+        setTimeout(function () {
+            messageBox.classList.add("hidden");
+        }, 2000);
+    }
+    window.addEventListener('load', function (){
+        var messageFromURL = getParameterByName('message');
+        if(messageFromURL)
+            showMessage(messageFromURL);
+    })
+</script>
 <script>
     const signIn = document.getElementById('onSignIn');
     const signUp = document.getElementById('onSignUp');
@@ -217,6 +283,7 @@
     <c:if test="${isLogin || empty isLogin}">
         signIn.click();
     </c:if>
+
 
 
 </script>

@@ -1,5 +1,6 @@
 package com.reidshop.security;
 
+import com.reidshop.Model.Enum.ROLE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,13 +39,14 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
-                .authorizeHttpRequests(req ->
-                        req.requestMatchers("/cart/payment/*/**").authenticated()
-                                .anyRequest().permitAll()
+                .authorizeHttpRequests(req -> req
+                        .requestMatchers("/cart/payment/*/**").authenticated()
+                        .requestMatchers("/admin/assets/vendor/**").permitAll()
+                        .requestMatchers("/admin/*/**").hasRole("ADMIN")
+                        .anyRequest().permitAll()
+
                 )
-                .formLogin((login->login.
-                        loginPage("/sign-in-up").permitAll()
-                        ))
+                .formLogin((login->login.loginPage("/sign-in-up").permitAll()))
 
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())

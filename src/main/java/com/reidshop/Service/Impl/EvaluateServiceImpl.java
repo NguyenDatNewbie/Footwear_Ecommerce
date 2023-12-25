@@ -1,6 +1,8 @@
 package com.reidshop.Service.Impl;
 
 import com.reidshop.Model.Entity.Evaluate;
+import com.reidshop.Model.Entity.OrderItem;
+import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Reponsitory.EvaluateRepository;
 import com.reidshop.Service.IEvaluateServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,5 +77,12 @@ public class EvaluateServiceImpl implements IEvaluateServiceImpl {
             arrayList.add(i);
         return arrayList;
     }
-
+//    @Override
+//    public boolean checkExist(Orders orders){
+//        for (OrderItem item:orders.getOrderItems()) {
+//            if(evaluateRepository.checkExits(orders.getAccount(),item.getInventory().getSize().getProduct())!=null)
+//                return false;
+//        }
+//        return true;
+//    }
 }

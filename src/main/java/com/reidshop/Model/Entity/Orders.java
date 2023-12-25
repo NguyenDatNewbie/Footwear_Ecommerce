@@ -9,6 +9,8 @@ import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table
 @Entity
@@ -63,4 +65,10 @@ public class Orders {
     @ManyToOne
     @JoinColumn(name="store_id")
     Store store;
+
+    @OneToMany(mappedBy = "order")
+    List<OrderItem> orderItems;
+
+    @OneToMany(mappedBy = "orders")
+    List<ProductOutOfStock> productOutOfStocks;
 }

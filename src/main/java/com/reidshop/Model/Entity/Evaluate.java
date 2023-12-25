@@ -23,9 +23,6 @@ public class Evaluate {
     String comment;
 
     @Column
-    String img;
-
-    @Column
     @Temporal(TemporalType.DATE)
     @DateTimeFormat(pattern = "dd--MM--yyyy")
     Date createdAt;
@@ -37,4 +34,8 @@ public class Evaluate {
     @ManyToOne
     @JoinColumn(name="account_id",nullable = false,referencedColumnName = "account_id")
     Account account;
+
+    @ManyToOne
+    @JoinColumn(name = "order_id")
+    Orders orders;
 }

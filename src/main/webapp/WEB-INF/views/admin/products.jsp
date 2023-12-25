@@ -313,19 +313,20 @@
   //Màu
   document.addEventListener("DOMContentLoaded", function () {
     // Lắng nghe sự kiện click cho tất cả các phần tử có lớp "filter"
-    var filterButtons = document.querySelectorAll(".container-color");
+    var filterButtons = document.querySelectorAll(".container-color span");
+
     filterButtons.forEach(function (button) {
       button.addEventListener("click", function () {
-        if(button.parentElement.classList.contains('active'))
-          button.parentElement.classList.remove('active');
-        else{
-          button.parentElement.classList.add('active');
-          var color = button.getAttribute('data-value');
-          document.getElementById('color').value = color;
-          console.log("Color: ", color);
-        }
+        filterButtons.forEach(function (button) {
+          if(button.parentElement.classList.contains('active'))
+            button.parentElement.classList.remove('active');
+        });
+        button.parentElement.classList.add('active');
+        document.getElementById('color').value =  button.parentElement.querySelector('p').textContent;
+        console.log("Color: ", document.getElementById('color').value);
       });
     });
+
   });
 
   document.addEventListener("DOMContentLoaded", function () {

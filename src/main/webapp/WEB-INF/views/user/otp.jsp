@@ -69,6 +69,27 @@
         .error i {
             margin-right: 12px; /* Khoảng cách giữa biểu tượng và văn bản */
         }
+        @keyframes slideIn {
+            from {
+                top: -50px;
+                opacity: 0;
+            }
+            to {
+                top: 10px;
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                top: 10px;
+                opacity: 1;
+            }
+            to {
+                top: -50px;
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 

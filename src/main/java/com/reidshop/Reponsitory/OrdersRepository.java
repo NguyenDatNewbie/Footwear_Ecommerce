@@ -99,9 +99,6 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     List<Orders> findAllOrderCancel();
 
 
-
-
-
     //Order by Store_id
     @Query("select o from Orders o where o.store.id = :storeId")
     List<Orders> findAllByStoreID(@Param("storeId") Long storeId);
@@ -150,4 +147,12 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
             "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) and o.status = 'COMPLETE' AND o.store.id = :storeId " +
             "GROUP BY DATE(o.createdAt) ")
     List<Double> listTotalPriceOfThisWeekStore(@Param("storeId") Long storeId);
+
+    @Query("select o from Orders o where o.account.id=?1 ORDER BY o.id DESC")
+    List<Orders> findOrdersByAccount(Long id);
+    @Query("select o from Orders o where o.account.id=?1 and o.status= ?2 ORDER BY o.id DESC")
+    List<Orders> findOrdersByAccountAndStatus(Long id, OrderStatus status);
+
+    @Query("select o from Orders o where o.account.id=?1 and o.receiveType='STORE' ORDER BY o.id DESC")
+    List<Orders> findOrdersByAccountReceive(Long id);
 }

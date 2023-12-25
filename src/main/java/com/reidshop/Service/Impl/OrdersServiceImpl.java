@@ -1,14 +1,13 @@
 package com.reidshop.Service.Impl;
 
 import com.reidshop.Model.Cookie.CookieHandle;
-import com.reidshop.Model.Entity.Account;
-import com.reidshop.Model.Entity.Orders;
-import com.reidshop.Model.Entity.Store;
+import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Model.Request.OrderCombineRequest;
 import com.reidshop.Reponsitory.AccountRepository;
+import com.reidshop.Reponsitory.EvaluateRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
 import com.reidshop.Service.Handle.DistanceService;
 import com.reidshop.Service.IOrderItemService;
@@ -41,6 +40,9 @@ public class OrdersServiceImpl implements IOrdersService {
     IOrderItemService orderItemService;
     @Autowired
     DistanceService distanceService;
+    @Autowired
+    EvaluateRepository evaluateRepository;
+
 
     public OrdersServiceImpl(OrdersRepository ordersRepository) {
         this.ordersRepository = ordersRepository;
@@ -156,7 +158,9 @@ public class OrdersServiceImpl implements IOrdersService {
             // Hết hàng status = 0 add 7 ngày còn hàng = 1
             orders.setLimitReceiveAt(Date.valueOf(LocalDate.now().plusDays(orderCombineRequest.getStoreValid().get(0).getStatus()==1 ? 1 : 7)));
             Orders complete = ordersRepository.save(orders);
-            productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
+            double totalPrice = productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
+            complete.setTotalPrice(totalPrice);
+            ordersRepository.save(complete);
         }
         else{
             orders.setStore(store);
@@ -174,6 +178,20 @@ public class OrdersServiceImpl implements IOrdersService {
     }
 
     @Override
+    public void rateSave(Evaluate evaluate, long orderId){
+        Orders orders = ordersRepository.findById(orderId).orElse(null);
+        if(orders!=null)
+        {
+            for (OrderItem item: orders.getOrderItems()) {
+                Product product = item.getInventory().getSize().getProduct();
+                Evaluate newEvaluate = evaluate;
+                newEvaluate.setProduct(product);
+                newEvaluate.setOrders(orders);
+                evaluateRepository.save(newEvaluate);
+            }
+        }
+    }
+    @Override
     public void UpdateOrderStatus(Long orderId, OrderStatus newStatus) {
         Orders order = ordersRepository.findById(orderId).orElseThrow();
         order.setStatus(newStatus);
@@ -190,5 +208,11 @@ public class OrdersServiceImpl implements IOrdersService {
             e.printStackTrace(); // In ra stack trace để kiểm tra lỗi
             return 0;
         }
+    }
+
+    @Override
+    public List<Orders> findOrdersByAccountAndStatus(Long id, String status){
+        List<Orders> orders = ordersRepository.findOrdersByAccountAndStatus(id,OrderStatus.valueOf(status));
+        return orders;
     }
 }
