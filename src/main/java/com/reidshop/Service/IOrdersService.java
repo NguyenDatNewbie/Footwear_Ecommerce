@@ -36,5 +36,7 @@ public interface IOrdersService {
 
     void UpdateOrderStatus(Long orderId, OrderStatus orderStatus);
 
+    double totalSalesOfTodayStore(Long storeId);
+
     List<Orders> findOrdersByAccountAndStatus(Long id, String status);
 }

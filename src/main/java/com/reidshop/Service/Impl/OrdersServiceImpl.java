@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -199,6 +198,17 @@ public class OrdersServiceImpl implements IOrdersService {
         ordersRepository.save(order);
     }
 
+    @Override
+    public double totalSalesOfTodayStore(Long storeId) {
+        try {
+            Long result = (long) ordersRepository.totalSalesOfTodayStore(1L);
+            return result;
+        } catch (Exception e) {
+            // Xử lý exception nếu có
+            e.printStackTrace(); // In ra stack trace để kiểm tra lỗi
+            return 0;
+        }
+    }
 
     @Override
     public List<Orders> findOrdersByAccountAndStatus(Long id, String status){

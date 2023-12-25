@@ -61,7 +61,7 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     //List total_price của các order trong tuần
     @Query("SELECT SUM(o.totalPrice) AS dailyTotal " +
             "FROM Orders o " +
-            "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) " +
+            "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) and o.status = 'COMPLETE'" +
             "GROUP BY DATE(o.createdAt) ")
     List<Double> listTotalPriceOfThisWeek();
 
@@ -69,7 +69,7 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     //List order id của mỗi ngày trong tuần
     @Query("SELECT DATE(o.createdAt) AS orderDate, GROUP_CONCAT(o.id) AS orderIds " +
             "FROM Orders o " +
-            "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) " +
+            "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) and o.status = 'COMPLETE'" +
             "GROUP BY DATE(o.createdAt)")
     List<Object[]> findOrderIdsByWeek();
 
@@ -97,6 +97,57 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     //List order CANCEL
     @Query("SELECT o FROM Orders o WHERE o.status = 'CANCEL'")
     List<Orders> findAllOrderCancel();
+
+
+    //Order by Store_id
+    @Query("select o from Orders o where o.store.id = :storeId")
+    List<Orders> findAllByStoreID(@Param("storeId") Long storeId);
+
+    //List order by store_id for status
+    @Query("SELECT o FROM Orders o WHERE o.status = :status AND o.store.id = :storeId")
+    List<Orders> findAllOrdersByStatusAndStoreId(@Param("status") OrderStatus status, @Param("storeId") Long storeId);
+
+    //Vendor
+    //Order
+    @Query("SELECT count(*) from Orders p where p.store.id = :storeId")
+    int countAllOrdersForStore(@Param("storeId") Long storeId);
+
+    @Query("SELECT count(*) from Orders p where p.store.id = :storeId and DATE(p.createdAt) = CURRENT_DATE")
+    int countTodayOrdersForStore(@Param("storeId") Long storeId);
+
+    @Query("SELECT count(*) from Orders p where p.store.id = :storeId and FUNCTION('DATE_FORMAT', p.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')")
+    int countMonthOrdersForStore(@Param("storeId") Long storeId);
+
+    //Sale
+    @Query("SELECT COALESCE(SUM(p.totalPrice), 0) FROM Orders p where p.store.id = :storeId AND p.status = 'COMPLETE'")
+    double saleAllByStoreId(@Param("storeId") Long storeId);
+
+    @Query("SELECT COALESCE(SUM(p.totalPrice), 0) FROM Orders p WHERE DATE(p.createdAt) = CURRENT_DATE AND p.status = 'COMPLETE' and  p.store.id = :storeId")
+    double totalSalesOfTodayStore(@Param("storeId") Long storeId);
+
+    @Query("SELECT COALESCE(SUM(p.totalPrice), 0) FROM Orders p WHERE (FUNCTION('DATE_FORMAT', p.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')) AND p.status = 'COMPLETE' and  p.store.id = :storeId")
+    double totalSalesOfMonthStore(@Param("storeId") Long storeId);
+
+    //revenue
+    @Query("SELECT o.id FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE AND o.status = 'COMPLETE' AND o.store.id = :storeId")
+    List<Integer> findAllOrderTodayStore(@Param("storeId") Long storeId);
+
+    @Query("SELECT o.id FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) AND o.status = 'COMPLETE' AND o.store.id = :storeId")
+    List<Integer> findAllOrderWeekStore(@Param("storeId") Long storeId);
+
+    @Query("SELECT p.id FROM Orders p WHERE (FUNCTION('DATE_FORMAT', p.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')) AND p.status = 'COMPLETE' AND p.store.id = :storeId")
+    List<Integer> findAllOrderMonthStore(@Param("storeId") Long storeId);
+
+    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) AND o.status = 'COMPLETE' AND o.store.id = :storeId")
+    double totalPriceOfThisWeekStore(@Param("storeId") Long storeId);
+
+    //List total_price của các order trong tuần
+    @Query("SELECT SUM(o.totalPrice) AS dailyTotal " +
+            "FROM Orders o " +
+            "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) and o.status = 'COMPLETE' AND o.store.id = :storeId " +
+            "GROUP BY DATE(o.createdAt) ")
+    List<Double> listTotalPriceOfThisWeekStore(@Param("storeId") Long storeId);
+
     @Query("select o from Orders o where o.account.id=?1 ORDER BY o.id DESC")
     List<Orders> findOrdersByAccount(Long id);
     @Query("select o from Orders o where o.account.id=?1 and o.status= ?2 ORDER BY o.id DESC")
