@@ -51,8 +51,9 @@ public class AdminController {
     @RequestMapping("")
     public String index(ModelMap modelMap){
         List<Category> categoryList = categoryRepository.findAll();
-        listRevenueOfThisWeek();
+        List<Double> listRevenue = listRevenueOfThisWeek();
         modelMap.addAttribute("categories",categoryList);
+        modelMap.addAttribute("listRevenue",listRevenue);
         modelMap.addAttribute("productService",productService);
         modelMap.addAttribute("formatVND",formatVND);
         modelMap.addAttribute("productRepository",productRepository);
@@ -222,24 +223,26 @@ public class AdminController {
         return ResponseEntity.ok(salesData);
     }
 
-    public List<Object[]> listRevenueOfThisWeek(){
+    public List<Double> listRevenueOfThisWeek(){
         List<Object[]> result = ordersService.findOrderIdsByWeek();
         List<Double> salesData = ordersService.listTotalPriceOfThisWeek();
         Collections.reverse(salesData);
-        for (Double value : salesData) {
-            System.out.print(value + " ");
-        }
+        List<Double> listRevenueThisWeek = new ArrayList<>();
         for (Object[] row : result) {
-            Date orderDate = (Date) row[0];
             String orderIds = (String) row[1];
+
+            Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderIds));
 
             String[] orderIdArray = orderIds.split(",");
 
+
             double totalOriginalOfDay = calculateTotalPrice(Arrays.asList(orderIdArray));
-            System.out.println("orderDate: " + orderDate+ ", orderIds: " + Arrays.toString(orderIdArray));
-            System.out.println("totalOriginalOfDay: " + totalOriginalOfDay);
+            double revenue = order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfDay);
+
+            listRevenueThisWeek.add(revenue);
         }
-        return ordersService.findOrderIdsByWeek();
+
+        return listRevenueThisWeek;
     }
 
     public double calculateTotalPrice(List<String> orderIds) {
@@ -248,22 +251,6 @@ public class AdminController {
             originalPrice += orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
         }
         return originalPrice;
-    }
-
-    public static void reverseArray(int[] arr) {
-        int left = 0;
-        int right = arr.length - 1;
-
-        while (left < right) {
-            // Hoán đổi phần tử tại left và right
-            int temp = arr[left];
-            arr[left] = arr[right];
-            arr[right] = temp;
-
-            // Di chuyển left và right đến phần tử tiếp theo
-            left++;
-            right--;
-        }
     }
 
 }

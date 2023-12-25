@@ -31,4 +31,7 @@ public interface IOrdersService {
     void savePayment(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request);
 
     void UpdateOrderStatus(Long orderId, OrderStatus orderStatus);
+
+    //Vendor
+    double totalSalesOfTodayStore(Long storeId);
 }

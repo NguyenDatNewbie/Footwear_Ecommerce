@@ -180,5 +180,15 @@ public class OrdersServiceImpl implements IOrdersService {
         ordersRepository.save(order);
     }
 
-
+    @Override
+    public double totalSalesOfTodayStore(Long storeId) {
+        try {
+            Long result = (long) ordersRepository.totalSalesOfTodayStore(1L);
+            return result;
+        } catch (Exception e) {
+            // Xử lý exception nếu có
+            e.printStackTrace(); // In ra stack trace để kiểm tra lỗi
+            return 0;
+        }
+    }
 }

@@ -80,33 +80,6 @@
                       <div class="modal-body">
                         <form class="row g-3 needs-validation" novalidate action="<c:url value="/admin/account/addNewAccountVendor"/> " method="post" onsubmit="return validateForm()">
                           <div class="col-12">
-                            <label class="form-label">Department Address</label>
-                            <div class="tab-content" id="tab1">
-                              <div class="flex-2">
-                                <select class="form-select form-select-sm mb-3" id="city"
-                                        aria-label=".form-select-sm" style="margin-right: 10px">
-                                  <option value="" selected>Chọn tỉnh thành</option>
-                                </select>
-                                <select class="form-select form-select-sm mb-3" id="district"
-                                        aria-label=".form-select-sm">
-                                  <option value="" selected>Chọn quận huyện</option>
-                                </select>
-                              </div>
-
-                              <div class="flex-2">
-                                <select class="form-select form-select-sm" id="ward"
-                                        aria-label=".form-select-sm" style="margin-right: 10px">
-                                  <option value="" selected>Chọn phường xã</option>
-                                </select>
-
-                                <input placeholder="Địa chỉ chi tiết" name="addressDetail"
-                                       id="addressDetail"
-                                       type="text" required style="margin-top: 10px; " class="form-control">
-                              </div>
-                            </div>
-                          </div>
-
-                          <div class="col-12">
                             <label for="email" class="form-label">Email Register</label>
                             <div class="input-group has-validation">
                               <span class="input-group-text" id="inputGroupPrepend">@</span>
@@ -125,6 +98,40 @@
                             <label for="rePassword" class="form-label">Re-enter Password</label>
                             <input type="password" name="rePassword" class="form-control" placeholder="Re-enter Password" id="rePassword" required oninput="validateRePassword()">
                             <div class="invalid-feedback" id="passwordMismatch">Passwords do not match!</div>
+                          </div>
+                          <div class="col-12">
+                            <label class="form-label">Department Address</label>
+                            <div class="tab-content" id="tab1">
+                              <div class="flex-2">
+                                <select class="form-select form-select-sm mb-3" id="city"
+                                        aria-label=".form-select-sm" style="margin-right: 10px; font-size: 15px;">
+                                  <option value="" selected>Chọn tỉnh thành</option>
+                                </select>
+                                <select class="form-select form-select-sm mb-3" id="district"
+                                        aria-label=".form-select-sm" style="margin-right: 10px; font-size: 15px;">
+                                  <option value="" selected>Chọn quận huyện</option>
+                                </select>
+                              </div>
+
+                              <div class="flex-2">
+                                <select class="form-select form-select-sm" id="ward"
+                                        aria-label=".form-select-sm" style="margin-right: 10px; font-size: 15px;">
+                                  <option value="" selected>Chọn phường xã</option>
+                                </select>
+
+                                <input placeholder="Địa chỉ chi tiết" name="addressDetail"
+                                       id="addressDetail"
+                                       type="text" required style="margin-top: 10px; " class="form-control">
+                              </div>
+                            </div>
+                          </div>
+                          <div class="col-md-6">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" placeholder="Name" id="name" name="name">
+                          </div>
+                          <div class="col-md-6">
+                            <label for="phoneNumber" class="form-label">Phone Number</label>
+                            <input type="number" class="form-control" placeholder="Phone Number" id="phoneNumber" name="phoneNumber">
                           </div>
                           <input type="text" hidden="hidden" name="addressDepartment" id="addressDepartment">
                           <div class="col-12">

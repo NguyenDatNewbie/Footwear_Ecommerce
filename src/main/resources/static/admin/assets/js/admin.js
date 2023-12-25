@@ -170,11 +170,4 @@ $(document).ready(function() {
         });
     });
 });
-$(document).ready(function() {
-    // Sử dụng jQuery hoặc JavaScript để gọi API endpoint
-    $.get('/admin/home/getRevenueToday', function(response) {
-        // Xử lý kết quả từ API và cập nhật lên trang web
-        $('#revenue').text(formatter.format(response));
-    });
-});
 

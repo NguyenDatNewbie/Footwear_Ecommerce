@@ -91,6 +91,8 @@ public class ManagerAccountController {
     public ModelAndView addNewAccountVendor(ModelMap modelMap,
                                             @Valid @ModelAttribute("account") Account account,
                                             @RequestParam("addressDepartment") String addressDepartment,
+                                            @RequestParam("name") String nameDepartment,
+                                            @RequestParam("phoneNumber") String phoneNumber,
                                             BindingResult result) throws IOException {
         if(result.hasErrors()){
             System.out.println(result);
@@ -118,6 +120,15 @@ public class ManagerAccountController {
                 newStore.setAccount(account);
                 newStore.setDepartment(addressDepartment);
                 storeRepository.save(newStore);
+
+                //New Account Detail
+                AccountDetail newAccDtl = new AccountDetail();
+                newAccDtl.setImage("https://pos.nvncdn.com/80c639-72864/ps/20230619_g56PqYH9vP.jpeg");
+                newAccDtl.setName(nameDepartment);
+                newAccDtl.setAccount(account);
+                newAccDtl.setPhone(phoneNumber);
+                newAccDtl.setAddress(addressDepartment);
+                accountDetailRepository.save(newAccDtl);
 
                 modelMap.addAttribute("successMessage", "Register Account For Vendor Successfully.");
                 modelMap.addAttribute("account", new Account());
