@@ -38,4 +38,9 @@ public class Product {
     @OneToMany(mappedBy = "product")
     List<Image> images = new ArrayList<>();
 
+
+    public String getNameAndId(){
+        return id.toString()+" - " + name;
+    }
+
 }

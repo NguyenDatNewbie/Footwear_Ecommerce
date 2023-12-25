@@ -29,7 +29,8 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
             "AND    ('DUMMYVALUE' IN ?2 Or (SUBSTRING_INDEX(p.name, ' ', -1) IN ?2))" +
             "AND   ('DUMMYVALUE' IN ?3 Or (s.size IN ?3))")
     List<Product> getProductsByMulti(Long categoryId,List<String> colors,List<String> sizes);
-
+    @Query("SELECT p FROM Product p WHERE p.name LIKE CONCAT('%', ?1, '%')")
+    List<Product> findByNameOrId(String query);
     @Query("SELECT p FROM Product p WHERE p.name LIKE CONCAT('%', ?1, '%')")
     List<Product> searchProduct(String query);
 }
