@@ -17,10 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Controller
 @RequestMapping("shop")
@@ -83,6 +80,23 @@ public class ShopController {
         modelMap.addAttribute("products",products);
         modelMap.addAttribute("productRepository",productRepository);
         return "user/shop";
+    }
+
+    @GetMapping("/searchList")
+    @ResponseBody
+    List<Map<String,String>> searchListName(@RequestParam("query") String query){
+        List<Product> products = productRepository.searchProduct(query);
+        List<Map<String,String>> maps = new ArrayList<>();
+        for (Product product:products) {
+            Map<String,String> map  = new HashMap<>();
+            map.put("link","/product/"+ String.valueOf(product.getId()));
+            map.put("img",product.getImages().get(0).getImg());
+            map.put("name",product.getName());
+            map.put("priceOrigin",String.valueOf(product.getPrice()));
+            map.put("price", String.valueOf(product.getPrice()*(1-product.getPromotion()/100.0)));
+            maps.add(map);
+        }
+        return maps;
     }
 
     public List<Product> getNullableCoursesFiltered(Long categoryId,List<String> colors,List<String> sizes) {

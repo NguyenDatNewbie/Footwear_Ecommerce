@@ -1920,12 +1920,12 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 }
 @media only screen and (min-width: 1200px) and (max-width: 1600px) {
   .header_three .search_bar form {
-    width: 280px;
+    width: 370px;
   }
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
   .header_three .search_bar form {
-    width: 280px;
+    width: 350px;
   }
 }
 @media only screen and (min-width: 768px) and (max-width: 991px) {

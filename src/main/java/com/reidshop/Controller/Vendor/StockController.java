@@ -1,4 +1,4 @@
-package com.reidshop.Controller.Admin;
+package com.reidshop.Controller.Vendor;
 
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.*;

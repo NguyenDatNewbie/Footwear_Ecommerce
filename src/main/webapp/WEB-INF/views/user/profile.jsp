@@ -10,7 +10,9 @@
     <meta name="keywords" content="Male_Fashion, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Somore | Thông tin cá nhân</title>
+    <title>Thông tin cá nhân</title>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="/assets/img/logo/logo.png" style="width: 20px;">
 
     <link rel="shortcut icon" type="image/x-icon"
           href="assets/img/favicon.ico">

@@ -36,17 +36,12 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="widgets_container contact_us">
-                        <h3>Contact Us</h3>
+                        <h3>Liên hệ với chúng tôi</h3>
                         <div class="footer_contact">
                             <p>Địa chỉ trụ sở chính: Số 1 Võ Văn Ngân, Thủ Đức</p>
                             <p>Địa thoại: <a href="tel:+(+012)800456789-987">03231232132</a> </p>
                             <p>Email: demo@example.com</p>
-                            <ul>
-                                <li><a href="#" title="Twitter"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#" title="google-plus"><i class="fa fa-google-plus"></i></a></li>
-                                <li><a href="#" title="facebook"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#" title="youtube"><i class="fa fa-youtube"></i></a></li>
-                            </ul>
+
                         </div>
                     </div>
                 </div>

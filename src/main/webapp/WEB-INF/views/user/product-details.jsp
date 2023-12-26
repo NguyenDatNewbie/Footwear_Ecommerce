@@ -8,7 +8,9 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Product details</title>
+    <title>Chi tiết sản phẩm</title>
+    <link rel="shortcut icon" type="image/x-icon"
+          href="/assets/img/logo/logo.png" style="width: 20px;">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Favicon -->
@@ -326,7 +328,6 @@
                             <div class=" product_ratting" style="margin-bottom: 0px">
                                 <ul>
                                     <c:forEach items="${evaluateService.rateStar(evaluateService.avg(evaluateList))}" var="star">
-                                        <script> console.log(${star})</script>
                                         <c:choose>
                                             <c:when test="${star==1}">
                                                 <li><i class="fa fa-star"></i></li>

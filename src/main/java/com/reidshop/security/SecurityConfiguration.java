@@ -41,9 +41,12 @@ public class SecurityConfiguration {
         http.csrf().disable()
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/cart/payment/*/**").authenticated()
+                        .requestMatchers("/profile/**").authenticated()
+                        .requestMatchers("/orders/**").authenticated()
                         .requestMatchers("/admin/assets/vendor/**").permitAll()
                         .requestMatchers("/admin/assets/**").permitAll()
                         .requestMatchers("/admin/*/**").hasRole("ADMIN")
+                        .requestMatchers("/vendor/*/**").hasRole("VENDOR")
                         .anyRequest().permitAll()
 
                 )

@@ -3,166 +3,38 @@
          isELIgnored="false"%>
 
 <!-- Main Wrapper Start -->
-<!--Offcanvas menu area start-->
-<div class="off_canvars_overlay">
+<style>
+    #autocomplete-container {
+        position: relative;
+        width: 100%;
+        color: black;
+    }
+    #autocomplete-list {
+        position: absolute;
+        z-index: 999;
+        list-style: none;
+        margin-left: 16px;
+        padding: 0;
+        width: 335px;
+        max-height: 200px; /* Giới hạn chiều cao của danh sách */
+        overflow-y: auto; /* Tạo ra thanh cuộn khi nội dung vượt quá chiều cao */
+        border: 1px solid #ccc;
+        border-top: none;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        display: none;
+    }
 
-</div>
-<div class="offcanvas_menu">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="canvas_open">
-                    <a href="javascript:void(0)"><i class="ion-navicon"></i></a>
-                </div>
-                <div class="offcanvas_menu_wrapper">
-                    <div class="canvas_close">
-                        <a href="javascript:void(0)"><i class="ion-android-close"></i></a>
-                    </div>
-                    <div class="welcome_text">
-                        <ul>
-                            <li><span>Free Delivery:</span> Take advantage of our time to save event</li>
-                            <li><span>Free Returns *</span> Satisfaction guaranteed</li>
-                        </ul>
-                    </div>
+    #autocomplete-list li {
+        padding: 8px;
+        cursor: pointer;
+        background-color: #f9f9f9;
+    }
 
-                    <div class="top_right">
-                        <ul>
-                            <li class="top_links"><a href="#">My Account <i class="ion-chevron-down"></i></a>
-                                <ul class="dropdown_links">
-                                    <li><a href="wishlist.html">My Wish List </a></li>
-                                    <li><a href="my-account.html">My Account </a></li>
-                                    <li><a href="#">Sign In</a></li>
-                                    <li><a href="compare.html">Compare Products  </a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="search_bar">
-                        <form action="javascript:search()">
-                            <input placeholder="Search entire store here..." type="text" >
-                            <button type="submit"><i class="ion-ios-search-strong"></i></button>
-                        </form>
-                    </div>
-                    <div class="cart_area">
-                        <div class="middel_links">
-                            <ul>
-                                <li><a href="login.html">Login</a></li>
-                                <li>/</li>
-                                <li><a href="login.html">Register</a></li>
-                            </ul>
-
-                        </div>
-                        <div  class="cart_link">
-                            <a href="/cart" style="display: flex"><i class="fa fa-shopping-basket"><span style="margin-left: 3px" id="cart_link"></span></i></a>
-                        </div>
-                    </div>
-                    <div class="contact_phone">
-                        <p>Call Free Support: <a href="tel:+(012)800456789">(+012) 800 456 789 </a></p>
-                    </div>
-                    <div id="menu" class="text-left ">
-                        <ul class="offcanvas_main_menu">
-                            <li class="menu-item-has-children active">
-                                <a href="#">Home</a>
-                                <ul class="sub-menu">
-                                    <li><a href="index.html">Home 1</a></li>
-                                    <li><a href="index-2.html">Home 2</a></li>
-                                    <li><a href="index-3.html">Home 3</a></li>
-                                    <li><a href="index-4.html">Home 4</a></li>
-                                    <li><a href="index-5.html">Home 5</a></li>
-                                    <li><a href="index-6.html">Home 6</a></li>
-                                    <li><a href="index-7.html">Home 7</a></li>
-                                    <li><a href="index-8.html">Home 8</a></li>
-                                    <li><a href="index-9.html">Home 9</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">Shop</a>
-                                <ul class="sub-menu">
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Shop Layouts</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="shop.html">shop</a></li>
-                                            <li><a href="shop-fullwidth.html">Full Width</a></li>
-                                            <li><a href="shop-fullwidth-list.html">Full Width list</a></li>
-                                            <li><a href="shop-right-sidebar.html">Right Sidebar </a></li>
-                                            <li><a href="shop-right-sidebar-list.html"> Right Sidebar list</a></li>
-                                            <li><a href="shop-list.html">List View</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">other Pages</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="portfolio.html">portfolio</a></li>
-                                            <li><a href="portfolio-details.html">portfolio details</a></li>
-                                            <li><a href="cart.html">cart</a></li>
-                                            <li><a href="checkout.html">Checkout</a></li>
-                                            <li><a href="my-account.html">my account</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Product Types</a>
-                                        <ul class="sub-menu">
-                                            <li><a href="product-details.html">product details</a></li>
-                                            <li><a href="product-sidebar.html">product sidebar</a></li>
-                                            <li><a href="product-grouped.html">product grouped</a></li>
-                                            <li><a href="variable-product.html">product variable</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">blog</a>
-                                <ul class="sub-menu">
-                                    <li><a href="blog.html">blog</a></li>
-                                    <li><a href="blog-details.html">blog details</a></li>
-                                    <li><a href="blog-sidebar.html">blog  Sidebar</a></li>
-                                    <li><a href="blog-fullwidth.html">blog fullwidth</a></li>
-                                </ul>
-
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="#">pages </a>
-                                <ul class="sub-menu">
-                                    <li><a href="about.html">About Us</a></li>
-                                    <li><a href="services.html">services</a></li>
-                                    <li><a href="faq.html">Frequently Questions</a></li>
-                                    <li><a href="contact.html">contact</a></li>
-                                    <li><a href="login.html">login</a></li>
-                                    <li><a href="wishlist.html">Wishlist</a></li>
-                                    <li><a href="404.html">Error 404</a></li>
-                                    <li><a href="compare.html">compare</a></li>
-                                    <li><a href="privacy-policy.html">privacy policy</a></li>
-                                    <li><a href="coming-soon.html">coming soon</a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="my-account.html">my account</a>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="about.html">About Us</a>
-                            </li>
-                            <li class="menu-item-has-children">
-                                <a href="contact.html"> Contact Us</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="offcanvas_footer">
-                        <span><a href="#"><i class="fa fa-envelope-o"></i> info@yourdomain.com</a></span>
-                        <ul>
-                            <li class="facebook"><a href="#"><i class="fa fa-facebook"></i></a></li>
-                            <li class="twitter"><a href="#"><i class="fa fa-twitter"></i></a></li>
-                            <li class="pinterest"><a href="#"><i class="fa fa-pinterest-p"></i></a></li>
-                            <li class="google-plus"><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                            <li class="linkedin"><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<!--Offcanvas menu area end-->
-
+    #autocomplete-list li:hover {
+        background-color: #ddd;
+    }
+</style>
 <!--header area start-->
 <header class="header_area header_three">
     <!--header top start-->
@@ -173,7 +45,6 @@
                 </div>
                 <div class="col-lg-5 col-md-12">
                     <div class="top_right text-right" id="account">
-
                     </div>
                 </div>
             </div>
@@ -189,7 +60,12 @@
                     <div class="col-lg-4">
                         <div class="search_bar">
                             <form action="javascript:search()">
-                                <input placeholder="Search entire store here..." type="text" id="searchName">
+                                <div id="autocomplete-container">
+                                    <input placeholder="Tìm kiếm sản phẩm..." style="color: black;font-weight: 500;" type="text" id="searchName" oninput="getData()">
+                                    <ul id="autocomplete-list"></ul>
+
+                                </div>
+
                                 <button type="submit"><i class="ion-ios-search-strong"></i></button>
                             </form>
                         </div>
@@ -252,6 +128,99 @@
     <!--header bottom end-->
 </header>
 <!--header area end-->
+<%--Get data--%>
+<script>
+    let arraysData = [];
+    var inputElement = document.getElementById("searchName");
+    var listElement = document.getElementById("autocomplete-list");
+    inputElement.addEventListener("input", function () {
+        getData();
+        var inputValue = inputElement.value.toLowerCase();
+        var matches = arraysData.filter(function (arr) {
+            return arr.name.toLowerCase().includes(inputValue);
+        });
+        displayMatches(matches);
+    });
+
+    function displayMatches(matches) {
+        const formatVND = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
+        if (matches.length === 0) {
+            listElement.style.display = "none";
+            return;
+        }
+        listElement.innerHTML = "";
+        matches.forEach(function (match) {
+            var listItem = document.createElement("li");
+            listItem.style.cursor = "pointer"; // Add cursor style for better UX
+            var a = document.createElement("a");
+            a.href = match.link;
+            var div = document.createElement("div");
+            div.style.display = "flex";
+            div.style.alignItems = "center"; // Align items vertically
+
+            var img = document.createElement("img");
+            img.src = match.img; // Set the image source
+            img.style.width = "50px";
+
+            var infoDiv = document.createElement("div");
+            infoDiv.style.marginLeft = "10px"; // Add some margin between image and text
+
+            var nameDiv = document.createElement("div");
+            var spanName = document.createElement("span");
+            spanName.textContent = match.name;
+            nameDiv.appendChild(spanName);
+
+            var priceDiv = document.createElement("div");
+            var spanPrice = document.createElement("span");
+            spanPrice.textContent = formatVND.format(parseFloat(match.price)); // Assuming match.price holds the product price
+            spanPrice.style.color = "red";
+            priceDiv.appendChild(spanPrice);
+
+            if(match.price !== match.priceOrigin) {
+                spanPrice.style.marginRight = "5px"
+                var spanOriginalPrice = document.createElement("span");
+                spanOriginalPrice.style.textDecoration ="line-through";
+                spanOriginalPrice.textContent = formatVND.format(parseFloat(match.priceOrigin));; // Assuming match.originalPrice holds the original product price
+                priceDiv.appendChild(spanOriginalPrice);
+            }
+
+            infoDiv.appendChild(nameDiv);
+            infoDiv.appendChild(priceDiv);
+
+            div.appendChild(img);
+            div.appendChild(infoDiv);
+            a.appendChild(div);
+            listItem.appendChild(a);
+
+            listElement.appendChild(listItem);
+        });
+
+        listElement.style.display = "block";
+    }
+
+    // Hide autocomplete list when clicking outside the container
+    document.addEventListener("click", function (event) {
+        if (!event.target.closest("#autocomplete-container")) {
+            listElement.style.display = "none";
+        }
+    });
+
+    function getData() {
+        $.ajax({
+            url: '/shop/searchList?query='+document.getElementById("searchName").value,
+            type: "get",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                arraysData = response;
+            }
+        });
+    }
+
+
+</script>
 <script>
     function  reloadCartLength(){
         let cart = [];
@@ -259,20 +228,19 @@
         if (storage)
             cart = JSON.parse(storage);
 
-        document.getElementById("cart_link").textContent = cart.length.toString();
         document.getElementById("cart_link2").textContent = cart.length.toString();
     }
     function search(){
         window.location.href = "/shop/search?query="+document.getElementById("searchName").value;
     }
+
+
     function resetActive(){
         var li  = document.querySelectorAll('.main_menu nav ul .active');
         li.forEach(function (box) {
             box.classList.remove("active");
         });
-        console.log(li);
         li  = document.querySelectorAll('.main_menu nav ul li');
-        console.log(li);
         if(window.location.href.includes("shop")){
             li[1].classList.add('active');
         }
@@ -299,10 +267,9 @@
             showAccount.append(ul);
             showAccount.querySelector('ul').innerHTML = '<li class="top_links"><a href="#">My Account <i class="ion-chevron-down"></i></a>\n' +
                 '                        <ul class="dropdown_links">\n' +
+                '                            <li><a href="/profile">Tài khoản của tôi</a></li>\n' +
+                '                            <li><a href="/orders">Đơn hàng</a></li>\n' +
                 '                            <li><a id="logout" href="/logout?back=/">Đăng xuất</a></li>\n' +
-                '                            <li><a href="my-account.html">My Account </a></li>\n' +
-                '                            <li><a href="#">Sign In</a></li>\n' +
-                '                            <li><a href="compare.html">Compare Products  </a></li>\n' +
                 '                        </ul>\n' +
                 '                    </li>';
             document.getElementById('logout').href = "/reset?back="+window.location.pathname;
