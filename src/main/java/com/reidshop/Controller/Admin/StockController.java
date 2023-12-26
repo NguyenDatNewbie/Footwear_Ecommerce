@@ -16,7 +16,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/vendor/stock")
@@ -35,7 +37,8 @@ public class StockController {
     StoreRepository storeRepository;
     @Autowired
     StockServiceImpl stockService;
-
+    @Autowired
+    InventoryRepository inventoryRepository;
     @GetMapping("")
     String index(ModelMap modelMap){
         modelMap.addAttribute("supplierRepository",supplierRepository);
@@ -68,5 +71,20 @@ public class StockController {
         if(message.equals("success"))
             return ResponseEntity.status(HttpStatus.OK).body(message);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+    }
+
+    @GetMapping("/check/inventory")
+    @ResponseBody
+    Map<String,String> check(@RequestParam("id") long sizeId, HttpServletRequest request){
+        String token = CookieHandle.getCookieValue(request, "token");
+        String email = jwtService.extractUsername(token);
+        Account account = accountRepository.findByEmail(email).orElse(new Account());
+        int totalQuantity = inventoryRepository.totalInventory(sizeId,account.getId());
+        Size size = sizeRepository.findById(sizeId).orElse(null);
+        Map<String,String> result = new HashMap<>();
+        result.put("quantity",String.valueOf(totalQuantity));
+        result.put("size",size.getSize());
+        result.put("product",size.getProduct().getName());
+        return result;
     }
 }

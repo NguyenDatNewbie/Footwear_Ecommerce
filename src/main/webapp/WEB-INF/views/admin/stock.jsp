@@ -90,6 +90,21 @@
         .hidden{
             display: none;
         }
+        .content{
+            padding: 20px 0 15px 0;
+            font-size: 18px;
+            color: #012970;
+            font-family: "Poppins", sans-serif;
+        }
+        .content h5{
+            font-weight: 600;
+        }
+        .check span{
+            font-size: 16px;
+        }
+        .table-striped>tbody>tr:nth-of-type(odd)>*{
+            --bs-table-bg-type: rgb(224, 247, 250);
+        }
     </style>
 </head>
 
@@ -134,9 +149,23 @@
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
-                        <div class="contact_area">
-                            <div class="form-title">Tổng tiền: <span>Tiền</span></div>
-                            <div><h5>Tổng tiền: <span>Tiền</span></h5></div>
+                        <div class="row">
+                        <div class="col-lg-4">
+                        <div class="content statistics">
+                            <div>
+                                <h5>Tổng tiền</h5>
+                                <span></span>
+                            </div>
+                            <div>
+                                <h5>Số lượng</h5>
+                                <span></span>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="col-lg-8">
+                                <div class="content check">
+                                </div>
+                        </div>
                         </div>
                     </div>
                 </div>
@@ -147,8 +176,8 @@
                 <div class="card">
                     <div class="card-body">
                         <div style="display: flex">
-                            <h5 class="card-title" style="flex: 1">Nhập kho</h5>
-                            <button class="btn btn-outline-success" onclick="add()" style="margin: 20px 0 15px 0;width: 75px;font-weight: 550;font-size: 17px;">Lưu</button>
+                            <h5 class="card-title" style="flex: 1; padding-bottom: 0">Nhập kho</h5>
+                            <button class="btn btn-outline-success" onclick="add()" style="margin: 20px 0 0 0;width: 75px;font-weight: 550;font-size: 17px;">Lưu</button>
                         </div>
                         <div class="datatable-container">
                             <!-- Table with stripped rows -->
@@ -161,14 +190,14 @@
                                 <button class="button-icon" onclick="deleteItem()" style="color: red"><i class="bi bi-x"
                                                                                   style="font-size: 18px"></i><br><span>Xóa</span>
                                 </button>
-                                <button class="button-icon" style="color: blueviolet"><i class="bi bi-check"
+                                <button class="button-icon" onclick="check()" style="color: blueviolet"><i class="bi bi-check"
                                                                                    style="font-size: 18px"></i><br><span>Kiểm kê</span>
                                 </button>
                             </div>
                             <table class="table table-striped datatable datatable-table" id="stockTable">
                                 <input value="" style="display: none" id="itemTable">
                                 <thead>
-                                <tr>
+                                <tr style="background-color: #4dd0e1">
                                     <th scope="row" width="30px" style="text-align: center">STT</th>
                                     <th scope="col">Sản phẩm</th>
                                     <th scope="col" width="120px">Kích thước</th>
@@ -192,13 +221,6 @@
                                     </td>
                                     <td><input type="number" id="quantity"></td>
                                     <td><input type="number" id="price"></td>
-                                </tr>
-
-                                <tr>
-                                    <th scope="row" style="text-align: center">1</th>
-                                    <td>Brandon Jacob</td>
-                                    <td>Designer</td>
-                                    <td>28</td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -298,9 +320,10 @@
 </script>
 <%--Handle--%>
 <script>
-    function reset() {
-        localStorage.removeItem("stock");
-    }
+    const formatVND = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    });
 
     function resetInput() {
         var name = document.getElementById("autocomplete-input");
@@ -311,6 +334,7 @@
         size.disabled= false;
         document.getElementById("quantity").value = '';
         document.getElementById("price").value = '';
+        document.querySelector(".check").innerHTML='';
     }
     function deleteItem(){
         var stocks = JSON.parse(localStorage.getItem("stocks")) || [];
@@ -325,6 +349,18 @@
             localStorage.setItem("stocks", JSON.stringify(stocks));
             showData();
         }
+    }
+    function calculator(){
+        var stocks = JSON.parse(localStorage.getItem("stocks")) || [];
+        let price = 0;
+        let quantity = 0;
+        stocks.forEach(function (stock){
+            price += parseFloat(stock.price);
+            quantity += parseInt(stock.quantity);
+        })
+        var content = document.querySelectorAll(".statistics div");
+        content[0].querySelector("span").textContent=formatVND.format(price);
+        content[1].querySelector("span").textContent=quantity;
     }
     function getText(value) {
         var name = document.getElementById("autocomplete-input")
@@ -383,6 +419,31 @@
         resetInput();
         showData();
     }
+    function check(){
+        $.ajax({
+            url: '/vendor/stock/check/inventory?id=' + document.getElementById("size").value,
+            type: "get",
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                document.querySelector(".check").innerHTML ='<div>\n' +
+                    '                    <h5 style="margin: 0">Sản phẩm</h5><span>' +
+                    response.product+
+                    '</span>\n' +
+                    '                </div>\n' +
+                    '                <div style="display: flex">\n' +
+                    '                    <h5 style="width: 150px">Kích thước:</h5><span>' +
+                    response.size+
+                    '</span>\n' +
+                    '                </div>\n' +
+                    '                <div style="display: flex">\n' +
+                    '                    <h5 style="width: 150px">Tồn kho:</h5> <span>' +
+                    response.quantity+
+                    '</span>\n' +
+                    '                </div>'
+
+            }
+        });
+    }
     // Hàm gọi lại để xử lý sự kiện click cho từng dòng
     function createRowClickHandler(index, stock) {
         console.log(index);
@@ -390,10 +451,10 @@
         getText(stock);
     }
     function showData() {
+        document.querySelector(".check").innerHTML='';
         // Lấy thẻ table từ DOM (có thể có id là "stockTable")
         var table = document.getElementById("stockTable");
 
-        // Xóa hết các dòng (trừ dòng đầu tiên là dòng tiêu đề) trong bảng
         for (var i = table.rows.length - 1; i > 1; i--) {
             table.deleteRow(i);
         }
@@ -417,14 +478,16 @@
             cell2.innerHTML = stock.name;
             cell3.innerHTML = stock.size.size;
             cell4.innerHTML = stock.quantity;
-            cell5.innerHTML = stock.price;
+            cell5.innerHTML = formatVND.format(parseFloat(stock.price));
 
             row.style.cursor = "pointer";
             row.onclick = function () {
                 createRowClickHandler(i, stocks[i]);
             }
         };
+        calculator();
     }
+
     showData();
 </script>
 <script>
