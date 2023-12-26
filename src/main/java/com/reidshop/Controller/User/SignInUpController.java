@@ -99,7 +99,7 @@ public class SignInUpController {
             if(account.getRole()== ROLE.ADMIN )
                 return new ModelAndView("redirect:/admin/home");
             else if(account.getRole() == ROLE.VENDOR)
-                return new ModelAndView("redirect:/");
+                return new ModelAndView("redirect:/vendor/home");
             return new ModelAndView("redirect:/");
         } catch (BadCredentialsException exception)
         {
