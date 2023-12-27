@@ -22,41 +22,16 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class DistanceMatrixController {
     @Autowired
     DistanceService distanceService;
     @GetMapping("/getDistances/{origin}/{destination}")
-    public ResponseEntity<String> getDistances(@PathVariable String origin,@PathVariable String destination) {
-        final String apiKey = "AIzaSyAUic2ta4mUKXuPpbszvDGMy1D8FosuFm8"; // Thay YOUR_API_KEY bằng khóa API của bạn
-        String message;
-
-        try {
-            String url = "https://maps.googleapis.com/maps/api/distancematrix/json"
-                    + "?origins=" + origin
-                    + "&destinations=" + destination
-                    + "&language=vi-VN&units=metric&key=" + apiKey;
-            ResponseEntity<DistanceResponse> response = new RestTemplate().exchange(url, HttpMethod.GET, null, DistanceResponse.class);
-
-            if (response.getStatusCode() == HttpStatus.OK) {
-                JSONObject json = new JSONObject(response.getBody());
-
-                String distance = json.getJSONArray("rows")
-                        .getJSONObject(0)
-                        .getJSONArray("elements")
-                        .getJSONObject(0)
-                        .getJSONObject("distance")
-                        .getString("text");
-                message = "Khoảng cách từ " + origin + " đến " + destination + ": " + distance;
-            } else {
-                message = "Không thể lấy thông tin khoảng cách từ " + origin + " đến " + destination;
-            }
-            return ResponseEntity.status(HttpStatus.OK).body(message);
-        } catch (Exception e) {
-            message = "Đã xảy ra lỗi khi tìm khoảng cách từ " + origin + " đến " + destination + ": " + e.getMessage();
-            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(message);
-        }
+    @ResponseBody
+    public Map<String,String> getDistances(@PathVariable String origin, @PathVariable String destination) {
+        return  distanceService.getDistanceValue(origin,destination);
     }
 
     @PostMapping("/getCostShip/{ward}/{district}/{city}")

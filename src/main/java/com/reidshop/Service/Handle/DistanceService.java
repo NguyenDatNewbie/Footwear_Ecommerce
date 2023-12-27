@@ -13,7 +13,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DistanceService {
@@ -27,8 +29,8 @@ public class DistanceService {
             if(stores.get(i).getStatus()!=status)
                 continue;
 
-            Long storeMin = getDistanceValue(origin, min.getStore().getDepartment());
-            Long storeI = getDistanceValue(origin,stores.get(i).getStore().getDepartment());
+            Long storeMin = Long.valueOf(getDistanceValue(origin, min.getStore().getDepartment()).get("value"));
+            Long storeI = Long.valueOf(getDistanceValue(origin,stores.get(i).getStore().getDepartment()).get("value"));
             if(storeI==null)
                 continue;
             if(storeMin==null){
@@ -45,11 +47,10 @@ public class DistanceService {
             return getStoreDistanceMin(stores,origin,0);
         return min;
     }
-    
-    Long getDistanceValue(String origin,String destination){
-        final String apiKey = "AIzaSyAUic2ta4mUKXuPpbszvDGMy1D8FosuFm8"; // Thay YOUR_API_KEY bằng khóa API của bạn
-        Long distanceValue = null;
 
+    public Map<String,String> getDistanceValue(String origin, String destination){
+        final String apiKey = "AIzaSyAUic2ta4mUKXuPpbszvDGMy1D8FosuFm8"; // Thay YOUR_API_KEY bằng khóa API của bạn
+        Map<String,String> map = new HashMap<>();
         try {
             String url = "https://maps.googleapis.com/maps/api/distancematrix/json"
                     + "?origins=" + origin
@@ -66,12 +67,20 @@ public class DistanceService {
                         .getJSONObject(0)
                         .getJSONObject("distance")
                         .getLong("value");
-                distanceValue= distance;
-            } 
+
+                String text = json.getJSONArray("rows")
+                        .getJSONObject(0)
+                        .getJSONArray("elements")
+                        .getJSONObject(0)
+                        .getJSONObject("distance")
+                        .getString("text");
+                map.put("value", String.valueOf(distance));
+                map.put("text",text);
+            }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println(e.getMessage()+"Sai");
         }
-        return distanceValue;
+        return map;
     }
 
     public double calCostShip(List<StoreValidRequest> storeValidRequests,String city,String district, String ward){
@@ -85,7 +94,7 @@ public class DistanceService {
             }
         }
         StoreValidRequest min = getStoreDistanceMin(storeValidRequests,address,1);
-        Long distance = getDistanceValue(min.getStore().getDepartment(),address);
+        Long distance = Long.valueOf(getDistanceValue(min.getStore().getDepartment(),address).get("value"));
         if(distance==null)
             distance= Long.valueOf(0);
         if(distance<=2500){

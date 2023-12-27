@@ -796,6 +796,8 @@
     }
 </script>
 <script>
+
+
     // Function để thêm một mục vào danh sách
     function addItemToList(item) {
         // Tạo một phần tử li
@@ -858,7 +860,6 @@
             contentType: "application/json; charset=utf-8",
             data: data,
             success: function (response) {
-                console.log(response);
                 document.getElementById('ul-address').innerHTML = '';
                 response.forEach(item => {
                     addItemToList(item);
@@ -1005,7 +1006,6 @@
                         carts: JSON.parse(cart),
                         storeValid: storeValid
                     }
-                    console.log('/cart/payment/DELIVERY/' + paymentOption.value);
 
                     $.ajax({
                         url: '/cart/payment/STORE/' + paymentOption.value,
@@ -1026,7 +1026,6 @@
                             }
                         },
                         error: function (error){
-                            console.log("errorPay",error);
                         }
                     });
                 }
@@ -1090,23 +1089,7 @@
         }
     }
 </script>
-<script>
-    function getDistance(origin, destination) {
-        $.ajax({
-            url: '/getDistances/' + origin + '/' + destination,
-            type: "GET",
-            contentType: "application/json; charset=utf-8",
-            success: function (response) {
-                console.log(response);
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    }
 
-    // getDistance('Hồ Chí Minh','Hà Nội');
-</script>
 
 <%--Xử lý sự kiện khi trang load xong--%>
 <script>

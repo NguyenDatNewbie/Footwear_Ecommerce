@@ -61,7 +61,7 @@
                         <div class="search_bar">
                             <form action="javascript:search()">
                                 <div id="autocomplete-container">
-                                    <input placeholder="Tìm kiếm sản phẩm..." style="color: black;font-weight: 500;" type="text" id="searchName" oninput="getData()">
+                                    <input placeholder="Tìm kiếm sản phẩm..." style="color: black;font-weight: 500;" type="text" id="searchName" autocomplete="off" oninput="getData()">
                                     <ul id="autocomplete-list"></ul>
 
                                 </div>
@@ -116,7 +116,12 @@
                                     </li>
                                     <li><a href="blog.html">Sự kiện</a></li>
 
-                                    <li><a href="contact.html">Liên hệ</a></li>
+                                    <li><a href="#">Liên hệ<i class="fa fa-angle-down"></i></a>
+                                        <ul class="sub_menu pages">
+                                             <li><a href="/contact/address">Cửa hàng</a></li>
+                                            <li><a href="/contact">Hỗ trợ</a></li>
+                                        </ul>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>
