@@ -2,6 +2,7 @@ var formatter = new Intl.NumberFormat('vi-VN', {
     style: 'currency',
     currency: 'VND'
 });
+
 $(document).ready(function() {
     $('#today').click(function() {
         $.ajax({
