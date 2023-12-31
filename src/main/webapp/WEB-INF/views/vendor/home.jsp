@@ -30,6 +30,7 @@
     <link href="/admin/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="/admin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="/admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
     <!-- Template Main CSS File -->
@@ -186,7 +187,7 @@
                                                 data: ${listTotalPriceOfThisWeekStore},
                                             }, {
                                                 name: 'Revenue',
-                                                data: [],
+                                                data: ${listRevenue},
                                             }],
                                             chart: {
                                                 height: 350,

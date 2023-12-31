@@ -14,18 +14,29 @@
     </li><!-- End Dashboard Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" href="<c:url value="/vendor/products"/>">
-        <i class="bi bi-shop"></i>
-        <span>Products</span>
-      </a>
-    </li><!-- End Order Page Nav -->
-
-    <li class="nav-item">
       <a class="nav-link collapsed" href="<c:url value="/vendor/order"/>">
         <i class="bi bi-journal-text"></i>
         <span>Orders</span>
       </a>
     </li><!-- End Order Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-text"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="<c:url value="/vendor/listStock"/>">
+            <i class="bi bi-circle"></i><span>Stock</span>
+          </a>
+        </li>
+        <li>
+          <a href="<c:url value="/vendor/stock"/>">
+            <i class="bi bi-circle"></i><span>Import Product</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Forms Nav -->
 
   </ul>
 

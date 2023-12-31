@@ -28,11 +28,18 @@
     <link href="/admin/assets/vendor/quill/quill.snow.css" rel="stylesheet">
     <link href="/admin/assets/vendor/quill/quill.bubble.css" rel="stylesheet">
     <link href="/admin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <link href="/admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
     <!-- Template Main CSS File -->
     <link href="/admin/assets/css/style.css" rel="stylesheet">
+    <style>
+        .button-wrapper {
+            display: flex;
+            gap: 5px; /* Khoảng cách giữa các nút */
+        }
+    </style>
 </head>
 
 <body>
@@ -112,7 +119,7 @@
                                                     <td>${order.name}</td>
                                                     <td>${order.address}</td>
                                                     <td>${formatVND.format(order.totalPrice)}</td>
-                                                    <td>${order.store.department}</td>
+                                                    <td>${order.store.account.accountDetail.name}</td>
                                                     <td>${order.createdAt}</td>
                                                     <td>
                                                         <c:choose>
@@ -147,18 +154,20 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${order.status == 'CANCEL'}">
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <div class="button-wrapper">
+                                                            <c:choose>
+                                                                <c:when test="${order.status == 'CANCEL'}">
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="#" title="Update Status" class="btn btn-success disabled" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="#" title="Cancel" class="btn btn-danger disabled" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="/vendor/order/updateStatus/${order.id}" title="Update Status" class="btn btn-success" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="/vendor/order/cancelOrder/${order.id}" title="Cancel" class="btn btn-danger" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -189,7 +198,7 @@
                                                     <td>${order.name}</td>
                                                     <td>${order.address}</td>
                                                     <td>${formatVND.format(order.totalPrice)}</td>
-                                                    <td>${order.store.department}</td>
+                                                    <td>${order.store.account.accountDetail.name}</td>
                                                     <td>${order.createdAt}</td>
                                                     <td>
                                                         <c:choose>
@@ -224,18 +233,20 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${order.status == 'CANCEL'}">
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <div class="button-wrapper">
+                                                            <c:choose>
+                                                                <c:when test="${order.status == 'CANCEL'}">
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="#" title="Update Status" class="btn btn-success disabled" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="#" title="Cancel" class="btn btn-danger disabled" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="/vendor/order/updateStatus/${order.id}" title="Update Status" class="btn btn-success" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="/vendor/order/cancelOrder/${order.id}" title="Cancel" class="btn btn-danger" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -266,7 +277,7 @@
                                                     <td>${order.name}</td>
                                                     <td>${order.address}</td>
                                                     <td>${formatVND.format(order.totalPrice)}</td>
-                                                    <td>${order.store.department}</td>
+                                                    <td>${order.store.account.accountDetail.name}</td>
                                                     <td>${order.createdAt}</td>
                                                     <td>
                                                         <c:choose>
@@ -301,18 +312,20 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${order.status == 'CANCEL'}">
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <div class="button-wrapper">
+                                                            <c:choose>
+                                                                <c:when test="${order.status == 'CANCEL'}">
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="#" title="Update Status" class="btn btn-success disabled" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="#" title="Cancel" class="btn btn-danger disabled" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="/vendor/order/updateStatus/${order.id}" title="Update Status" class="btn btn-success" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="/vendor/order/cancelOrder/${order.id}" title="Cancel" class="btn btn-danger" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -343,7 +356,7 @@
                                                     <td>${order.name}</td>
                                                     <td>${order.address}</td>
                                                     <td>${formatVND.format(order.totalPrice)}</td>
-                                                    <td>${order.store.department}</td>
+                                                    <td>${order.store.account.accountDetail.name}</td>
                                                     <td>${order.createdAt}</td>
                                                     <td>
                                                         <c:choose>
@@ -378,18 +391,20 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${order.status == 'CANCEL'}">
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <div class="button-wrapper">
+                                                            <c:choose>
+                                                                <c:when test="${order.status == 'CANCEL'}">
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="#" title="Update Status" class="btn btn-success disabled" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="#" title="Cancel" class="btn btn-danger disabled" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="/vendor/order/updateStatus/${order.id}" title="Update Status" class="btn btn-success" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="/vendor/order/cancelOrder/${order.id}" title="Cancel" class="btn btn-danger" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -420,7 +435,7 @@
                                                     <td>${order.name}</td>
                                                     <td>${order.address}</td>
                                                     <td>${formatVND.format(order.totalPrice)}</td>
-                                                    <td>${order.store.department}</td>
+                                                    <td>${order.store.account.accountDetail.name}</td>
                                                     <td>${order.createdAt}</td>
                                                     <td>
                                                         <c:choose>
@@ -455,18 +470,20 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${order.status == 'CANCEL'}">
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <div class="button-wrapper">
+                                                            <c:choose>
+                                                                <c:when test="${order.status == 'CANCEL'}">
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="#" title="Update Status" class="btn btn-success disabled" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="#" title="Cancel" class="btn btn-danger disabled" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="/vendor/order/updateStatus/${order.id}" title="Update Status" class="btn btn-success" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="/vendor/order/cancelOrder/${order.id}" title="Cancel" class="btn btn-danger" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -497,7 +514,7 @@
                                                     <td>${order.name}</td>
                                                     <td>${order.address}</td>
                                                     <td>${formatVND.format(order.totalPrice)}</td>
-                                                    <td>${order.store.department}</td>
+                                                    <td>${order.store.account.accountDetail.name}</td>
                                                     <td>${order.createdAt}</td>
                                                     <td>
                                                         <c:choose>
@@ -532,18 +549,20 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${order.status == 'CANCEL'}">
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <div class="button-wrapper">
+                                                            <c:choose>
+                                                                <c:when test="${order.status == 'CANCEL'}">
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="#" title="Update Status" class="btn btn-success disabled" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="#" title="Cancel" class="btn btn-danger disabled" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="/vendor/order/updateStatus/${order.id}" title="Update Status" class="btn btn-success" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="/vendor/order/cancelOrder/${order.id}" title="Cancel" class="btn btn-danger" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </c:forEach>
@@ -574,7 +593,7 @@
                                                     <td>${order.name}</td>
                                                     <td>${order.address}</td>
                                                     <td>${formatVND.format(order.totalPrice)}</td>
-                                                    <td>${order.store.department}</td>
+                                                    <td>${order.store.account.accountDetail.name}</td>
                                                     <td>${order.createdAt}</td>
                                                     <td>
                                                         <c:choose>
@@ -609,18 +628,20 @@
                                                         </c:choose>
                                                     </td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${order.status == 'CANCEL'}">
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" disabled class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" disabled class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/${order.account.id}/${order.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/updateStatus/${order.id}'" class="btn btn-success" style="font-size: 15px">Update Status</button>
-                                                                <button type="button" onclick="window.location.href='/vendor/order/cancelOrder/${order.id}'" class="btn btn-danger" style="font-size: 15px">Cancel</button>
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <div class="button-wrapper">
+                                                            <c:choose>
+                                                                <c:when test="${order.status == 'CANCEL'}">
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="#" title="Update Status" class="btn btn-success disabled" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="#" title="Cancel" class="btn btn-danger disabled" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                                    <a href="/vendor/order/updateStatus/${order.id}" title="Update Status" class="btn btn-success" style="font-size: 15px"><i class="bi bi-arrow-up-circle"></i></a>
+                                                                    <a href="/vendor/order/cancelOrder/${order.id}" title="Cancel" class="btn btn-danger" style="font-size: 15px"><i class="bi bi-x-circle"></i></a>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             </c:forEach>

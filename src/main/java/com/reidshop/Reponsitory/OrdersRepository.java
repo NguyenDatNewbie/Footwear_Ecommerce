@@ -33,14 +33,14 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     @Query("SELECT COUNT(o) FROM Orders o WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE)")
     Long countOrdersInCurrenYear();
     //Tổng doanh thu toàn bộ của hàng
-    @Query("SELECT SUM(p.totalPrice) FROM Orders p\n")
+    @Query("SELECT COALESCE(SUM(p.totalPrice), 0) FROM Orders p\n")
     double revenueAll();
     //Tổng doanh thu theo ngày
-    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE AND o.status = 'COMPLETE'")
+    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE AND o.status = 'COMPLETE'")
     double totalSalesOfToday();
-    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE (FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')) AND o.status = 'COMPLETE'")
+    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE (FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')) AND o.status = 'COMPLETE'")
     double totalSalesOfThisMonth();
-    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE)")
+    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE)")
     double totalSalesOfThisYear();
 
     //Lấy tất cả order_id trong ngày
@@ -51,7 +51,7 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     @Query("SELECT o.id FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) AND o.status = 'COMPLETE'")
     List<Integer> findAllOrderOfThisWeek();
     //tổng doanh số trong tuần hiện tại
-    @Query("SELECT SUM(o.totalPrice) FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) AND o.status = 'COMPLETE'")
+    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) AND o.status = 'COMPLETE'")
     double totalPriceOfThisWeek();
 
     //Lấy order_id trong 1 tháng
@@ -155,4 +155,11 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
 
     @Query("select o from Orders o where o.account.id=?1 and o.receiveType='STORE' ORDER BY o.id DESC")
     List<Orders> findOrdersByAccountReceive(Long id);
+
+    //find order id this week of storeID
+    @Query("SELECT DATE(o.createdAt) AS orderDate, GROUP_CONCAT(o.id) AS orderIds " +
+            "FROM Orders o " +
+            "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) and o.status = 'COMPLETE' and o.store.id = :storeId " +
+            "GROUP BY DATE(o.createdAt)")
+    List<Object[]> findOrderIdsByWeekOfStore(@Param("storeId") Long storeId);
 }
