@@ -31,6 +31,8 @@
     <link href="/admin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="/admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+
 
     <!-- Template Main CSS File -->
     <link href="/admin/assets/css/style.css" rel="stylesheet">
@@ -159,7 +161,7 @@
                                         <i class="bi bi-people"></i>
                                     </div>
                                     <div class="ps-3">
-                                        <h6 id="revenue">0</h6>
+                                        <h6 id="revenue">0 ₫</h6>
 <%--                                        <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>--%>
 
                                     </div>

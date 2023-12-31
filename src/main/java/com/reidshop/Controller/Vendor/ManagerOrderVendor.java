@@ -1,16 +1,10 @@
 package com.reidshop.Controller.Vendor;
 
 import com.reidshop.Model.Cookie.CookieHandle;
-import com.reidshop.Model.Entity.Account;
-import com.reidshop.Model.Entity.AccountDetail;
-import com.reidshop.Model.Entity.OrderItem;
-import com.reidshop.Model.Entity.Orders;
+import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.ReceiveType;
-import com.reidshop.Reponsitory.AccountDetailRepository;
-import com.reidshop.Reponsitory.AccountRepository;
-import com.reidshop.Reponsitory.OrderItemRepository;
-import com.reidshop.Reponsitory.OrdersRepository;
+import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.Impl.OrdersServiceImpl;
 import com.reidshop.security.JwtService;
@@ -47,28 +41,37 @@ public class ManagerOrderVendor {
     AccountDetailRepository accountDetailRepository;
     @Autowired
     JwtService jwtService;
+    @Autowired
+    StoreRepository storeRepository;
 
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
 
     @RequestMapping("")
     public String index(ModelMap modelMap, HttpServletRequest request){
-//        String token = CookieHandle.getCookieValue(request, "token");
-//        String email = jwtService.extractUsername(token);
-//        Account account = accountRepository.findByEmail(email).orElse(null);
+        String token = CookieHandle.getCookieValue(request, "token");
+        String email = jwtService.extractUsername(token);
+        Account account = accountRepository.findByEmail(email).orElse(null);
+
+        Store store = storeRepository.searchAllByAccountId(account.getId());
+        //Store ID
+        Long storeID = store.getId();
 
         modelMap.addAttribute("formatVND",formatVND);
         modelMap.addAttribute("ordersRepository", ordersRepository);
 
+        AccountDetail accountDetail = accountDetailRepository.findAccountDetailByAccountId(account.getId());
+        modelMap.addAttribute("accountDetail", accountDetail);
+
         //List All
-        List<Orders> ordersAll = ordersRepository.findAllByStoreID(1L);
+        List<Orders> ordersAll = ordersRepository.findAllByStoreID(storeID);
         //List by status
-        List<Orders> orderWAIT = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.WAIT, 1l);
-        List<Orders> orderPREPARE = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.PREPARE, 1l);
-        List<Orders> orderALREADY = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.ALREADY, 1l);
-        List<Orders> orderDELIVERY = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.DELIVERY, 1l);
-        List<Orders> orderCOMPLETE = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.COMPLETE, 1l);
-        List<Orders> orderCANCEL = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.CANCEL, 1l);
+        List<Orders> orderWAIT = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.WAIT, storeID);
+        List<Orders> orderPREPARE = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.PREPARE, storeID);
+        List<Orders> orderALREADY = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.ALREADY, storeID);
+        List<Orders> orderDELIVERY = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.DELIVERY, storeID);
+        List<Orders> orderCOMPLETE = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.COMPLETE, storeID);
+        List<Orders> orderCANCEL = ordersRepository.findAllOrdersByStatusAndStoreId(OrderStatus.CANCEL, storeID);
 
         modelMap.addAttribute("ordersAll", ordersAll);
         modelMap.addAttribute("orderWAIT", orderWAIT);
@@ -97,7 +100,7 @@ public class ManagerOrderVendor {
     @GetMapping("cancelOrder/{orderId}")
     public ModelAndView cancelOrder(ModelMap model, @PathVariable("orderId") Long orderId) {
         ordersService.UpdateOrderStatus(orderId, OrderStatus.CANCEL);
-        return new ModelAndView("forward:/vendor/order", model);
+        return new ModelAndView("redirect:/vendor/order", model);
     }
 
     @GetMapping("updateStatus/{orderId}")

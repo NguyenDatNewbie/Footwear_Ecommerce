@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface AccountDetailRepository extends JpaRepository<AccountDetail,Long> {
     @Query("SELECT ad FROM AccountDetail ad WHERE ad.account.id = :accountId")
     Optional<AccountDetail> findByAccountId(@Param("accountId") Long accountId);
+
+    @Query("SELECT ad FROM AccountDetail ad WHERE ad.account.id = :accountId")
+    AccountDetail findAccountDetailByAccountId(@Param("accountId") Long accountId);
 }

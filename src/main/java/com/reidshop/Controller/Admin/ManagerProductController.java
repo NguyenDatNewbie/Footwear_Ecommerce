@@ -7,6 +7,7 @@ import com.reidshop.Model.Entity.Image;
 import com.reidshop.Model.Entity.Product;
 import com.reidshop.Model.Entity.Size;
 import com.reidshop.Reponsitory.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -101,25 +102,60 @@ public class ManagerProductController {
     }
 
     @PostMapping("updateProduct")
+    @Transactional
     public ModelAndView updateProduct(ModelMap model,
-                                      @Valid @ModelAttribute("product") Product product, BindingResult result){
+                                      @Valid @ModelAttribute("product") Product product,
+                                      @RequestParam("selectedSizes") String selectedSizes,
+                                      BindingResult result){
         if(result.hasErrors()){
             return new ModelAndView("admin/detailOrEdit");
         }
+
+        //Xóa size của product
+        sizeRepository.deleteByProductId(product.getId());
+
+        //Thêm size mới
+        String[] sizesArray = selectedSizes.split(",");
+        for (String size : sizesArray){
+            Size newSize = new Size();
+            newSize.setProduct(product);
+            newSize.setSize(size);
+            sizeRepository.save(newSize);
+        }
+
         productRepository.save(product);
 
         return new ModelAndView("redirect:/admin/products", model);
     }
 
     @GetMapping("edit/{productId}")
-    public ModelAndView edit(ModelMap model, @PathVariable("productId") Long productId){
+    public ModelAndView edit(ModelMap model, @PathVariable("productId") Long productId) {
         Optional<Product> opt = productRepository.findById(productId); //lấy đối tượng
-        if (opt.isPresent()){
+
+        //All Size
+        List<String> allSizes = Arrays.asList("38", "39", "40", "41", "42", "43");
+        List<Category> categoryList = categoryRepository.findAll();
+        List<Size> sizeOfProID = sizeRepository.findAllByProductId(productId);
+        List<Image> imagesPro = imageRepository.findAllByProduct(productId);
+
+
+        if (opt.isPresent()) {
             Product product = opt.get();
+            Map<String, Boolean> sizeCheckedMap = new HashMap<>();
+            allSizes.forEach(size -> sizeCheckedMap.put(size, false));
+            sizeOfProID.stream()
+                    .filter(size -> allSizes.contains(size.getSize()))
+                    .forEach(size -> sizeCheckedMap.put(size.getSize(), true));
+
+
             model.addAttribute("product", product);
+            model.addAttribute("imagesPro", imagesPro);
+            model.addAttribute("allSizes", allSizes);   //All size
+            model.addAttribute("sizeOfProID", sizeOfProID); //Size của product
+            model.addAttribute("sizeCheckedMap", sizeCheckedMap);
+            model.addAttribute("categories", categoryList);
             return new ModelAndView("admin/detailOrEdit", model);
         }
-
         return new ModelAndView("redirect:/admin/products", model);
     }
 }

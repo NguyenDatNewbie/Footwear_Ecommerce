@@ -39,10 +39,19 @@ public class StockController {
     StockServiceImpl stockService;
     @Autowired
     InventoryRepository inventoryRepository;
+    @Autowired
+    AccountDetailRepository accountDetailRepository;
+
     @GetMapping("")
-    String index(ModelMap modelMap){
+    String index(ModelMap modelMap, HttpServletRequest request){
+        String token = CookieHandle.getCookieValue(request, "token");
+        String email = jwtService.extractUsername(token);
+        Account account = accountRepository.findByEmail(email).orElse(null);
+
+        AccountDetail accountDetail = accountDetailRepository.findAccountDetailByAccountId(account.getId());
+        modelMap.addAttribute("accountDetail", accountDetail);
         modelMap.addAttribute("supplierRepository",supplierRepository);
-        return "admin/stock";
+        return "vendor/stock";
     }
 
     @GetMapping("/getProduct")
