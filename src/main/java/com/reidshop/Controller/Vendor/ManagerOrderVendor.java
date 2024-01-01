@@ -43,6 +43,8 @@ public class ManagerOrderVendor {
     JwtService jwtService;
     @Autowired
     StoreRepository storeRepository;
+    @Autowired
+    InventoryRepository inventoryRepository;
 
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
@@ -99,6 +101,18 @@ public class ManagerOrderVendor {
 
     @GetMapping("cancelOrder/{orderId}")
     public ModelAndView cancelOrder(ModelMap model, @PathVariable("orderId") Long orderId) {
+        List<OrderItem> orderItemsByOrderID = orderItemRepository.findAllItemByOrderId(orderId);
+        for (OrderItem orderItem : orderItemsByOrderID){
+            Optional<Inventory> optionalInventory  = inventoryRepository.findById(orderItem.getInventory().getId()); //lấy invenroty theo oderitem
+            if (optionalInventory.isPresent()){
+                //Cộng thêm quantity vao Inventory
+                Inventory inventory = optionalInventory.get();
+                int quantityOrderItem = orderItem.getQuantity();
+                int newQuantityInventory = quantityOrderItem + inventory.getQuantity();
+                inventory.setQuantity(newQuantityInventory);
+                inventoryRepository.save(inventory);    // cập nhật quantity
+            }
+        }
         ordersService.UpdateOrderStatus(orderId, OrderStatus.CANCEL);
         return new ModelAndView("redirect:/vendor/order", model);
     }

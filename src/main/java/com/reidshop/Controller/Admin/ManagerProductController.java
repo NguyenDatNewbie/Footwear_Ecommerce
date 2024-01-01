@@ -6,10 +6,12 @@ import com.reidshop.Model.Entity.Category;
 import com.reidshop.Model.Entity.Image;
 import com.reidshop.Model.Entity.Product;
 import com.reidshop.Model.Entity.Size;
+import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Reponsitory.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -105,11 +107,16 @@ public class ManagerProductController {
     @Transactional
     public ModelAndView updateProduct(ModelMap model,
                                       @Valid @ModelAttribute("product") Product product,
+                                      @RequestParam("category") Long categoryId,
                                       @RequestParam("selectedSizes") String selectedSizes,
+                                      @RequestParam("image-file") MultipartFile[] imageFiles,
                                       BindingResult result){
         if(result.hasErrors()){
             return new ModelAndView("admin/detailOrEdit");
         }
+        //Set category
+        Category category = categoryRepository.findById(categoryId).orElse(null);
+        product.setCategory(category);
 
         //Xóa size của product
         sizeRepository.deleteByProductId(product.getId());
@@ -123,6 +130,23 @@ public class ManagerProductController {
             sizeRepository.save(newSize);
         }
 
+//        Add new Image
+        try {
+            for (MultipartFile imageFile : imageFiles){
+                if (!imageFile.isEmpty()){
+                    Image image = new Image();
+                    Map r = this.cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                    String img = (String) r.get("secure_url");
+                    image.setImg(img);
+                    image.setProduct(product);
+                    imageRepository.save(image);
+                }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        //Update product
         productRepository.save(product);
 
         return new ModelAndView("redirect:/admin/products", model);
@@ -157,5 +181,38 @@ public class ManagerProductController {
             return new ModelAndView("admin/detailOrEdit", model);
         }
         return new ModelAndView("redirect:/admin/products", model);
+    }
+
+    @GetMapping("delete-image/{imageId}")
+    public ModelAndView deleteImage(ModelMap model, @PathVariable("imageId") Long imageId) {
+        Optional<Image> image = imageRepository.findById(imageId);
+        Long productID = image.get().getProduct(); //lay productID
+        String imageUrl = image.get().getImg();    //lấy đường dẫn của ảnh trên cloudinary
+        String publicID = extractPublicId(imageUrl);
+
+        try {
+            // Thực hiện xóa ảnh từ Cloudinary
+            Map result = cloudinary.uploader().destroy(publicID, ObjectUtils.emptyMap());
+
+            // Kiểm tra kết quả xóa ảnh từ Cloudinary
+            if (result.get("result").equals("ok")) {
+                imageRepository.deleteById(imageId);
+                System.out.println("Đã xóa ảnh từ Cloudinary");
+            } else {
+                System.out.println("Lỗi xóa ảnh từ Cloudinary");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new ModelAndView("redirect:/admin/products/edit/" + productID, model);
+    }
+    private static String extractPublicId(String imageUrl) {
+        String[] parts = imageUrl.split("/");
+        String lastPart = parts[parts.length - 1];
+        String publicId = lastPart.split("\\.")[0];
+
+        System.out.println(publicId);
+        return publicId;
     }
 }

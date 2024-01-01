@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Dashboard - NiceAdmin Bootstrap Template</title>
+    <title>Reid - Admin</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -91,7 +91,7 @@
                                     <div class="ps-3">
 
                                         <h6 id="totalOrders">${ordersService.countAllOrders()}</h6>
-                                        <span class="text-success small pt-1 fw-bold" id="orderIncreaseText"></span> <span class="text-muted small pt-2 ps-1" id="increaseOrderText">Keep up the good work</span>
+                                        <span class="text-muted small pt-2 ps-1" id="increaseOrderText">Keep up the good work</span>
 
                                     </div>
                                 </div>
@@ -126,8 +126,7 @@
                                     </div>
                                     <div class="ps-3">
                                         <h6 id="totalSales">${formatVND.format(ordersService.revenueAll())}</h6>
-<%--                                        <span class="text-success small pt-1 fw-bold" >8%</span> <span class="text-muted small pt-2 ps-1">increase</span>--%>
-
+                                        <span class="text-muted small pt-2 ps-1">It is important to sell more orders.</span>
                                     </div>
                                 </div>
                             </div>
@@ -162,7 +161,7 @@
                                     </div>
                                     <div class="ps-3">
                                         <h6 id="revenue">0 ₫</h6>
-<%--                                        <span class="text-danger small pt-1 fw-bold">12%</span> <span class="text-muted small pt-2 ps-1">decrease</span>--%>
+                                        <span class="text-muted small pt-2 ps-1">Increased revenue is the goal of every store.</span>
 
                                     </div>
                                 </div>

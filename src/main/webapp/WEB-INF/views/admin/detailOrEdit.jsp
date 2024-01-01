@@ -9,7 +9,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Dashboard - NiceAdmin Bootstrap Template</title>
+  <title>Reid - Admin</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -44,6 +44,24 @@
     .selected-size {
       background-color: yellow; /* Màu nền của checkbox khi được chọn */
     }
+    .image-container {
+      display: inline-block;
+    }
+
+    .image-container img {
+      width: 150px;
+      height: 150px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+
+    .image-container a {
+      display: block;
+      margin-top: 10px; /* Khoảng cách giữa ảnh và nút xóa */
+      font-size: 15px;
+      width: 50px;
+      margin-left: calc((150px - 50px) / 2); /* Căn giữa thẻ a theo chiều ngang */
+    }
   </style>
 
 </head>
@@ -65,7 +83,7 @@
 
           <!-- Vertical Form -->
           <!-- No Labels Form -->
-          <form class="row g-3" action="<c:url value="/admin/products/updateProduct"/> " method="post">
+          <form class="row g-3" action="<c:url value="/admin/products/updateProduct"/> " method="post" enctype="multipart/form-data">
             <div class="col-md-12">
               <input hidden="hidden" type="text" class="form-control" placeholder="Product ID" value="${product.id}" id="id" name="id">
             </div>
@@ -122,11 +140,15 @@
               <span class="card-title" style="font-size: 1em; margin-left: 5px;">Image</span>
               <div class="mb-0">
                 <c:forEach items="${imagesPro}" var="image">
-                  <img src="${image.img}" class="img-fluid rounded-start" style="width: 200px; height: 200px; margin-right: 10px; margin-top: 10px;">
+                  <div class="image-container">
+                      <img src="${image.img}" class="img-fluid rounded-start" style="width: 150px; height: 150px; margin-right: 10px; margin-top: 10px;">
+                      <a href="/admin/products/delete-image/${image.id}" title="Delete" class="btn btn-danger" style="font-size: 15px"><i class="bi bi-trash"></i></a>
+                  </div>
                 </c:forEach>
               </div>
             </div>
             <div class="col-12 upload-image">
+              <span class="card-title" style="font-size: 1em; margin-left: 5px;">Add New Images</span>
               <input type="file" id="image-file" name="image-file" multiple/>
               <img id="uploaded-image" />
             </div>
