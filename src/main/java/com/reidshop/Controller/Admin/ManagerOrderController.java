@@ -1,11 +1,13 @@
 package com.reidshop.Controller.Admin;
 
 import com.reidshop.Model.Entity.AccountDetail;
+import com.reidshop.Model.Entity.Inventory;
 import com.reidshop.Model.Entity.OrderItem;
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
+import com.reidshop.Reponsitory.InventoryRepository;
 import com.reidshop.Reponsitory.OrderItemRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
 import com.reidshop.Reponsitory.ProductRepository;
@@ -36,6 +38,8 @@ public class ManagerOrderController {
     OrderItemRepository orderItemRepository;
     @Autowired
     IOrderItemService orderItemService;
+    @Autowired
+    InventoryRepository inventoryRepository;
 
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
@@ -64,6 +68,18 @@ public class ManagerOrderController {
 
     @GetMapping("cancelOrder/{orderId}")
     public ModelAndView cancelOrder(ModelMap model, @PathVariable("orderId") Long orderId) {
+        List<OrderItem> orderItemsByOrderID = orderItemRepository.findAllItemByOrderId(orderId);
+        for (OrderItem orderItem : orderItemsByOrderID){
+            Optional<Inventory> optionalInventory  = inventoryRepository.findById(orderItem.getInventory().getId()); //lấy invenroty theo oderitem
+            if (optionalInventory.isPresent()){
+                //Cộng thêm quantity vao Inventory
+                Inventory inventory = optionalInventory.get();
+                int quantityOrderItem = orderItem.getQuantity();
+                int newQuantityInventory = quantityOrderItem + inventory.getQuantity();
+                inventory.setQuantity(newQuantityInventory);
+                inventoryRepository.save(inventory);    // cập nhật quantity
+            }
+        }
         ordersService.UpdateOrderStatus(orderId, OrderStatus.CANCEL);
         return new ModelAndView("forward:/admin/order", model);
     }
