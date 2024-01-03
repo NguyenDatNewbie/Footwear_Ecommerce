@@ -28,6 +28,13 @@
     </li><!-- End Order Page Nav -->
 
     <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/stores"/>">
+        <i class="bi bi-diagram-3"></i>
+        <span>Stores</span>
+      </a>
+    </li><!-- End Category Page Nav -->
+
+    <li class="nav-item">
       <a class="nav-link collapsed" href="<c:url value="/admin/account"/>">
         <i class="bi bi-person"></i>
         <span>Accounts</span>
@@ -40,6 +47,7 @@
         <span>Categories</span>
       </a>
     </li><!-- End Category Page Nav -->
+
 
   </ul>
 
