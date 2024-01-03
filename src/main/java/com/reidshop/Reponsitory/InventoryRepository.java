@@ -17,6 +17,9 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
     @Query("select coalesce(sum(i.quantity),0)  from Inventory i where i.size.id=?1 and i.store.account.id=?2")
     int totalInventory(long sizeId,long accountId);
 
+    @Query("SELECT i from Inventory i where i.store.account.id=?1")
+    List<Inventory> findAllInventoryByStore(long accountId);
+
     @Query("select o from Inventory o where o.store.id = :storeId")
     List<Inventory> findAllInventoryByStoreID(@Param("storeId") Long storeId);
 }

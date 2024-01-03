@@ -118,17 +118,25 @@ public class ManagerProductController {
         Category category = categoryRepository.findById(categoryId).orElse(null);
         product.setCategory(category);
 
+//        List<Size> sizeOfProID = sizeRepository.findAllByProductId(product.getId());
+
         //Xóa size của product
-        sizeRepository.deleteByProductId(product.getId());
 
         //Thêm size mới
         String[] sizesArray = selectedSizes.split(",");
-        for (String size : sizesArray){
-            Size newSize = new Size();
-            newSize.setProduct(product);
-            newSize.setSize(size);
-            sizeRepository.save(newSize);
+
+        if (sizesArray.length == 0 || (sizesArray.length == 1 && sizesArray[0].isEmpty())){
+            System.out.println("Kooong thêm size");
+        }else {
+            sizeRepository.deleteByProductId(product.getId());
+            for (String size : sizesArray){
+                Size newSize = new Size();
+                newSize.setProduct(product);
+                newSize.setSize(size);
+                sizeRepository.save(newSize);
+            }
         }
+
 
 //        Add new Image
         try {
