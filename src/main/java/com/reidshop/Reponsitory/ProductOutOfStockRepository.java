@@ -11,4 +11,7 @@ import java.util.List;
 public interface ProductOutOfStockRepository extends JpaRepository<ProductOutOfStock,Long> {
     @Query("select p from ProductOutOfStock p where p.orders.store.id=?1")
     List<ProductOutOfStock> findAllByStoreId(long storeId);
+
+    @Query("select p from ProductOutOfStock p where p.orders.id=?1")
+    List<ProductOutOfStock> findByOrderId(long orderId);
 }

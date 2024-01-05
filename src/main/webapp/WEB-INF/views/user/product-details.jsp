@@ -340,7 +340,7 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </c:forEach>
-                                    <li class="review">(${evaluateList.size()} đánh giá)</li>
+                                    <li class="review">(${evaluateList.size()} đánh giá -  ${productCurrent.sold} đã bán)</li>
 
                                 </ul>
                             </div>

@@ -1,12 +1,9 @@
 package com.reidshop.Service.Impl;
 
-import com.reidshop.Model.Entity.Inventory;
-import com.reidshop.Model.Entity.Stock;
-import com.reidshop.Model.Entity.Store;
-import com.reidshop.Model.Entity.Supplier;
+import com.reidshop.Model.Entity.*;
+import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Request.StockRequest;
-import com.reidshop.Reponsitory.InventoryRepository;
-import com.reidshop.Reponsitory.StockRepository;
+import com.reidshop.Reponsitory.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +17,12 @@ public class StockServiceImpl {
     InventoryRepository inventoryRepository;
     @Autowired
     StockRepository stockRepository;
+    @Autowired
+    ProductOutOfStockRepository productOutOfStockRepository;
+    @Autowired
+    OrdersRepository ordersRepository;
+    @Autowired
+    OrderItemRepository orderItemRepository;
     public String save(Store store, List<StockRequest> stockRequests, Supplier supplier){
         try {
             Stock stock = new Stock();
@@ -34,12 +37,40 @@ public class StockServiceImpl {
                 inventory.setQuantity(stockRequest.getQuantity());
                 inventory.setImportPrice(stockRequest.getPrice());
                 inventory.setStore(store);
-                inventoryRepository.save(inventory);
+                Inventory completeInventory =  inventoryRepository.save(inventory);
+                checkAndUpdateInProductOutOfStock(completeInventory,store);
             }
+            return "success";
         }
         catch (Exception exception){
             return exception.getMessage();
         }
-        return "success";
+    }
+
+    // Lỗi orderItem nếu quantity cần nhiều inventory để đáp ứng được quantity thì không biết lưu cho inventory nào
+    void checkAndUpdateInProductOutOfStock(Inventory inventory,Store store){
+        List<ProductOutOfStock> productOutOfStocks = productOutOfStockRepository.findAllByStoreId(store.getId());
+        for(ProductOutOfStock p: productOutOfStocks){
+
+            if(p.getSize().getId() == inventory.getSize().getId())
+            {
+                if(inventory.getQuantity()>=p.getQuantity()) {
+                    inventory.setQuantity(inventory.getQuantity()-p.getQuantity());
+                    Orders orders = p.getOrders();
+                    OrderItem orderItem = new OrderItem();
+                    orderItem.setOrder(orders);
+                    orderItem.setPrice(p.getPrice());
+                    orderItem.setInventory(inventory);
+                    orderItem.setQuantity(p.getQuantity());
+                    productOutOfStockRepository.delete(p);
+                    orderItemRepository.save(orderItem);
+                    orders.setStatus(OrderStatus.PREPARE);
+                    ordersRepository.save(orders);
+                    inventoryRepository.save(inventory);
+                }
+                // Nếu như nhập có size đúng thì phải trừ trong productOutOfStock
+//                else
+            }
+        }
     }
 }

@@ -270,9 +270,9 @@
         {
             var ul = document.createElement('ul');
             showAccount.append(ul);
-            showAccount.querySelector('ul').innerHTML = '<li class="top_links"><a href="#">My Account <i class="ion-chevron-down"></i></a>\n' +
+            showAccount.querySelector('ul').innerHTML = '<li class="top_links"><a href="#">Tài khoản<i class="ion-chevron-down"></i></a>\n' +
                 '                        <ul class="dropdown_links">\n' +
-                '                            <li><a href="/profile">Tài khoản của tôi</a></li>\n' +
+                '                            <li><a href="/profile">Thông tin cá nhân</a></li>\n' +
                 '                            <li><a href="/orders">Đơn hàng</a></li>\n' +
                 '                            <li><a id="logout" href="/logout?back=/">Đăng xuất</a></li>\n' +
                 '                        </ul>\n' +

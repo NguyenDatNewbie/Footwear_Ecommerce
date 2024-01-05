@@ -156,6 +156,12 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     @Query("select o from Orders o where o.account.id=?1 and o.receiveType='STORE' ORDER BY o.id DESC")
     List<Orders> findOrdersByAccountReceive(Long id);
 
+    @Query("select o from Orders o inner join OrderItem item on o.id = item.order.id where o.account.id=?2 " +
+            "and o.store.department LIKE CONCAT('%', ?1, '%')")
+    List<Orders> findBySearchQuery(String query,Long accountId);
+
+
+
     //find order id this week of storeID
     @Query("SELECT DATE(o.createdAt) AS orderDate, GROUP_CONCAT(o.id) AS orderIds " +
             "FROM Orders o " +

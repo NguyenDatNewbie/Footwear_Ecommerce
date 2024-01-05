@@ -15,16 +15,27 @@
         ========================= -->
 
     <!-- Plugins CSS -->
-    <link rel="stylesheet" href="assets/css/plugins.css">
+    <link rel="stylesheet" href="/assets/css/plugins.css">
 
     <!-- Main Style CSS -->
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
     <link href="/admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon"
-          href="assets/img/favicon.ico">
+          href="/assets/img/favicon.ico">
     <style>
+        .wait-product{
+            padding-left: 10px;
+            border-left: 1px solid black;
+            color: blue!important;
+        }
+        .wait-quantity{
+            padding-right: 10px;
+        }
+        .input-group input{
+            font-family: Emoji;
+        }
         .order {
             font-family: Emoji;
         }
@@ -150,10 +161,11 @@
             border-radius: 0;
             border: none;
             border-bottom: 2px solid #ff6a28;
+            color: #ff6a28;
         }
 
         .input-group {
-            margin: 15px 0;
+            margin: 0px 0 10px 0;
         }
 
         .nav-tabs .nav-link {
@@ -264,17 +276,23 @@
                         </li>
                     </ul>
                 </div>
-                <div class="input-group">
-                    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-                           aria-describedby="search-addon"/>
-                    <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init><i
-                            class="fas fa-search"></i></button>
-                </div>
+
                 <div class="tab-content pt-2" id="borderedTabJustifiedContent">
                     <div class="tab-pane fade show active" id="bordered-justified-all" role="tabpanel"
                          aria-labelledby="all-tab">
+                        <div class="input-group">
+                            <input type="search"
+                                   id="input-search"
+                                   class="form-control rounded"
+                                   placeholder="Tìm kiếm đơn hàng theo tên sản phẩm và địa chỉ cửa hàng..."
+                                   aria-label="Search"
+                                   aria-describedby="search-addon"
+                                   value="${not empty keyword ? keyword : ''}" />
+                            <button type="button" class="btn btn-outline-primary" id="order-search" data-mdb-ripple-init><i
+                                    class="fas fa-search"></i></button>
+                        </div>
                         <c:forEach var="order"
-                                   items="${ordersService.findOrdersByAccount(account.id)}">
+                                   items="${orders}">
                             <div class="order">
                                 <div class="solid">
                                     <div class="info-store">
@@ -308,23 +326,6 @@
                                 </div>
                                 <div class="solid">
                                     <div class="products">
-                                        <c:forEach items="${order.orderItems}" var="item">
-                                            <div class="product">
-                                                <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
-                                                        style="width: 90px"></div>
-                                                <div class="info">
-                                                    <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
-                                                    <div class="flex money">
-                                                        <div><span>x${item.quantity}</span></div>
-                                                        <div><span
-                                                                style="color:red">${formatVND.format(item.price)}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -333,6 +334,23 @@
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
                                                     <span>Kich thước: ${item.size.size}</span><br>
+                                                    <div class="flex money">
+                                                        <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
+                                                        <div><span
+                                                                style="color:red">${formatVND.format(item.price)}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        <c:forEach items="${order.orderItems}" var="item">
+                                            <div class="product">
+                                                <div><img
+                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        style="width: 90px"></div>
+                                                <div class="info">
+                                                    <span>${item.inventory.size.product.name}</span><br>
+                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -404,23 +422,6 @@
                                 </div>
                                 <div class="solid">
                                     <div class="products">
-                                        <c:forEach items="${order.orderItems}" var="item">
-                                            <div class="product">
-                                                <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
-                                                        style="width: 90px"></div>
-                                                <div class="info">
-                                                    <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
-                                                    <div class="flex money">
-                                                        <div><span>x${item.quantity}</span></div>
-                                                        <div><span
-                                                                style="color:red">${formatVND.format(item.price)}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -429,6 +430,23 @@
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
                                                     <span>Kich thước: ${item.size.size}</span><br>
+                                                    <div class="flex money">
+                                                        <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
+                                                        <div><span
+                                                                style="color:red">${formatVND.format(item.price)}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        <c:forEach items="${order.orderItems}" var="item">
+                                            <div class="product">
+                                                <div><img
+                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        style="width: 90px"></div>
+                                                <div class="info">
+                                                    <span>${item.inventory.size.product.name}</span><br>
+                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -502,23 +520,6 @@
                                 </div>
                                 <div class="solid">
                                     <div class="products">
-                                        <c:forEach items="${order.orderItems}" var="item">
-                                            <div class="product">
-                                                <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
-                                                        style="width: 90px"></div>
-                                                <div class="info">
-                                                    <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
-                                                    <div class="flex money">
-                                                        <div><span>x${item.quantity}</span></div>
-                                                        <div><span
-                                                                style="color:red">${formatVND.format(item.price)}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -527,6 +528,23 @@
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
                                                     <span>Kich thước: ${item.size.size}</span><br>
+                                                    <div class="flex money">
+                                                        <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
+                                                        <div><span
+                                                                style="color:red">${formatVND.format(item.price)}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        <c:forEach items="${order.orderItems}" var="item">
+                                            <div class="product">
+                                                <div><img
+                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        style="width: 90px"></div>
+                                                <div class="info">
+                                                    <span>${item.inventory.size.product.name}</span><br>
+                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -598,23 +616,6 @@
                                 </div>
                                 <div class="solid">
                                     <div class="products">
-                                        <c:forEach items="${order.orderItems}" var="item">
-                                            <div class="product">
-                                                <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
-                                                        style="width: 90px"></div>
-                                                <div class="info">
-                                                    <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
-                                                    <div class="flex money">
-                                                        <div><span>x${item.quantity}</span></div>
-                                                        <div><span
-                                                                style="color:red">${formatVND.format(item.price)}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -623,6 +624,23 @@
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
                                                     <span>Kich thước: ${item.size.size}</span><br>
+                                                    <div class="flex money">
+                                                        <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
+                                                        <div><span
+                                                                style="color:red">${formatVND.format(item.price)}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        <c:forEach items="${order.orderItems}" var="item">
+                                            <div class="product">
+                                                <div><img
+                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        style="width: 90px"></div>
+                                                <div class="info">
+                                                    <span>${item.inventory.size.product.name}</span><br>
+                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -694,23 +712,6 @@
                                 </div>
                                 <div class="solid">
                                     <div class="products">
-                                        <c:forEach items="${order.orderItems}" var="item">
-                                            <div class="product">
-                                                <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
-                                                        style="width: 90px"></div>
-                                                <div class="info">
-                                                    <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
-                                                    <div class="flex money">
-                                                        <div><span>x${item.quantity}</span></div>
-                                                        <div><span
-                                                                style="color:red">${formatVND.format(item.price)}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -719,6 +720,23 @@
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
                                                     <span>Kich thước: ${item.size.size}</span><br>
+                                                    <div class="flex money">
+                                                        <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
+                                                        <div><span
+                                                                style="color:red">${formatVND.format(item.price)}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        <c:forEach items="${order.orderItems}" var="item">
+                                            <div class="product">
+                                                <div><img
+                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        style="width: 90px"></div>
+                                                <div class="info">
+                                                    <span>${item.inventory.size.product.name}</span><br>
+                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -790,23 +808,6 @@
                                 </div>
                                 <div class="solid">
                                     <div class="products">
-                                        <c:forEach items="${order.orderItems}" var="item">
-                                            <div class="product">
-                                                <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
-                                                        style="width: 90px"></div>
-                                                <div class="info">
-                                                    <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
-                                                    <div class="flex money">
-                                                        <div><span>x${item.quantity}</span></div>
-                                                        <div><span
-                                                                style="color:red">${formatVND.format(item.price)}</span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </c:forEach>
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -815,6 +816,23 @@
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
                                                     <span>Kich thước: ${item.size.size}</span><br>
+                                                    <div class="flex money">
+                                                        <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
+                                                        <div><span
+                                                                style="color:red">${formatVND.format(item.price)}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:forEach>
+                                        <c:forEach items="${order.orderItems}" var="item">
+                                            <div class="product">
+                                                <div><img
+                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        style="width: 90px"></div>
+                                                <div class="info">
+                                                    <span>${item.inventory.size.product.name}</span><br>
+                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -998,6 +1016,25 @@
     function getOrder(id) {
         document.getElementById('form-evaluate').action = "/orders/evaluate/" + id;
     }
+
+
+    window.addEventListener('load',function (){
+        function tranferLink(){
+            var input = document.getElementById('input-search').value;
+            if(input===null || input==='')
+                window.location.href = '/orders';
+            else
+                window.location.href = '/orders/search?keyword='+document.getElementById('input-search').value;
+        }
+        document.getElementById('input-search').addEventListener('keydown',function (event){
+            if (event.key === "Enter") {
+                tranferLink();
+            }
+        });
+       document.getElementById('order-search').addEventListener('click',function (){
+           tranferLink();
+       });
+    });
 </script>
 
 </body>
