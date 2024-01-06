@@ -225,32 +225,25 @@ public class AdminController {
 
     public List<Double> listRevenueOfThisWeek(){
         List<Object[]> result = ordersService.findOrderIdsByWeek();
-        List<Double> salesData = ordersService.listTotalPriceOfThisWeek();
-        Collections.reverse(salesData);
+
         List<Double> listRevenueThisWeek = new ArrayList<>();
         for (Object[] row : result) {
+            double revenue = 0;
             String orderIds = (String) row[1];
-
-            Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderIds));
 
             String[] orderIdArray = orderIds.split(",");
 
-
-            double totalOriginalOfDay = calculateTotalPrice(Arrays.asList(orderIdArray));
-            double revenue = order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfDay);
+            for (String orderId : orderIdArray) {
+                Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderId));
+                double totalOriginalOfOrder = orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
+                revenue += (order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfOrder));
+            }
+            System.out.println("Revenue: " + revenue);
 
             listRevenueThisWeek.add(revenue);
         }
 
         return listRevenueThisWeek;
-    }
-
-    public double calculateTotalPrice(List<String> orderIds) {
-        double originalPrice = 0.0;
-        for (String orderId : orderIds) {
-            originalPrice += orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
-        }
-        return originalPrice;
     }
 
 }
