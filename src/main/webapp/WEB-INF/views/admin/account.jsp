@@ -309,7 +309,7 @@
   function prepareCombinedValues() {
     var city = document.getElementById('city');
     var district = document.getElementById('district');
-    var ward = document.getElementById('district');
+    var ward = document.getElementById('ward');
     var detail = document.getElementById('addressDetail').value;
 
     var valueCity = city.options[city.selectedIndex].textContent;
