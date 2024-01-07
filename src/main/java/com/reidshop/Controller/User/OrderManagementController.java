@@ -50,6 +50,23 @@ public class OrderManagementController {
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(null);
         modelMap.addAttribute("account",account);
+        modelMap.addAttribute("orders",ordersRepository.findOrdersByAccount(account.getId()));
+        modelMap.addAttribute("ordersRepository",ordersService);
+        modelMap.addAttribute("ordersService",ordersRepository);
+        modelMap.addAttribute("evaluateRepository",evaluateRepository);
+        modelMap.addAttribute("formatVND",formatVND);
+        return "user/order";
+    }
+
+    @GetMapping("/search")
+    String search(HttpServletRequest request, ModelMap modelMap,
+                  @RequestParam("keyword") String keyword){
+        String token = CookieHandle.getCookieValue(request, "token");
+        String email = jwtService.extractUsername(token);
+        Account account = accountRepository.findByEmail(email).orElse(null);
+        modelMap.addAttribute("orders",ordersService.findOrderByAccountQuery(account.getId(), keyword));
+        modelMap.addAttribute("keyword",keyword);
+        modelMap.addAttribute("account",account);
         modelMap.addAttribute("ordersRepository",ordersService);
         modelMap.addAttribute("ordersService",ordersRepository);
         modelMap.addAttribute("evaluateRepository",evaluateRepository);
@@ -69,7 +86,7 @@ public class OrderManagementController {
     }
 
     @PostMapping(value = "/evaluate/{id}",consumes = {"application/x-www-form-urlencoded"})
-    ModelAndView cancel(@ModelAttribute Evaluate evaluate, @PathVariable long id, HttpServletRequest request){
+    ModelAndView evaluate(@ModelAttribute Evaluate evaluate, @PathVariable long id, HttpServletRequest request){
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(null);

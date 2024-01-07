@@ -39,4 +39,6 @@ public interface IOrdersService {
     double totalSalesOfTodayStore(Long storeId);
 
     List<Orders> findOrdersByAccountAndStatus(Long id, String status);
+
+    List<Orders> findOrderByAccountQuery(Long accountId, String keyword);
 }

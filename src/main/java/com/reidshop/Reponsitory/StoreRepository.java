@@ -14,4 +14,11 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
     List<Store> searchAllByDepartment(@Param("department") String department);
     @Query("SELECT s FROM Store s WHERE s.account.id=?1")
     Store searchAllByAccountId(long accountId);
+
+    @Query("SELECT DISTINCT  SUBSTRING_INDEX(department, ',', -1) FROM Store")
+    List<String> findOneColumnCity();
+
+    @Query("SELECT DISTINCT  SUBSTRING_INDEX(SUBSTRING_INDEX(s.department, ',', -2), ',', 1)" +
+            "FROM Store s WHERE s.department LIKE CONCAT('%', ?1, '%')")
+    List<String> findOneColDistrictByCity(String city);
 }

@@ -6,10 +6,10 @@ import com.reidshop.Model.Enum.ROLE;
 import com.reidshop.Model.Request.RegisterRequest;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Service.IAccountService;
-import com.reidshop.Service.IEmailService;
+import com.reidshop.dto.GoogleAccessTokenResponse;
+import com.reidshop.dto.GoogleUserInfo;
 import com.reidshop.exception.ValidationHandle;
 import com.reidshop.security.JwtService;
-import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -18,12 +18,15 @@ import jakarta.validation.Valid;
 import com.reidshop.token.HandleToken;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 //import com.reidshop.Config.WebSecurityConfig;
 
@@ -42,7 +45,11 @@ public class SignInUpController {
     AuthenticationManager authenticationManager;
     @Autowired
     JwtService jwtService;
+    private final RestTemplate restTemplate;
 
+    public SignInUpController(RestTemplateBuilder restTemplateBuilder) {
+        this.restTemplate = restTemplateBuilder.build();
+    }
 
     @RequestMapping("")
     public String index() {
@@ -108,5 +115,35 @@ public class SignInUpController {
             modelMap.addAttribute("isLogin", true);
             return new ModelAndView("user/login");
         }
+    }
+
+    @GetMapping("/login/google/success")
+    public ModelAndView loginWithGG(@RequestParam("code") String authorizationCode, HttpServletResponse response){
+        // Lấy Access Token từ Mã Xác Thực
+        String accessTokenUri = "https://oauth2.googleapis.com/token";
+        String redirectUri = "http://localhost:8083/sign-in-up/login/google/success";
+        String clientId = "47551941690-h1bot25tietr34kbcmp0sh13n0lid1mu.apps.googleusercontent.com";
+        String clientSecret = "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";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        HttpEntity<String> request = new HttpEntity<>("code=" + authorizationCode +
+                "&client_id=" + clientId +
+                "&client_secret=" + clientSecret +
+                "&redirect_uri=" + redirectUri +
+                "&grant_type=authorization_code", headers);
+
+        ResponseEntity<GoogleAccessTokenResponse> responseEntity = restTemplate.postForEntity(accessTokenUri, request, GoogleAccessTokenResponse.class);
+        GoogleAccessTokenResponse accessTokenResponse = responseEntity.getBody();
+
+        String userInfoUri = "https://www.googleapis.com/oauth2/v2/userinfo";
+        HttpHeaders userInfoHeaders = new HttpHeaders();
+        userInfoHeaders.setBearerAuth(accessTokenResponse.getAccess_token());
+        HttpEntity<String> userInfoRequest = new HttpEntity<>(userInfoHeaders);
+        GoogleUserInfo googleUserInfo = restTemplate.exchange(userInfoUri,HttpMethod.GET, userInfoRequest, GoogleUserInfo.class).getBody();
+        Account account = accountService.loginWithGoogle(googleUserInfo);
+        response.addCookie(CookieHandle.createCookie("token",jwtService.generateToken(account.getEmail())));
+        response.addCookie(CookieHandle.createCookieNotAuthentication("isLogin","true"));
+        return new ModelAndView("redirect:/");
     }
 }

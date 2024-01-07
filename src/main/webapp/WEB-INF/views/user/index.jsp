@@ -71,7 +71,9 @@
             background: #ff6a28;
             color: #ffffff;
         }
-
+        .banner_thumb{
+            padding: 9px;
+        }
     </style>
 
 </head>
@@ -83,7 +85,7 @@
 
     <!--slider area start-->
     <div class="slider_area slider_style home_three_slider owl-carousel">
-        <div class="single_slider" data-bgimg="../assets/img/slider/slider4.jpg">
+        <div class="single_slider" data-bgimg="/assets/img/slider/1248.jpg">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12">
@@ -96,7 +98,7 @@
                 </div>
             </div>    
         </div>
-        <div class="single_slider" data-bgimg="../assets/img/slider/slider5.jpg">
+        <div class="single_slider" data-bgimg="/assets/img/slider/1246.jpg">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12">
@@ -109,7 +111,7 @@
                 </div>
             </div>
         </div>
-        <div class="single_slider" data-bgimg="../assets/img/slider/slider6.jpg">
+        <div class="single_slider" data-bgimg="/assets/img/slider/1333.jpg">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12">
@@ -128,25 +130,25 @@
     <!--banner area start-->
     <div class="banner_section banner_section_three">
         <div class="container-fluid">
-            <div class="row ">
-               <div class="col-lg-4 col-md-6">
+            <div class="row" style="justify-content: center;">
+               <div class="col-lg-3 col-md-6">
                     <div class="banner_area">
                         <div class="banner_thumb">
-                            <a href="shop.html"><img src="../assets/img/bg/banner8.jpg" alt="#"></a>
+                            <a href="shop.html"><img src="/assets/img/slider/20shoes_5.jpg" alt="#"></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-3 col-md-6">
                     <div class="banner_area">
                         <div class="banner_thumb">
-                            <a href="shop.html"><img src="../assets/img/bg/banner9.jpg" alt="#"></a>
+                            <a href="shop.html"><img src="/assets/img/slider/9899439.jpg" alt="#"></a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
+                <div class="col-lg-3 col-md-6">
                     <div class="banner_area bottom">
                         <div class="banner_thumb">
-                            <a href="shop.html"><img src="../assets/img/bg/banner10.jpg" alt="#"></a>
+                            <a href="shop.html"><img src="/assets/img/slider/27shoes_1.jpg" alt="#"></a>
                         </div>
                     </div>
                 </div>

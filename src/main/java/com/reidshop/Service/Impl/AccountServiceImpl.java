@@ -7,6 +7,7 @@ import com.reidshop.Model.Request.RegisterRequest;
 import com.reidshop.Reponsitory.AccountDetailRepository;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Service.IAccountService;
+import com.reidshop.dto.GoogleUserInfo;
 import com.reidshop.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,23 @@ public class AccountServiceImpl implements IAccountService {
     @Autowired
     AccountDetailRepository accountDetailRepository;
 
+    @Override
+    public Account loginWithGoogle(GoogleUserInfo googleUserInfo){
+        Account account = accountRepository.findByEmail(googleUserInfo.getEmail()).orElse(new Account());
+        if(account.getEmail()==null)
+        {
+            account.setEmail(googleUserInfo.getEmail());
+            account.setPassword(passwordEncoder.encode("google"));
+            account.setRole(ROLE.USER);
+            accountRepository.save(account);
+            AccountDetail accountDetail = new AccountDetail();
+            accountDetail.setAccount(account);
+            accountDetail.setName(googleUserInfo.getName());
+            accountDetail.setImage(googleUserInfo.getPicture());
+            accountDetailRepository.save(accountDetail);
+        }
+        return account;
+    }
 
     @Override
     public Boolean save(RegisterRequest request){

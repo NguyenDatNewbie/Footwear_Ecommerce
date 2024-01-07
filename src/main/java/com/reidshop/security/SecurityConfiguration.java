@@ -40,6 +40,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests(req -> req
+                        .requestMatchers("/google/loginWithGG").permitAll()
                         .requestMatchers("/cart/payment/*/**").authenticated()
                         .requestMatchers("/profile/**").authenticated()
                         .requestMatchers("/orders/**").authenticated()
@@ -50,8 +51,9 @@ public class SecurityConfiguration {
                         .anyRequest().permitAll()
 
                 )
-                .formLogin((login->login.loginPage("/sign-in-up").permitAll()))
 
+                .formLogin((login->login.loginPage("/sign-in-up").permitAll()))
+                .oauth2Login().defaultSuccessUrl("/sign-in-up/login/google/success").and()
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

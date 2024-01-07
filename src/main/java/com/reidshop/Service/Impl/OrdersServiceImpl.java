@@ -9,6 +9,7 @@ import com.reidshop.Model.Request.OrderCombineRequest;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Reponsitory.EvaluateRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
+import com.reidshop.Reponsitory.ProductOutOfStockRepository;
 import com.reidshop.Service.Handle.DistanceService;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
@@ -35,6 +36,8 @@ public class OrdersServiceImpl implements IOrdersService {
 
     @Autowired
     IProductOutOfStockService productOutOfStockService;
+    @Autowired
+    ProductOutOfStockRepository productOutOfStockRepository;
 
     @Autowired
     IOrderItemService orderItemService;
@@ -214,5 +217,36 @@ public class OrdersServiceImpl implements IOrdersService {
     public List<Orders> findOrdersByAccountAndStatus(Long id, String status){
         List<Orders> orders = ordersRepository.findOrdersByAccountAndStatus(id,OrderStatus.valueOf(status));
         return orders;
+    }
+
+    @Override
+    public List<Orders> findOrderByAccountQuery(Long accountId, String keyword){
+        List<Orders> orders = ordersRepository.findOrdersByAccount(accountId);
+        List<Orders> result = ordersRepository.findBySearchQuery(keyword,accountId);
+        for(Orders order: orders){
+            if(result.contains(order))
+                continue;
+            boolean exist = false;
+            for (OrderItem orderItem: order.getOrderItems()) {
+                if(orderItem.getInventory().getSize().getProduct().getName().toLowerCase().contains(keyword.toLowerCase()))
+                {
+                    exist = true;
+                    break;
+                }
+            }
+            if(exist==false)
+            {
+                List<ProductOutOfStock> productOutOfStocks = productOutOfStockRepository.findByOrderId(order.getId());
+                for (ProductOutOfStock p: productOutOfStocks)
+                    if(p.getSize().getProduct().getName().toLowerCase().contains(keyword.toLowerCase()))
+                    {
+                        exist = true;
+                        break;
+                    }
+            }
+            if(exist)
+                result.add(order);
+        }
+        return result;
     }
 }

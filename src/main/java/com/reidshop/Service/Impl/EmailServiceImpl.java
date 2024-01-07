@@ -1,10 +1,10 @@
 package com.reidshop.Service.Impl;
 
+import com.reidshop.Model.Request.ContactRequest;
 import com.reidshop.Service.IEmailService;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -42,14 +42,42 @@ public class EmailServiceImpl implements IEmailService {
                 + "        \r\n"
                 + "         <p style=\"margin: 0;\">Mã xác thực của bạn là: <strong>" + formattedNumber + "</strong></p>\r\n"
                 + "    </div>\r\n"
-                + "           \r\n"
-                + "   \r\n"
                 + "    </body>\r\n"
                 + "</html>";
 
         // Đặt nội dung email dưới dạng HTML
         helper.setText(htmlContent, true);
 
+        mailSender.send(message);
+    }
+
+    @Override
+    public void sendMessage(ContactRequest contactRequest) throws MessagingException{
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setFrom(contactRequest.getEmail());
+        helper.setTo(SENDER);
+        helper.setSubject("[REID] "+contactRequest.getSubject());
+        String htmlContent = "<html>\r\n"
+                + "    <body>\r\n"
+                + "<div>\n"
+                +        "    <p>Bạn: " +
+                contactRequest.getName()
+                +"</p>\n"
+                +        "    <p>Bạn: " +
+                contactRequest.getEmail()
+                +"</p>\n"
+                + "    <p>Nội dung" +
+                "</p>\n"
+                + "    <p>" +
+                contactRequest.getMessage()+
+                "</p>\n"
+                + "</div>"
+                + "    </body>\r\n"
+                + "</html>";
+
+        // Đặt nội dung email dưới dạng HTML
+        helper.setText(htmlContent, true);
         mailSender.send(message);
     }
 
