@@ -296,7 +296,7 @@
                             <div class="order">
                                 <div class="solid">
                                     <div class="info-store">
-                                        <div class="name"><h4>ReidStore chi nhánh ${order.store.id}</h4></div>
+                                        <div class="name"><h4>Chi nhánh ${order.store.id} - ${order.store.department}</h4></div>
                                         <div>
                                             <div class="info-status">
                                                 <c:choose>
@@ -392,7 +392,7 @@
                             <div class="order">
                                 <div class="solid">
                                     <div class="info-store">
-                                        <div class="name"><h4>ReidStore chi nhánh ${order.store.id}</h4></div>
+                                        <div class="name"><h4>Chi nhánh ${order.store.id} - ${order.store.department}</h4></div>
                                         <div>
                                             <div class="info-status">
                                                 <c:choose>
@@ -586,7 +586,7 @@
                             <div class="order">
                                 <div class="solid">
                                     <div class="info-store">
-                                        <div class="name"><h4>ReidStore chi nhánh ${order.store.id}</h4></div>
+                                        <div class="name"><h4>Chi nhánh ${order.store.id} - ${order.store.department}</h4></div>
                                         <div>
                                             <div class="info-status">
                                                 <c:choose>
@@ -682,7 +682,7 @@
                             <div class="order">
                                 <div class="solid">
                                     <div class="info-store">
-                                        <div class="name"><h4>ReidStore chi nhánh ${order.store.id}</h4></div>
+                                        <div class="name"><h4>Chi nhánh ${order.store.id} - ${order.store.department}</h4></div>
                                         <div>
                                             <div class="info-status">
                                                 <c:choose>
@@ -778,7 +778,7 @@
                             <div class="order">
                                 <div class="solid">
                                     <div class="info-store">
-                                        <div class="name"><h4>ReidStore chi nhánh ${order.store.id}</h4></div>
+                                        <div class="name"><h4>Chi nhánh ${order.store.id} - ${order.store.department}</h4></div>
                                         <div>
                                             <div class="info-status">
                                                 <c:choose>
@@ -867,12 +867,13 @@
                             </div>
                         </c:forEach>
                     </div>
+                    <div class="pagination">
+                        <ul class="listPage">
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="pagination">
-                    <ul class="listPage">
-                    </ul>
-                </div>
+
 
             </div>
 
@@ -931,8 +932,6 @@
     let thisPage = 1;
     let limit = 3;
     let list = document.querySelectorAll('.tab-pane.active .order');
-
-    // let listIndex = document.querySelectorAll('.list .item');
     function reLoadItem() {
         list = document.querySelectorAll('.tab-pane.active .order');
         loadItem();
@@ -951,11 +950,11 @@
         listPage();
     }
 
-
     function listPage() {
         let count = Math.ceil(list.length / limit);
+        console.log(count);
         document.querySelector('.listPage').innerHTML = '';
-        if (count >3) {
+        if (count >1) {
             if (thisPage != 1) {
                 let prev = document.createElement('li');
                 let icon = document.createElement('i');
@@ -965,16 +964,6 @@
                 document.querySelector('.listPage').appendChild(prev);
             }
 
-            for (i = 1; i <= count; i++) {
-                let newPage = document.createElement('li');
-                newPage.innerText = i;
-                if (i == thisPage) {
-                    newPage.classList.add('active');
-                }
-                newPage.setAttribute('onclick', "changePage(" + i + ")");
-                document.querySelector('.listPage').appendChild(newPage);
-            }
-
             if (thisPage != count) {
                 let next = document.createElement('li');
                 let icon = document.createElement('i');
@@ -982,6 +971,16 @@
                 next.appendChild(icon);
                 next.setAttribute('onclick', "changePage(" + (thisPage + 1) + ")");
                 document.querySelector('.listPage').appendChild(next);
+            }
+
+            for (let i = 1; i <= count; i++) {
+                let newPage = document.createElement('li');
+                newPage.innerText = i;
+                if (i == thisPage) {
+                    newPage.classList.add('active');
+                }
+                newPage.setAttribute('onclick', "changePage(" + i + ")");
+                document.querySelector('.listPage').appendChild(newPage);
             }
         }
     }
@@ -1005,11 +1004,9 @@
         $.ajax({
             url: "/orders/update/" + id,
             type: "POST",
-            contentType: "application/json; charset=utf-8",
             success: function () {
                 window.location.reload();
             }
-
         });
     }
 

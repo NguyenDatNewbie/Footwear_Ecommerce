@@ -187,7 +187,11 @@ public class OrdersServiceImpl implements IOrdersService {
         {
             for (OrderItem item: orders.getOrderItems()) {
                 Product product = item.getInventory().getSize().getProduct();
-                Evaluate newEvaluate = evaluate;
+                Evaluate newEvaluate = new Evaluate();
+                newEvaluate.setAccount(evaluate.getAccount());
+                newEvaluate.setRate(evaluate.getRate());
+                newEvaluate.setComment(evaluate.getComment());
+                newEvaluate.setCreatedAt(Date.valueOf(LocalDate.now()));
                 newEvaluate.setProduct(product);
                 newEvaluate.setOrders(orders);
                 evaluateRepository.save(newEvaluate);

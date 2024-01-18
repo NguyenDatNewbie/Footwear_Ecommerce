@@ -416,7 +416,7 @@
                             </li>
                             <li>
                                 <a data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews"
-                                   aria-selected="false">Reviews</a>
+                                   aria-selected="false">Đánh giá</a>
                             </li>
                         </ul>
                     </div>

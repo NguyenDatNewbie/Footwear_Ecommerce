@@ -51,7 +51,6 @@ public class StockServiceImpl {
     void checkAndUpdateInProductOutOfStock(Inventory inventory,Store store){
         List<ProductOutOfStock> productOutOfStocks = productOutOfStockRepository.findAllByStoreId(store.getId());
         for(ProductOutOfStock p: productOutOfStocks){
-
             if(p.getSize().getId() == inventory.getSize().getId())
             {
                 if(inventory.getQuantity()>=p.getQuantity()) {

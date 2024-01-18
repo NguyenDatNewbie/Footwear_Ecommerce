@@ -77,10 +77,12 @@ public class DistanceService {
                 map.put("value", String.valueOf(distance));
                 map.put("text",text);
             }
+
         } catch (Exception e) {
             System.out.println(e.getMessage()+"Sai");
         }
         return map;
+
     }
 
     public double calCostShip(List<StoreValidRequest> storeValidRequests,String city,String district, String ward){
@@ -94,7 +96,9 @@ public class DistanceService {
             }
         }
         StoreValidRequest min = getStoreDistanceMin(storeValidRequests,address,1);
-        Long distance = Long.valueOf(getDistanceValue(min.getStore().getDepartment(),address).get("value"));
+        Long distance = null;
+        if (getDistanceValue(min.getStore().getDepartment(),address).get("value")!=null)
+            distance = Long.valueOf(getDistanceValue(min.getStore().getDepartment(),address).get("value"));
         if(distance==null)
             distance= Long.valueOf(0);
         if(distance<=2500){
