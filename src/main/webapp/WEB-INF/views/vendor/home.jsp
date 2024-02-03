@@ -10,7 +10,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Dashboard - NiceAdmin Bootstrap Template</title>
+    <title>Dashboard - Vendor</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -299,33 +299,33 @@
                                     <li><a class="dropdown-item" href="#">This Year</a></li>
                                 </ul>
                             </div>
-                            <div class="card-body pb-0">
-                                <h5 class="card-title">Top Selling <span>| Today</span></h5>
+<%--                            <div class="card-body pb-0">--%>
+<%--                                <h5 class="card-title">Top Selling <span>| Today</span></h5>--%>
 
-                                <table class="table table-borderless">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">Preview</th>
-                                        <th scope="col">Product</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Sold</th>
-                                        <th scope="col">Promotion</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach items="${productRepository.findAllByProductSold()}" var="product">
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="${product.images.get(0).img}" alt=""></a></th>
-                                            <td><a href="#" class="text-primary fw-bold">${product.name}</a></td>
-                                            <td>${formatVND.format(product.price)}</td>
-                                            <td class="fw-bold">${product.sold}</td>
-                                            <td>${product.promotion}</td>
-                                        </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
+<%--                                <table class="table table-borderless">--%>
+<%--                                    <thead>--%>
+<%--                                    <tr>--%>
+<%--                                        <th scope="col">Preview</th>--%>
+<%--                                        <th scope="col">Product</th>--%>
+<%--                                        <th scope="col">Price</th>--%>
+<%--                                        <th scope="col">Sold</th>--%>
+<%--                                        <th scope="col">Promotion</th>--%>
+<%--                                    </tr>--%>
+<%--                                    </thead>--%>
+<%--                                    <tbody>--%>
+<%--                                        <c:forEach items="${productRepository.findAllByProductSold()}" var="product">--%>
+<%--                                        <tr>--%>
+<%--                                            <th scope="row"><a href="#"><img src="${product.images.get(0).img}" alt=""></a></th>--%>
+<%--                                            <td><a href="#" class="text-primary fw-bold">${product.name}</a></td>--%>
+<%--                                            <td>${formatVND.format(product.price)}</td>--%>
+<%--                                            <td class="fw-bold">${product.sold}</td>--%>
+<%--                                            <td>${product.promotion}</td>--%>
+<%--                                        </tr>--%>
+<%--                                        </c:forEach>--%>
+<%--                                    </tbody>--%>
+<%--                                </table>--%>
 
-                            </div>
+<%--                            </div>--%>
 
                         </div>
                     </div><!-- End Top Selling -->

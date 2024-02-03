@@ -50,11 +50,13 @@ public class StockServiceImpl {
     // Lỗi orderItem nếu quantity cần nhiều inventory để đáp ứng được quantity thì không biết lưu cho inventory nào
     void checkAndUpdateInProductOutOfStock(Inventory inventory,Store store){
         List<ProductOutOfStock> productOutOfStocks = productOutOfStockRepository.findAllByStoreId(store.getId());
+        System.out.println("1");
         for(ProductOutOfStock p: productOutOfStocks){
 
             if(p.getSize().getId() == inventory.getSize().getId())
             {
                 if(inventory.getQuantity()>=p.getQuantity()) {
+                    System.out.println("0");
                     inventory.setQuantity(inventory.getQuantity()-p.getQuantity());
                     Orders orders = p.getOrders();
                     OrderItem orderItem = new OrderItem();

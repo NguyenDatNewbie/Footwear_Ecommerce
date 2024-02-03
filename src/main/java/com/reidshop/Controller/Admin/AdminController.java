@@ -226,6 +226,13 @@ public class AdminController {
     public List<Double> listRevenueOfThisWeek(){
         List<Object[]> result = ordersService.findOrderIdsByWeek();
 
+        for (Object[] row : result) {
+            for (Object column : row) {
+                System.out.print(column + "\t");
+            }
+            System.out.println();
+        }
+
         List<Double> listRevenueThisWeek = new ArrayList<>();
         for (Object[] row : result) {
             double revenue = 0;
@@ -235,11 +242,11 @@ public class AdminController {
 
             for (String orderId : orderIdArray) {
                 Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderId));
+                System.out.println(orderId);
                 double totalOriginalOfOrder = orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
+                System.out.println(totalOriginalOfOrder);
                 revenue += (order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfOrder));
             }
-            System.out.println("Revenue: " + revenue);
-
             listRevenueThisWeek.add(revenue);
         }
 
