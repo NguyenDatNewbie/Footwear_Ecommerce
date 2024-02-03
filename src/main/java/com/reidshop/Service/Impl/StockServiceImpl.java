@@ -52,7 +52,6 @@ public class StockServiceImpl {
         List<ProductOutOfStock> productOutOfStocks = productOutOfStockRepository.findAllByStoreId(store.getId());
         System.out.println("1");
         for(ProductOutOfStock p: productOutOfStocks){
-
             if(p.getSize().getId() == inventory.getSize().getId())
             {
                 if(inventory.getQuantity()>=p.getQuantity()) {

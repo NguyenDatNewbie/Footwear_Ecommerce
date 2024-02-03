@@ -75,7 +75,8 @@ public class OrderManagementController {
     }
 
     @PostMapping("/update/{id}")
-    void cancel(@PathVariable long id){
+    @ResponseBody
+    String cancel(@PathVariable long id){
         Orders orders = ordersRepository.findById(id).orElse(null);
         if(orders.getStatus()== OrderStatus.PREPARE || orders.getStatus() ==OrderStatus.WAIT
                 || orders.getStatus() == OrderStatus.ALREADY){
@@ -83,6 +84,7 @@ public class OrderManagementController {
             ordersRepository.save(orders);
             orderItemService.reInventory(orders.getId());
         }
+        return "success";
     }
 
     @PostMapping(value = "/evaluate/{id}",consumes = {"application/x-www-form-urlencoded"})

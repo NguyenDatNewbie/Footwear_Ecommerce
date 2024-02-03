@@ -283,7 +283,8 @@
         else {
             var link = document.createElement('a')
             link.href = '/sign-in-up';
-            link.textContent = 'Sign In';
+            link.textContent = 'Đăng nhập/Đăng ký';
+            link.style.color = '#fff';
             showAccount.append(link);
         }
     }

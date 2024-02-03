@@ -25,7 +25,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 
     @Query("SELECT p FROM Product p " +
             "JOIN Size s ON p.id = s.product.id " +
-            "WHERE  (?1=0 or p.category.id = ?1 )" +
+            "WHERE  (?1=0 or p.category.id = ?1 or (p.category.parent IS NOT NULL AND p.category.parent = ?1))" +
             "AND    ('DUMMYVALUE' IN ?2 Or (SUBSTRING_INDEX(p.name, ' ', -1) IN ?2))" +
             "AND   ('DUMMYVALUE' IN ?3 Or (s.size IN ?3))")
     List<Product> getProductsByMulti(Long categoryId,List<String> colors,List<String> sizes);

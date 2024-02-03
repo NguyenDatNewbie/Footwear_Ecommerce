@@ -248,6 +248,9 @@
         .sidebar_widget ul li:hover ul{
             display:block;
         }
+        .current_price{
+            color: red!important;
+        }
 
     </style>
 </head>
@@ -413,15 +416,6 @@
 
                                     <div class="product_content list_content">
                                         <h3><a href="product-details.html">${product.name}</a></h3>
-                                        <div class="product_ratting">
-                                            <ul>
-                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-star"></i></a></li>
-                                            </ul>
-                                        </div>
                                         <div class="product_price">
                                             <c:choose>
                                                 <c:when test="${product.promotion>0}">
