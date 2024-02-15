@@ -16,7 +16,10 @@ public class Image {
     @Column
     String img;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
+    @JoinColumn(name = "color_id",nullable = false)
+    Color color;
+
     @ManyToOne
     @JoinColumn(name = "product_id",nullable = false)
     Product product;

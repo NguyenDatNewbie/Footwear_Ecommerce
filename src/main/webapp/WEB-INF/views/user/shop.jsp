@@ -239,19 +239,47 @@
             cursor: pointer;
             color: #ff6a28;
         }
+        .color-more{
+            margin-top: 8px;
+        }
+        .thumb-color{
+            width: 55px;
+            margin-right: 5%;
+        }
+        .thumb-color button:active{
+            background: #ff6a28;
+            padding: 1px;
+            border-radius: 50%;
+        }
 
-        /*.sidebar_widget ul li ul li {*/
-        /*    width:100%;*/
-        /*    border-bottom:1px solid rgba(255,255,255,.3);*/
-        /*}*/
-
+        .activeColor{
+            background: #ff6a28!important;
+            padding: 2px!important;
+            border-radius: 50%;
+        }
+        .thumb-color button{
+            border: none;
+            padding: 0;
+            background: transparent;
+        }
+        .thumb-color button img{
+            border-radius: 50%;
+        }
         .sidebar_widget ul li:hover ul{
             display:block;
         }
         .current_price{
             color: red!important;
         }
-
+        .single_product{
+            border: 1px solid;
+            padding-bottom: 10px;
+            border-bottom-left-radius: 3%;
+            border-bottom-right-radius: 3%;
+        }
+        .content{
+            padding-left: 10px;
+        }
     </style>
 </head>
 
@@ -316,36 +344,12 @@
                         <div class="widget_list color">
                             <h2>Color</h2>
                             <div style="display: flex">
-                               <label class="container-color">
-                                   <input type="checkbox">
-                                   <span class="checkmark" style="background-color: #DEE9F2"></span>
-                                   <p>White</p>
-                               </label>
-                                <label class="container-color">
-                                    <input type="checkbox">
-                                    <span class="checkmark" style="background-color: black"></span>
-                                    <p>Black</p>
-                                </label>
-                                <label class="container-color">
-                                    <input type="checkbox">
-                                    <span class="checkmark" style="background-color: #95ABBD"></span>
-                                    <p>Grey</p>
-                                </label>
-                                <label class="container-color">
-                                    <input type="checkbox">
-                                    <span class="checkmark" style="background-color: green"></span>
-                                    <p>Green</p>
-                                </label>
-                                <label class="container-color">
-                                    <input type="checkbox">
-                                    <span class="checkmark" style="background-color: red"></span>
-                                    <p>Red</p>
-                                </label>
-                                <label class="container-color">
-                                    <input type="checkbox">
-                                    <span class="checkmark" style="background-color: #F57B1B"></span>
-                                    <p>Orange</p>
-                                </label>
+                                <c:forEach var="color" items="${colorRepository.findAll()}">
+                                    <label class="container-color">
+                                        <input type="checkbox" value="${color.id}">
+                                        <span class="checkmark" style="background-color: ${color.color_code}"></span>
+                                    </label>
+                                </c:forEach>
                             </div>
                         </div>
                     </div>
@@ -380,8 +384,8 @@
 
                     <div class="row shop_wrapper list" id="product_content" >
                         <c:forEach var="product" items="${products}">
-                            <div class="col-lg-4 col-md-4 col-12 item" >
-                                <div class="single_product">
+                            <div class="col-lg-4 col-md-4 col-12 item" style="display: block" >
+                                <div class="single_product" id="item-${product.id}" style="border: 1px solid; padding-bottom: 10px; border-bottom-left-radius: 3%;border-bottom-right-radius: 3%">
                                     <div class="product_thumb">
                                         <c:if test="${product.images.size()>0}">
                                             <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
@@ -400,37 +404,44 @@
                                         </div>
 
                                     </div>
-
-                                    <div class="product_content grid_content" >
-                                        <h3><a href="product-details.jsp">${product.name}</a></h3>
-                                        <c:choose>
-                                            <c:when test="${product.promotion>0}">
-                                                <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
-                                                <span class="old_price">${formatVND.format(product.price)}</span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span class="current_price">${formatVND.format(product.price)}</span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </div>
-
-                                    <div class="product_content list_content">
-                                        <h3><a href="product-details.html">${product.name}</a></h3>
-                                        <div class="product_price">
+                                    <div class="content" >
+                                        <div class="product_content grid_content" >
+                                            <h3><a href="product-details.jsp">${product.name}</a></h3>
                                             <c:choose>
                                                 <c:when test="${product.promotion>0}">
-                                                    <span class="current_price">${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                                    <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
                                                     <span class="old_price">${formatVND.format(product.price)}</span>
                                                 </c:when>
                                                 <c:otherwise>
                                                     <span class="current_price">${formatVND.format(product.price)}</span>
                                                 </c:otherwise>
                                             </c:choose>
+                                            <div class="color-more" style="display: flex">
+                                                <c:forEach var="product_color" items="${imageService.imageFirstOfColor(product.id)}">
+                                                    <div class="thumb-color">
+                                                        <button onclick="selectColor(${product_color.product},${product_color.color.id},this)" class="product-color"><img src="${product_color.img}" alt=""></button>
+                                                    </div>
+                                                </c:forEach>
+                                            </div>
                                         </div>
-                                        <div class="product_desc">
-                                            <p>${product.description}</p>
-                                        </div>
+                                        <div class="product_content list_content">
+                                            <h3><a href="product-details.html">${product.name}</a></h3>
+                                            <div class="product_price">
+                                                <c:choose>
+                                                    <c:when test="${product.promotion>0}">
+                                                        <span class="current_price">${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                                        <span class="old_price">${formatVND.format(product.price)}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="current_price">${formatVND.format(product.price)}</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                            <div class="product_desc">
+                                                <p>${product.description}</p>
+                                            </div>
 
+                                        </div>
                                     </div>
 
                                 </div>
@@ -467,6 +478,41 @@
 <!-- Main JS -->
 <script src="<c:url value="/assets/js/main.js"/> "></script>
 <script>
+    function displayProductColor(img1,img2,divItem){
+        var primaryImg = divItem.querySelector(".product_thumb .primary_img img");
+        var secondaryImg = divItem.querySelector(".product_thumb .secondary_img img");
+        primaryImg.src = img1;
+        secondaryImg.src = "";
+        if(img2!=null)
+            secondaryImg.src = img2;
+    }
+    function addActive(current){
+        var buttons = document.querySelectorAll(".thumb-color button");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("activeColor");
+            // Thêm lớp 'active' cho button đang được nhấn
+            current.classList.add("activeColor");
+        }
+    }
+    function selectColor(product_id,color_id,current){
+        let query = "productId="+product_id+"&"+"colorId="+color_id;
+        $.ajax({
+            url: "/shop/color",
+            type: "Get",
+            data: query,
+            contentType: "application/json; charset=utf-8",
+            success: function (data){
+                var divItem = document.getElementById("item-"+data[0].product);
+                if(data.length>1)
+                    displayProductColor(data[0].img,data[1].img,divItem);
+                else
+                    displayProductColor(data[0].img,null,divItem);
+
+                addActive(current);
+            }
+
+        });
+    }
     function changeSize(element) {
         // Loại bỏ lớp "active" từ tất cả các hộp
         // var boxes = document.querySelectorAll(".box_size");
@@ -561,6 +607,17 @@
         return result;
     }
 
+    function getColor(list){
+        var result = ""
+        for(let i =0;i < list.length;i++){
+            if(i==list.length-1)
+                result+= list[i].value;
+            else
+                result+= list[i].value+",";
+        }
+        return result;
+    }
+
     function filterAll(){
         var filter = document.querySelector('.filter');
         if(window.getComputedStyle(filter).display === "none")
@@ -569,8 +626,8 @@
         let max = $( "#slider-range" ).slider("values", 1 );
         var boxSizeClass = document.querySelectorAll('.box_size.active');
         var sizeQuery = getText(boxSizeClass);
-        var colorClass = document.querySelectorAll('.container-color.active p');
-        var colorQuery = getText(colorClass);
+        var colorClass = document.querySelectorAll('.container-color.active input');
+        var colorQuery = getColor(colorClass);
         var query="";
         var categoryDiv = document.querySelector('.brand-sidebar.active');
         if(categoryDiv!=null) {
@@ -597,12 +654,43 @@
         });
     }
 
+    function findImage(productId){
+        return new Promise((resolve,reject) => {
+            var result='';
+            $.ajax({
+                url: "/shop/image/first/"+productId,
+                type: "Get",
+                contentType: "application/json; charset=utf-8",
+                success: function (data){
+                    result+= '<div class="color-more" style="display: flex">\n';
+                    for (let i=0;i<data.length;i++){
+                        result+= '                                                    <div class="thumb-color">\n' +
+                            '                                                        <button onclick="selectColor('
+                            +data[i].product+','+data[i].color.id+',this)'
+                            + '" class="product-color"><img src="'
+                            +data[i].img
+                            +'" alt=""></button>\n' +
+                            '                                                    </div>\n';
+                    }
+                    result+= '                                            </div>';
 
-    function displayProduct(products){
+                    resolve(result);
+                },
+                error: function (){
+                    reject(result);
+                }
+            });
+
+        });
+
+    }
+    async function displayProduct(products){
         let result = '';
         for(let i =0;i<products.length;i++){
             result += '<div class="col-lg-4 col-md-4 col-12 item">'
-                + ' <div class="single_product">'
+                + ' <div class="single_product" id="item-' +
+                + products[i].id+
+                '">'
                 + '<div class="product_thumb">';
             if(products[i].images.length>0)
                 result += '<a class="primary_img" href="/product/' +
@@ -625,6 +713,7 @@
                 result+='-'+products[i].promotion +'%';
             result+= '</span></div>'
                 +'</div>'
+                +'<div class="content" >'
                 +'<div class="product_content grid_content">'
                 +'<h3><a href="product-details.html">'
                 + products[i].name +'</a></h3>';
@@ -638,13 +727,16 @@
                 result+=price+'</span>'
                     +'<span class="old_price">'
                     +old_price
-                    +'</span>' +' </div>';
+                    +'</span>';
 
             }
             else {
-                result+=old_price+'</span>' +' </div>';
+                result+=old_price+'</span>';
             }
 
+            result+= await findImage(products[i].id);
+
+            result+='</div>';
 
             result+='   <div class="product_content list_content">'
                 +'<h3><a href="product-details.html">'
@@ -675,6 +767,7 @@
             }
             result+=' <div class="product_desc">' +'<p>'
                 +products[i].description+'</p>'
+                +'</div>'
                 +'</div>'
                 +'</div>'
                 +'</div>'

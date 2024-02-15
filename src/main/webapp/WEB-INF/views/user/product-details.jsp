@@ -247,8 +247,31 @@
         .success i {
             margin-right: 5px; /* Khoảng cách giữa biểu tượng và văn bản */
         }
-
-
+        .color-more{
+            margin-top: 1%;
+        }
+        .thumb-color{
+            width: 50px;
+            margin-right: 2%;
+        }
+        .thumb-color button:active{
+            background: #ff6a28;
+            padding: 1px;
+            border-radius: 50%;
+        }
+        .thumb-color button{
+            border: none;
+            padding: 0;
+            background: transparent;
+        }
+        .thumb-color button img{
+            border-radius: 50%;
+        }
+        .activeColor{
+            background: #ff6a28!important;
+            padding: 2px!important;
+            border-radius: 50%;
+        }
         @keyframes slideIn {
             from {
                 top: -50px;
@@ -296,17 +319,17 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-5 col-md-5">
-                <div class="product-details-tab">
+                <div class="product-details-tab"  id="single-zoom">
                     <div id="img-1" class="zoomWrapper single-zoom">
-                        <img id="zoom1" src="${productCurrent.images.get(0).img}"
-                             data-zoom-image="${productCurrent.images.get(0).img}"
+                        <img id="zoom1" src="${images.get(0).img}"
+                             data-zoom-image="${images.get(0).img}"
                              alt="big-1">
                     </div>
 
                     <div class="single-zoom-thumb">
                         <ul class="s-tab-zoom owl-carousel single-product-active"
                             id="gallery_01">
-                            <c:forEach items="${productCurrent.images}"
+                            <c:forEach items="${images}"
                                        var="img">
                                 <li><a href="#" class="elevatezoom-gallery active"
                                        data-update="" data-image="${img.img}"
@@ -314,7 +337,6 @@
                                                                           alt="zo-th-1"/>
                                 </a></li>
                             </c:forEach>
-
                         </ul>
                     </div>
                 </div>
@@ -362,6 +384,19 @@
 
                         <div class="product_desc">
                             <p>${productCurrent.description}</p>
+                        </div>
+                        <div class="product_variant size" style="display: block; margin-bottom: 10px">
+                            <div style="display: flex">
+                                <h3 style="margin-right: 0px;">Màu sắc</h3>
+                            </div>
+
+                            <div class="color-more" style="display: flex">
+                                <c:forEach var="product_color" items="${imageService.imageFirstOfColor(productCurrent.id)}">
+                                    <div class="thumb-color">
+                                        <button onclick="selectColor(${productCurrent.id},${product_color.id},this)" class="product-color" type="button"><img src="${product_color.img}" alt=""></button>
+                                    </div>
+                                </c:forEach>
+                            </div>
                         </div>
                         <div class="product_variant size" style="display: block; margin-bottom: 10px">
                             <div style="display: flex">
@@ -558,7 +593,6 @@
         <div class="product_area">
             <div class="row">
                 <div class="product_carousel product_three_column4 owl-carousel">
-
                     <c:forEach items="${productService.findAllByProductCategorySoldTop(productCurrent.category.id)}"
                                var="product">
                         <div class="col-lg-3">
@@ -866,6 +900,63 @@
         }
     }
 
+    function displayProductColor(imgs){
+        var div = document.getElementById("single-zoom");
+        var content1 = '<div id="img-1" class="zoomWrapper single-zoom">\n' +
+            '                        <img id="zoom1" src="'
+            + imgs[0].img
+            +'"\n'
+            +'                             data-zoom-image="'
+            + imgs[0].img
+            +'"\n' +
+            '                             alt="big-1">\n' +
+            '                    </div>';
+        var content2 ='<div class="single-zoom-thumb">\n' +
+            '                        <ul class="s-tab-zoom owl-carousel single-product-active"\n' +
+            '                            id="gallery_01">';
+        for(let i =0;i<imgs.length;i++)
+        {
+
+            content2 += '<li><a href="#" class="elevatezoom-gallery active"\n' +
+                '                                       data-update="" data-image="'
+                +imgs[i].img
+                + '" '
+                +'                                       data-zoom-image="'
+                +imgs[i].img
+                + '">' +
+                ' <img src="'
+                + imgs[i].img
+                + '"\n' +
+                '                                                                          alt="zo-th-1"/>\n' +
+                '                                </a></li>\n';
+        }
+        console.log(content2);
+        content2+='</ul>\n' +
+            '                    </div>';
+        div.innerHTML = content2;
+    }
+    function addActive(current){
+        var buttons = document.querySelectorAll(".thumb-color button");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("activeColor");
+            // Thêm lớp 'active' cho button đang được nhấn
+            current.classList.add("activeColor");
+        }
+    }
+    function selectColor(product_id,color_id,current){
+        let query = "productId="+product_id+"&"+"colorId="+color_id;
+        $.ajax({
+            url: "/shop/color",
+            type: "Get",
+            data: query,
+            contentType: "application/json; charset=utf-8",
+            success: function (data){
+                displayProductColor(data);
+                addActive(current);
+            }
+
+        });
+    }
     function changePage(i) {
         thisPage = i;
         loadItem();
