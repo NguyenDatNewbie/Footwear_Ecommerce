@@ -1,9 +1,11 @@
 package com.reidshop.Controller.User;
 
 import com.reidshop.Model.Entity.Evaluate;
+import com.reidshop.Model.Entity.Image;
 import com.reidshop.Model.Entity.Product;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IEvaluateServiceImpl;
+import com.reidshop.Service.IImageService;
 import com.reidshop.Service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -33,7 +35,10 @@ public class ProductDetailController {
     IEvaluateServiceImpl evaluateService;
     @Autowired
     AccountDetailRepository accountDetailRepository;
-
+    @Autowired
+    IImageService imageService;
+    @Autowired
+    ColorRepository colorRepository;
 
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
@@ -55,6 +60,10 @@ public class ProductDetailController {
         modelMap.addAttribute("sizeRepository",sizeRepository);
         modelMap.addAttribute("productCurrent",product);
         modelMap.addAttribute("imageRepository",imageRepository);
+        modelMap.addAttribute("imageService",imageService);
+        modelMap.addAttribute("colorRepository",colorRepository);
+        List<Image> images = imageService.imageFirstOfColor(productId);
+        modelMap.addAttribute("images",images);
 
         return "user/product-details";
     }

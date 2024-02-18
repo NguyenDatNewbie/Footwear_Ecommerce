@@ -1,11 +1,14 @@
 package com.reidshop.Controller.User;
 
 import com.reidshop.Model.Entity.Category;
+import com.reidshop.Model.Entity.Image;
 import com.reidshop.Model.Entity.Product;
 import com.reidshop.Reponsitory.CategoryRepository;
+import com.reidshop.Reponsitory.ColorRepository;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.ProductRepository;
 import com.reidshop.Service.ICategoryService;
+import com.reidshop.Service.IImageService;
 import com.reidshop.Service.IProductService;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,10 @@ public class ShopController {
     CategoryRepository categoryRepository;
     @Autowired
     ICategoryService categoryService;
+    @Autowired
+    IImageService imageService;
+    @Autowired
+    ColorRepository colorRepository;
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
     @GetMapping("")
@@ -42,6 +49,22 @@ public class ShopController {
         modelMap.addAttribute("categoryRepository",categoryRepository);
         modelMap.addAttribute("products",products);
         modelMap.addAttribute("productRepository",productRepository);
+        modelMap.addAttribute("imageService",imageService);
+        modelMap.addAttribute("colorRepository",colorRepository);
+
+        return "user/shop";
+    }
+
+    @GetMapping("/search")
+    String search(@RequestParam("query") String query,ModelMap modelMap){
+        List<Product> products = productRepository.searchProduct(query);
+        modelMap.addAttribute("formatVND",formatVND);
+        modelMap.addAttribute("categoryService",categoryService);
+        modelMap.addAttribute("categoryRepository",categoryRepository);
+        modelMap.addAttribute("products",products);
+        modelMap.addAttribute("productRepository",productRepository);
+        modelMap.addAttribute("imageService",imageService);
+        modelMap.addAttribute("colorRepository",colorRepository);
         return "user/shop";
     }
 
@@ -53,8 +76,10 @@ public class ShopController {
                                              @RequestParam(value = "colors",required = false) List<String> colors,
                                             @RequestParam("min") double min, @RequestParam("max") double max)
     {
-        List<Product>  products = getNullableCoursesFiltered(categoryId,colors,sizes);
+        List<Product>  products = getNullableCoursesFiltered(categoryId,sizes);
         products = productService.filterRange(products,min,max);
+        if(colors!=null)
+            products = productService.findProductsByColors(colors,products);
         if(option!=0) {
             if (option == 1)
                 products = productService.sortByProductSold(products);
@@ -69,17 +94,6 @@ public class ShopController {
         }
 
         return new ResponseEntity<>(products,HttpStatus.OK);
-    }
-
-    @GetMapping("/search")
-    String search(@RequestParam("query") String query,ModelMap modelMap){
-        List<Product> products = productRepository.searchProduct(query);
-        modelMap.addAttribute("formatVND",formatVND);
-        modelMap.addAttribute("categoryService",categoryService);
-        modelMap.addAttribute("categoryRepository",categoryRepository);
-        modelMap.addAttribute("products",products);
-        modelMap.addAttribute("productRepository",productRepository);
-        return "user/shop";
     }
 
     @GetMapping("/searchList")
@@ -99,14 +113,22 @@ public class ShopController {
         return maps;
     }
 
-    public List<Product> getNullableCoursesFiltered(Long categoryId,List<String> colors,List<String> sizes) {
-        if(colors == null) {
-            colors = Arrays.asList("DUMMYVALUE");
-        }
+    public List<Product> getNullableCoursesFiltered(Long categoryId,List<String> sizes) {
         if(sizes == null) {
             sizes = Arrays.asList("DUMMYVALUE");
         }
-        return productRepository.getProductsByMulti(categoryId, colors, sizes);
+        return productRepository.getProductsByMulti(categoryId, sizes);
     }
 
+    @GetMapping("/color")
+    @ResponseBody
+    public List<Image> findByProductAndColor(@RequestParam Long productId, @RequestParam Long colorId){
+        return iImageService.findAllByProductAndColor(colorId,productId);
+    }
+
+    @GetMapping("/image/first/{productId}")
+    @ResponseBody
+    public List<Image> findImageByProduct(@PathVariable Long productId){
+        return imageService.imageFirstOfColor(productId);
+    }
 }

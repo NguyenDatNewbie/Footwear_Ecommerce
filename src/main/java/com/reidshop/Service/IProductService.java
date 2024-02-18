@@ -8,6 +8,9 @@ public interface IProductService {
 
 
 	List<Product> findAllByProductSoldTop();
+
+	List<Product> findProductsByColors(List<String> colors, List<Product> products);
+
 	List<Product> findAllByProductCategorySoldTop(Long category);
 
 

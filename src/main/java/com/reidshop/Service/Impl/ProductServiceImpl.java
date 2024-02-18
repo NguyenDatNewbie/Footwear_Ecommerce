@@ -30,6 +30,21 @@ public class ProductServiceImpl implements IProductService {
 		return result;
 	}
 
+	@Override
+	public List<Product> findProductsByColors(List<String> colors, List<Product> products){
+		List<Product> result = new ArrayList<>();
+		for (Product p: products) {
+			List<Long> colorIds = imageRepository.findColorOther(p.getId());
+			for(Long id: colorIds){
+				if(colors.contains(String.valueOf(id)))
+				{
+					result.add(p);
+					break;
+				}
+			}
+		}
+		return result;
+	}
 
 	@Override
 	public List<Product> findAllByProductCategorySoldTop(Long category){

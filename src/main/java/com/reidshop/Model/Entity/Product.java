@@ -1,5 +1,6 @@
 package com.reidshop.Model.Entity;
 
+import com.reidshop.Model.Enum.GENDER;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -30,6 +31,12 @@ public class Product {
 
     @Column
     int promotion;
+    @Column(columnDefinition = "BOOLEAN DEFAULT true")
+    boolean enable;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(255) DEFAULT 'UNISEX'")
+    GENDER gender;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
