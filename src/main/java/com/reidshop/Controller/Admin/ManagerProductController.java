@@ -60,6 +60,7 @@ public class ManagerProductController {
                                       @RequestParam("color") String color,
                                       @RequestParam("selectedSizes") String selectedSizes,
                                       @RequestParam("image-file") MultipartFile[] imageFiles,
+                                      @RequestParam("video-file") MultipartFile[] videoFiles,
                                       BindingResult result) throws IOException {
         if(result.hasErrors()){
             System.out.println(result);
@@ -89,7 +90,21 @@ public class ManagerProductController {
             e.printStackTrace();
         }
 
+        //Xử lý video và lưu lên cloudinary
 
+        System.out.println(videoFiles);
+        try {
+            for (MultipartFile videoFile : videoFiles){
+                Image image = new Image();
+                Map r = this.cloudinary.uploader().upload(videoFile.getBytes(), ObjectUtils.asMap("resource_type", "video"));
+                String img = (String) r.get("secure_url");
+                image.setImg(img);
+                image.setProduct(product);
+                imageRepository.save(image);
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
 
         //Add size
         String[] sizesArray = selectedSizes.split(",");
