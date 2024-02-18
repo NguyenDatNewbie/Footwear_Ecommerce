@@ -225,32 +225,32 @@ public class AdminController {
 
     public List<Double> listRevenueOfThisWeek(){
         List<Object[]> result = ordersService.findOrderIdsByWeek();
-        List<Double> salesData = ordersService.listTotalPriceOfThisWeek();
-        Collections.reverse(salesData);
+
+        for (Object[] row : result) {
+            for (Object column : row) {
+                System.out.print(column + "\t");
+            }
+            System.out.println();
+        }
+
         List<Double> listRevenueThisWeek = new ArrayList<>();
         for (Object[] row : result) {
+            double revenue = 0;
             String orderIds = (String) row[1];
-
-            Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderIds));
 
             String[] orderIdArray = orderIds.split(",");
 
-
-            double totalOriginalOfDay = calculateTotalPrice(Arrays.asList(orderIdArray));
-            double revenue = order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfDay);
-
+            for (String orderId : orderIdArray) {
+                Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderId));
+                System.out.println(orderId);
+                double totalOriginalOfOrder = orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
+                System.out.println(totalOriginalOfOrder);
+                revenue += (order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfOrder));
+            }
             listRevenueThisWeek.add(revenue);
         }
 
         return listRevenueThisWeek;
-    }
-
-    public double calculateTotalPrice(List<String> orderIds) {
-        double originalPrice = 0.0;
-        for (String orderId : orderIds) {
-            originalPrice += orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
-        }
-        return originalPrice;
     }
 
 }

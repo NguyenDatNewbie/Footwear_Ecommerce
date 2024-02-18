@@ -299,51 +299,51 @@
                     </div><!-- End Recent Sales -->
 
                     <!-- Top Selling -->
-                    <div class="col-12">
-                        <div class="card top-selling overflow-auto">
+<%--                    <div class="col-12">--%>
+<%--                        <div class="card top-selling overflow-auto">--%>
 
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
+<%--                            <div class="filter">--%>
+<%--                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>--%>
+<%--                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">--%>
+<%--                                    <li class="dropdown-header text-start">--%>
+<%--                                        <h6>Filter</h6>--%>
+<%--                                    </li>--%>
 
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
-                            <div class="card-body pb-0">
-                                <h5 class="card-title">Top Selling <span>| Today</span></h5>
+<%--                                    <li><a class="dropdown-item" href="#">Today</a></li>--%>
+<%--                                    <li><a class="dropdown-item" href="#">This Month</a></li>--%>
+<%--                                    <li><a class="dropdown-item" href="#">This Year</a></li>--%>
+<%--                                </ul>--%>
+<%--                            </div>--%>
+<%--                            <div class="card-body pb-0">--%>
+<%--                                <h5 class="card-title">Top Selling <span>| Today</span></h5>--%>
 
-                                <table class="table table-borderless">
-                                    <thead>
-                                    <tr>
-                                        <th scope="col">Preview</th>
-                                        <th scope="col">Product</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Sold</th>
-                                        <th scope="col">Promotion</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                        <c:forEach items="${productRepository.findAllByProductSold()}" var="product">
-                                        <tr>
-                                            <th scope="row"><a href="#"><img src="${product.images.get(0).img}" alt=""></a></th>
-                                            <td><a href="#" class="text-primary fw-bold">${product.name}</a></td>
-                                            <td>${product.price}</td>
-                                            <td class="fw-bold">${product.sold}</td>
-                                            <td>${product.promotion}</td>
-                                        </tr>
-                                        </c:forEach>
-                                    </tbody>
-                                </table>
+<%--                                <table class="table table-borderless">--%>
+<%--                                    <thead>--%>
+<%--                                    <tr>--%>
+<%--                                        <th scope="col">Preview</th>--%>
+<%--                                        <th scope="col">Product</th>--%>
+<%--                                        <th scope="col">Price</th>--%>
+<%--                                        <th scope="col">Sold</th>--%>
+<%--                                        <th scope="col">Promotion</th>--%>
+<%--                                    </tr>--%>
+<%--                                    </thead>--%>
+<%--                                    <tbody>--%>
+<%--                                        <c:forEach items="${productRepository.findAllByProductSold()}" var="product">--%>
+<%--                                        <tr>--%>
+<%--                                            <th scope="row"><a href="#"><img src="${product.images.get(0).img}" alt=""></a></th>--%>
+<%--                                            <td><a href="#" class="text-primary fw-bold">${product.name}</a></td>--%>
+<%--                                            <td>${product.price}</td>--%>
+<%--                                            <td class="fw-bold">${product.sold}</td>--%>
+<%--                                            <td>${product.promotion}</td>--%>
+<%--                                        </tr>--%>
+<%--                                        </c:forEach>--%>
+<%--                                    </tbody>--%>
+<%--                                </table>--%>
 
-                            </div>
+<%--                            </div>--%>
 
-                        </div>
-                    </div><!-- End Top Selling -->
+<%--                        </div>--%>
+<%--                    </div><!-- End Top Selling -->--%>
                 </div>
             </div><!-- End Left side columns -->
 

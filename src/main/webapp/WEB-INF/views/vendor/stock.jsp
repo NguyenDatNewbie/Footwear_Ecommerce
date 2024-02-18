@@ -221,8 +221,8 @@
                                         <select id="size" style="width: 100%; padding: 2px">
                                         </select>
                                     </td>
-                                    <td><input type="number" id="quantity"></td>
-                                    <td><input type="number" id="price"></td>
+                                    <td><input type="number" id="quantity" oninput="validateInput(this)"></td>
+                                    <td><input type="number" id="price" oninput="validateInput(this)"></td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -511,6 +511,14 @@
                 localStorage.removeItem("stocks");
             }
         });
+    }
+</script>
+<script>
+    function validateInput(input) {
+        if (input.value < 0) {
+            alert("Vui lòng nhập một số lớn hơn hoặc bằng 0.");
+            input.value = 1; // Hoặc bạn có thể đặt giá trị mặc định khác
+        }
     }
 </script>
 </body>

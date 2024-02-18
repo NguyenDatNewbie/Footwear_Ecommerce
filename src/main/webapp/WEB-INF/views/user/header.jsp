@@ -77,8 +77,13 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="cart_area">
-                            <div  class="cart_link">
-                                <a href="/cart" ><i class="fa fa-shopping-basket"><span style="margin-left: 3px" id="cart_link2"></span></i></a>
+                            <div  class="cart_link" >
+<%--                                    <a href="/cart" ><i class="fa fa-shopping-basket"><span style="margin-left: 3px" id="cart_link2"></span></i></a>--%>
+                                <a href="/cart" style="display: flex; align-items: center;">
+                                    <img src="<c:url value="/assets/img/icon/shopping-cart.png" />" alt="Cart Icon" style="width: 20px; height: 20px; margin-right: 5px; margin-bottom: 4px;">
+                                    <span style="margin-left: 3px; font-size: 17px" id="cart_link2"></span>
+                                </a>
+
                             </div>
                         </div>
                     </div>

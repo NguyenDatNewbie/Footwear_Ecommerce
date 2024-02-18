@@ -219,15 +219,18 @@ public class VendorHomeController {
         List<Object[]> listOrderID = ordersRepository.findOrderIdsByWeekOfStore(storeId);
         List<Double> listRevenueThisWeekOfStore = new ArrayList<>();
         for (Object[] row : listOrderID) {
+            double revenue = 0;
             String orderIds = (String) row[1];
 
-            Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderIds));
-
             String[] orderIdArray = orderIds.split(",");
-            System.out.println(orderIdArray);
 
-            double totalOriginalOfDay = calculateTotalPrice(Arrays.asList(orderIdArray));
-            double revenue = order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfDay);
+            for (String orderId : orderIdArray) {
+                Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderId));
+                double totalOriginalOfOrder = orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
+                revenue += (order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfOrder));
+            }
+            System.out.println("Revenue: " + revenue);
+
 
             listRevenueThisWeekOfStore.add(revenue);
         }
