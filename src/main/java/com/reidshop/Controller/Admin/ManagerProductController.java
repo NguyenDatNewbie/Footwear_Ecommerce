@@ -2,10 +2,7 @@ package com.reidshop.Controller.Admin;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.reidshop.Model.Entity.Category;
-import com.reidshop.Model.Entity.Image;
-import com.reidshop.Model.Entity.Product;
-import com.reidshop.Model.Entity.Size;
+import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Reponsitory.*;
 import jakarta.transaction.Transactional;
@@ -80,10 +77,13 @@ public class ManagerProductController {
         try {
             for (MultipartFile imageFile : imageFiles){
                 Image image = new Image();
+                Color color1 = new Color();
+                color1.setId(1L);
                 Map r = this.cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
                 String img = (String) r.get("secure_url");
                 image.setImg(img);
                 image.setProduct(product);
+                image.setColor(color1);
                 imageRepository.save(image);
             }
         }catch (IOException e){
@@ -96,15 +96,19 @@ public class ManagerProductController {
         try {
             for (MultipartFile videoFile : videoFiles){
                 Image image = new Image();
+                Color color1 = new Color();
+                color1.setId(1L);
                 Map r = this.cloudinary.uploader().upload(videoFile.getBytes(), ObjectUtils.asMap("resource_type", "video"));
                 String img = (String) r.get("secure_url");
                 image.setImg(img);
                 image.setProduct(product);
+                image.setColor(color1);
                 imageRepository.save(image);
             }
         }catch (IOException e){
             e.printStackTrace();
         }
+
 
         //Add size
         String[] sizesArray = selectedSizes.split(",");
