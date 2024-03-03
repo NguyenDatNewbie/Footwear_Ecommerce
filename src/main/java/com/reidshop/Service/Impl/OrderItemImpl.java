@@ -52,7 +52,7 @@ public class OrderItemImpl implements IOrderItemService {
         double totalPrice = 0.0;
         for(CartRequest cartRequest: item.getCarts()){
             OrderItem orderItem = new OrderItem();
-            Inventory inventory = inventoryRepository.findByStore(cartRequest.getId(), cartRequest.getSize(), cartRequest.getQuantity(), item.getStoreValid().get(0).getStore().getId());
+            Inventory inventory = inventoryRepository.findByStore(cartRequest.getId(), cartRequest.getSize(), cartRequest.getQuantity(), item.getStoreValid().get(0).getStore().getId(), cartRequest.getColor());
             orderItem.setOrder(orders);
             orderItem.setInventory(inventory);
             Product product = inventory.getSize().getProduct();

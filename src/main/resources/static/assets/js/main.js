@@ -695,7 +695,6 @@
         cursor: 'crosshair',
         zoomType : 'inner'
     });  
-
     /*portfolio Isotope activation*/
       $('.portfolio_gallery').imagesLoaded( function() {
         // init Isotope

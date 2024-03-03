@@ -1,8 +1,10 @@
 package com.reidshop.Service.Impl;
 
+import com.reidshop.Model.Entity.Color;
 import com.reidshop.Model.Entity.Image;
 import com.reidshop.Model.Entity.Product;
 import com.reidshop.Model.Request.CartRequest;
+import com.reidshop.Reponsitory.ColorRepository;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.ProductRepository;
 import com.reidshop.Service.ICartService;
@@ -20,6 +22,8 @@ public class CartServiceImpl implements ICartService {
     ProductRepository productRepository;
     @Autowired
     ImageRepository imageRepository;
+    @Autowired
+    ColorRepository colorRepository;
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
 
@@ -34,9 +38,11 @@ public class CartServiceImpl implements ICartService {
             CartRequest item = requestList.get(i);
             totalQuantity+=item.getQuantity();
             Product product = productRepository.findById(item.getId()).orElse(null);
+            Color color = colorRepository.findById(item.getColor()).orElse(null);
             if(product!=null){
                 totalPrice+= product.getPrice()*(1-product.getPromotion()/100.0)* item.getQuantity();
-                List<Image> images = imageRepository.findAllByProduct(product.getId());
+                List<Image> images = imageRepository.findAllByProductAndColor(item.getColor(), product.getId());
+
                 result+=
                         "<tr>\n" +
                         "                                        <td class=\"product_remove\"\n" +
@@ -48,7 +54,7 @@ public class CartServiceImpl implements ICartService {
                         images.get(0).getImg().toString()+
                         "\" alt=\"\"></a></td>\n" +
                         "                                        <td class=\"product_name\"><p href=\"#\">" +
-                        product.getName()+"<br><p>Kích thước: " + item.getSize()+"</p>"+
+                        product.getName()+"<br><p>Phân loại: "+color.getColor_name()+" ," + item.getSize()+"</p>"+
                         "</p></td>\n" +
                         "                                        <td class=\"product-price-column\">" +
                         formatVND.format(product.getPrice()*(1-product.getPromotion()/100.0))  +

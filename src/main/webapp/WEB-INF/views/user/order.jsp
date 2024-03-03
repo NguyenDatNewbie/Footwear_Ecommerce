@@ -119,7 +119,7 @@
 
         .checkout_form button {
             padding: 8px 20px;
-            min-width: 150px;
+            min-width: 120px;
             min-height: 40px;
             border-radius: 2px;
             font-size: 16px;
@@ -269,8 +269,8 @@
                             </button>
                         </li>
                         <li class="nav-item flex-fill" role="presentation">
-                            <button class="nav-link w-100" id="failed-tab" data-bs-toggle="tab"
-                                    data-bs-target="#bordered-justified-failed" type="button" role="tab"
+                            <button class="nav-link w-100" id="cancel-tab" data-bs-toggle="tab"
+                                    data-bs-target="#bordered-justified-cancel" type="button" role="tab"
                                     aria-controls="contact" aria-selected="false">Hủy
                             </button>
                         </li>
@@ -329,11 +329,11 @@
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.color.id,item.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.size.size}</span><br>
+                                                    <span>Phân loại: ${item.color.color_name}, ${item.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
                                                         <div><span
@@ -346,11 +346,11 @@
                                         <c:forEach items="${order.orderItems}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.inventory.color.id,item.inventory.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
+                                                    <span>Phân loại: ${item.inventory.color.color_name}, ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -373,14 +373,18 @@
                                                 <button data-toggle="modal" data-target="#modal-dialog"
                                                         onclick="getOrder(${order.id})">Đánh giá
                                                 </button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                         <c:when test="${order.status =='PREPARE' || order.status =='WAIT' || order.status =='ALREADY'}">
                                             <div class="checkout_form">
                                                 <button onclick="cancel(${order.id})">Hủy</button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
+
                                     </c:choose>
+
                                 </div>
                             </div>
                         </c:forEach>
@@ -388,7 +392,7 @@
                     <div class="tab-pane fade" id="bordered-justified-prepare" role="tabpanel"
                          aria-labelledby="prepare-tab">
                         <c:forEach var="order"
-                                   items="${ordersRepository.findOrdersByAccountAndStatus(account.id,'PREPARE')}">
+                                   items="${ordersTabPrepare}">
                             <div class="order">
                                 <div class="solid">
                                     <div class="info-store">
@@ -425,11 +429,11 @@
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.color.id,item.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.size.size}</span><br>
+                                                    <span>Phân loại: ${item.color.color_name}, ${item.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
                                                         <div><span
@@ -442,11 +446,11 @@
                                         <c:forEach items="${order.orderItems}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.inventory.color.id,item.inventory.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
+                                                    <span>Phân loại: ${item.inventory.color.color_name}, ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -469,11 +473,13 @@
                                                 <button data-toggle="modal" data-target="#modal-dialog"
                                                         onclick="getOrder(${order.id})">Đánh giá
                                                 </button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                         <c:when test="${order.status =='PREPARE' || order.status =='WAIT' || order.status =='ALREADY'}">
                                             <div class="checkout_form">
                                                 <button onclick="cancel(${order.id})">Hủy</button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                     </c:choose>
@@ -523,11 +529,11 @@
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.color.id,item.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.size.size}</span><br>
+                                                    <span>Phân loại: ${item.color.color_name}, ${item.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
                                                         <div><span
@@ -540,11 +546,11 @@
                                         <c:forEach items="${order.orderItems}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.inventory.color.id,item.inventory.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
+                                                    <span>Phân loại: ${item.inventory.color.color_name}, ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -567,11 +573,13 @@
                                                 <button data-toggle="modal" data-target="#modal-dialog"
                                                         onclick="getOrder(${order.id})">Đánh giá
                                                 </button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                         <c:when test="${order.status =='PREPARE' || order.status =='WAIT' || order.status =='ALREADY'}">
                                             <div class="checkout_form">
                                                 <button onclick="cancel(${order.id})">Hủy</button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                     </c:choose>
@@ -619,11 +627,11 @@
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.color.id,item.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.size.size}</span><br>
+                                                    <span>Phân loại: ${item.color.color_name}, ${item.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
                                                         <div><span
@@ -636,11 +644,11 @@
                                         <c:forEach items="${order.orderItems}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.inventory.color.id,item.inventory.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
+                                                    <span>Phân loại: ${item.inventory.color.color_name}, ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -663,11 +671,13 @@
                                                 <button data-toggle="modal" data-target="#modal-dialog"
                                                         onclick="getOrder(${order.id})">Đánh giá
                                                 </button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                         <c:when test="${order.status =='PREPARE' || order.status =='WAIT' || order.status =='ALREADY'}">
                                             <div class="checkout_form">
                                                 <button onclick="cancel(${order.id})">Hủy</button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                     </c:choose>
@@ -715,11 +725,11 @@
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.color.id,item.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.size.size}</span><br>
+                                                    <span>Phân loại: ${item.color.color_name}, ${item.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
                                                         <div><span
@@ -732,11 +742,11 @@
                                         <c:forEach items="${order.orderItems}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.inventory.color.id,item.inventory.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
+                                                    <span>Phân loại: ${item.inventory.color.color_name}, ${item.inventory.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
@@ -759,11 +769,13 @@
                                                 <button data-toggle="modal" data-target="#modal-dialog"
                                                         onclick="getOrder(${order.id})">Đánh giá
                                                 </button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                         <c:when test="${order.status =='PREPARE' || order.status =='WAIT' || order.status =='ALREADY'}">
                                             <div class="checkout_form">
                                                 <button onclick="cancel(${order.id})">Hủy</button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                     </c:choose>
@@ -811,11 +823,11 @@
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.color.id,item.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.size.size}</span><br>
+                                                    <span>Phân loại: ${item.color.color_name}, ${item.size.size}</span><br>
                                                     <div class="flex money">
                                                         <div><span class="wait-quantity">x${item.quantity}</span> <span class="wait-product">Chờ nhập hàng</span></div>
                                                         <div><span
@@ -828,12 +840,12 @@
                                         <c:forEach items="${order.orderItems}" var="item">
                                             <div class="product">
                                                 <div><img
-                                                        src="${item.inventory.size.product.images[0].img}"
+                                                        src="${imageRepository.findAllByProductAndColor(item.inventory.color.id,item.inventory.size.product.id)[0].img}"
                                                         style="width: 90px"></div>
                                                 <div class="info">
                                                     <span>${item.inventory.size.product.name}</span><br>
-                                                    <span>Kich thước: ${item.inventory.size.size}</span><br>
-                                                    <div class="flex money">
+                                                    <span>Phân loại: ${item.inventory.color.color_name}, ${item.inventory.size.size}</span><br>
+                                                        <div class="flex money">
                                                         <div><span>x${item.quantity}</span></div>
                                                         <div><span
                                                                 style="color:red">${formatVND.format(item.price)}</span>
@@ -855,11 +867,13 @@
                                                 <button data-toggle="modal" data-target="#modal-dialog"
                                                         onclick="getOrder(${order.id})">Đánh giá
                                                 </button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                         <c:when test="${order.status =='PREPARE' || order.status =='WAIT' || order.status =='ALREADY'}">
                                             <div class="checkout_form">
                                                 <button onclick="cancel(${order.id})">Hủy</button>
+                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
                                     </c:choose>
@@ -1009,7 +1023,21 @@
             }
         });
     }
-
+    function repurchase(id){
+        $.ajax({
+            url: "/orders/repurchase/" + id,
+            type: "Get",
+            success: function (response) {
+                console.log(response);
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                response.forEach(function (data){
+                    cart.push(data);
+                })
+                localStorage.setItem('cart',JSON.stringify(cart));
+                window.location.href = "/cart";
+            }
+        });
+    }
     function getOrder(id) {
         document.getElementById('form-evaluate').action = "/orders/evaluate/" + id;
     }

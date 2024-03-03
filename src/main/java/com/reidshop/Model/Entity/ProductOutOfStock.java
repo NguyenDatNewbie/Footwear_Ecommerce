@@ -16,6 +16,10 @@ public class ProductOutOfStock {
     @JoinColumn(name = "size_id")
     Size size;
 
+    @ManyToOne
+    @JoinColumn(name ="color_id")
+    Color color;
+
     @Column
     int quantity;
 

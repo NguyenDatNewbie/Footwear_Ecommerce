@@ -52,7 +52,9 @@
             font-weight: 500;
             border-radius: 0px;
         }
-
+        .flex-2 input{
+            width: 100%;
+        }
         .flex-2 select input {
             width: 100%;
         }
@@ -223,6 +225,23 @@
             margin-right: 5px; /* Khoảng cách giữa biểu tượng và văn bản */
         }
 
+        .infoDeli{
+            color: #ffffff;
+            background: #242424;
+            text-transform: uppercase;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .infoDeli i{
+            color: red;
+            width: 8%;
+            font-size: 24px;
+            justify-content: center;
+            text-align: right;
+            line-height: 37px;
+            float: right;
+        }
+
         @keyframes slideIn {
             from {
                 top: -50px;
@@ -245,7 +264,115 @@
             }
         }
 
-        .popup-buttons{gap: 5.5rem;justify-content: center;}
+        .popup-buttons{
+            gap: 5.5rem;
+            justify-content: center;
+        }
+
+        .list-address{
+            display: grid;
+            grid-template-columns: repeat(5, 1fr); /* Three columns */
+            grid-gap: 10px; /* Gap between grid items */
+            padding: 10px; /* Padding around grid container */
+        }
+        .area-address{
+            border: 1px solid #ddd;
+            margin: 15px 10px;
+        }
+        .info-item{
+            border: 1px solid;
+            border-radius: 10px;
+            font-size: 12px;
+            padding: 7px 5px;
+        }
+        .info-item p{
+            font-size: 10px;
+            margin: 0;
+            line-height: 15px;
+        }
+        .area-add-address{
+            margin: 20px 10px;
+        }
+        .area-add-address input{
+            border: 1px solid #ced4da;
+            padding: 4px 8px;
+            color: #242424;
+            font-weight: 500;
+        }
+        .modal_body h3{
+            color: #242424;
+            line-height: 37px;
+            padding: 5px 15px;
+            text-transform: uppercase;
+            font-size: 24px;
+            font-weight: 600;
+            text-align: center;
+        }
+        .coupon_code h3{
+            margin: 0;
+        }
+        .modal-content button.close:hover {
+            background: red;
+            color: #ffffff;
+        }
+        .button-handle{
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            width: 90px;
+            margin: 0 5px;
+            color: #fff;
+        }
+        .area-address .coupon_inner{
+            padding-bottom: 15px;
+        }
+        .area-address .coupon_inner button{
+            height: 32px;
+            line-height: 16px;
+        }
+        .area-address .info-item h4{
+            margin-bottom: 3px;
+        }
+        .area-address .info-item:hover{
+            cursor: pointer;
+        }
+        .area-address .active{
+            color: #ff6a28;
+            boder: 1px solid #ff6a28;
+        }
+
+        .coordinate-container {
+            width: 20%;
+            display: flex;
+            overflow: hidden; /* Ẩn văn bản vượt ra khỏi phần tử cha */
+        }
+
+        #animated-text {
+            animation: slideLeft 2s linear; /* Áp dụng animation với thời gian 2 giây và hiệu ứng linear */
+            text-transform: none;
+            font-size: 16px;
+            line-height: 43px;
+            margin-right: 10px;
+        }
+
+        @keyframes slideLeft {
+            0% {
+                transform: translateX(100%); /* Bắt đầu di chuyển từ phải sang trái */
+            }
+            100% {
+                transform: translateX(0); /* Dừng lại ở vị trí ban đầu */
+            }
+        }
+        .info-item p{
+            user-select: none;
+        }
+        label, p, i, span{
+            user-select: none;
+
+        }
+        .tab-label input{
+            user-select: none;
+        }
     </style>
 
 
@@ -267,6 +394,7 @@
         var payment = getParameterByName('payment');
         if(payment==="success"){
             localStorage.removeItem('cart');
+
             localStorage.removeItem('storeValid');
             window.location.href="/cart?message=success";
         }
@@ -332,8 +460,13 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6">
                             <div class="coupon_code left">
-                                <h3>Thông tin giao hàng</h3>
-
+                                <div style="display: flex" class="infoDeli">
+                                    <h3 style="width: 80%">Thông tin giao hàng</h3>
+                                    <div class="coordinate-container" data-toggle="modal" data-target="#modal_address">
+                                        <span id="animated-text" >Lưu vị trí</span>
+                                        <i class="fas fa-map-marker-alt"  style="color: red; line-height: 43px"></i>
+                                    </div>
+                                </div>
                                 <div class="coupon_inner">
                                     <div class="flex-2" style="margin-bottom: 15px">
                                         <input
@@ -375,7 +508,7 @@
 
                                         <div class="flex-2">
                                             <select class="form-select form-select-sm" id="ward"
-                                                    aria-label=".form-select-sm" style="margin-right: 10px">
+                                                    aria-label=".form-select-sm" style="margin-right: 10px;">
                                                 <option value="" selected>Chọn phường xã</option>
                                             </select>
 
@@ -467,7 +600,76 @@
 <!--footer area start-->
 <!-- JS
 ============================================ -->
+<div class="modal fade" id="modal_address" tabindex="-1"
+     role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <button type="button" id="btn-close-modal" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <div class="modal_body">
+                <h3>Vị trí giao hàng</h3>
+                <div>
+                    <div class="area-address">
+                        <div class="list-address" id="content-address">
+                        </div>
+                        <div class="coupon_inner" style="text-align: end">
+                            <button class="button-handle" onclick="usePlaceAddress()">Sử dụng</button>
+                            <button class="button-handle" onclick="btnAddNew()">Thêm</button>
+                            <button class="button-handle" onclick="replacePlaceAddress()">Sửa</button>
+                            <button class="button-handle" onclick="deleteItemPlaceAddress()">Xóa</button>
+                        </div>
+                    </div>
+                    <div class="area-add-address">
+                        <div>
+                            <div class="flex-2" style="margin-bottom: 15px">
+                                <input
+                                        placeholder="Họ và tên" name="name" type="text" id="modal-name"
+                                        required style="margin-right: 10px">
+                                <input
+                                        placeholder="Số điện thoại nhận hàng" name="phone" type="text"
+                                        id="modal-phone"
+                                        required>
+                            </div>
+                            <div class="flex-2">
+                                <select class="form-select form-select-sm mb-3" id="modal-city"
+                                        aria-label=".form-select-sm" style="margin-right: 10px">
+                                    <option value="" selected>Chọn tỉnh thành</option>
+                                </select>
+                                <select class="form-select form-select-sm mb-3" id="modal-district"
+                                        aria-label=".form-select-sm">
+                                    <option value="" selected>Chọn quận huyện</option>
+                                </select>
+                            </div>
 
+                            <div class="flex-2">
+                                <select class="form-select form-select-sm" id="modal-ward"
+                                        aria-label=".form-select-sm" style="margin-right: 10px; width: 50%">
+                                    <option value="" selected>Chọn phường xã</option>
+                                </select>
+
+                                <input placeholder="Địa chỉ giao hàng" name="addressDetail" style="width: 50%;"
+                                       id="modal-addressDetail"
+                                       type="text" required>
+                            </div>
+
+                            <div class="flex-2" style="margin-top: 10px">
+                                <input placeholder="Tên gợi nhớ của địa chỉ" name="nameAddress" style="width: 50%; margin-right: 10px"
+                                       id="modal-nameAddress"
+                                       type="text" required>
+                                <div class="coupon_inner" style="padding: 0; width: 50%;">
+                                    <button style="height: 33px;line-height: 16px;" onclick="addPlaceAddress()">Lưu</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Plugins JS -->
 <script src="<c:url value="/assets/js/plugins.js"/>"></script>
@@ -650,71 +852,287 @@
     var wards = document.getElementById("ward");
     var citis1 = document.getElementById("city1");
     var districts1 = document.getElementById("district1");
-    var Parameter = {
-        url: "https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json",
+    var modal_citis = document.getElementById("modal-city");
+    var modal_districts = document.getElementById("modal-district");
+    var modal_wards = document.getElementById("modal-ward");
+
+    var GetCity = {
+        url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
         method: "GET",
         responseType: "application/json",
+        headers: {
+            "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+        },
     };
-    var promise = axios(Parameter);
+    // var promise = axios(Parameter);
+    var promise1 = axios(GetCity);
+    var data;
     if (localStorage.getItem('cart') !== null) {
-        promise.then(function (result) {
-            renderCity(result.data);
+        promise1.then(function (result) {
+            var objectData = result.data.data;
+            var dataCity = [];
+            objectData.reverse().forEach(function (data){
+                dataCity.push({
+                    Id:data.ProvinceID,
+                    Name: data.NameExtension[2]
+                })
+            })
+            renderCity(dataCity);
         });
     }
 
+    function renderAddress(city, districtValue, wardValue){
+        for (var i = 0; i < citis.options.length; i++) {
+            if (citis.options[i].value === city) {
+                citis.selectedIndex = i;
+                break;
+            }
+        }
+        districts.length = 1;
+        wards.length = 1;
+        var GetDistrict = {
+            url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id="+city,
+            method: "GET",
+            responseType: "application/json",
+            headers: {
+                "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+            },
+        };
+        var promiseDistrict = axios(GetDistrict);
+        promiseDistrict.then(function (dataDistricts){
+            dataDistricts.data.data.forEach(function (district){
+                districts.options[districts.options.length] = new Option(district.DistrictName, district.DistrictID);
 
+                if(district.DistrictID==parseInt(districtValue)){
+                    districts.selectedIndex = districts.options.length-1;
+                }
+            });
+        });
+        var GetWards = {
+            url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id="+districtValue,
+            method: "GET",
+            responseType: "application/json",
+            headers: {
+                "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+            },
+        };
+        var promiseWard = axios(GetWards);
+        promiseWard.then(function (dataWard){
+            dataWard.data.data.forEach(function (ward){
+                wards.options[wards.options.length] = new Option(ward.WardName, ward.WardCode);
+                if(ward.WardCode==parseInt(wardValue)){
+                    wards.selectedIndex = wards.options.length-1;
+                }
+            });
+        });
+
+    }
     function renderCity(data) {
         for (const x of data) {
             citis.options[citis.options.length] = new Option(x.Name, x.Id);
             citis1.options[citis1.options.length] = new Option(x.Name, x.Id);
+            modal_citis.options[modal_citis.options.length] = new Option(x.Name, x.Id);
         }
 
         citis1.onchange = function () {
-            district1.length = 1;
-            if (this.value != "") {
-                const result = data.filter(n => n.Id === this.value);
-                for (const k of result[0].Districts) {
-                    district1.options[district1.options.length] = new Option(k.Name, k.Id);
-                }
-            }
+            districts1.length = 1;
+            var GetDistrict = {
+                url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id="+this.value,
+                method: "GET",
+                responseType: "application/json",
+                headers: {
+                    "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+                },
+            };
+            var promiseDistrict = axios(GetDistrict);
+            promiseDistrict.then(function (dataDistricts){
+                dataDistricts.data.data.forEach(function (district){
+                    districts1.options[districts1.options.length] = new Option(district.DistrictName, district.DistrictID);
+                });
+            });
             showStore();
         }
 
-        district1.onchange = function () {
+        districts1.onchange = function () {
             showStore();
         };
 
-        citis.onchange = function () {
-            district.length = 1;
-            ward.length = 1;
-            if (this.value != "") {
-                const result = data.filter(n => n.Id === this.value);
+        citis.onchange =  function () {
+            districts.length = 1;
+            wards.length = 1;
 
-                for (const k of result[0].Districts) {
-                    district.options[district.options.length] = new Option(k.Name, k.Id);
-                }
-            }
-            document.getElementById('receive_deli').textContent = "";
-            localStorage.removeItem("storeValid");
-        };
-        district.onchange = function () {
-            ward.length = 1;
-            const dataCity = data.filter((n) => n.Id === citis.value);
             if (this.value != "") {
-                const dataWards = dataCity[0].Districts.filter(n => n.Id === this.value)[0].Wards;
-
-                for (const w of dataWards) {
-                    wards.options[wards.options.length] = new Option(w.Name, w.Id);
-                }
+                    var GetDistrict = {
+                        url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id="+this.value,
+                        method: "GET",
+                        responseType: "application/json",
+                        headers: {
+                            "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+                        },
+                    };
+                    var promiseDistrict = axios(GetDistrict);
+                    promiseDistrict.then(function (dataDistricts){
+                        dataDistricts.data.data.forEach(function (district){
+                            districts.options[districts.options.length] = new Option(district.DistrictName, district.DistrictID);
+                        });
+                    });
             }
-            document.getElementById('receive_deli').textContent = "";
-            localStorage.removeItem("storeValid");
         };
-        ward.onchange = function () {
+        districts.onchange =  function () {
+            wards.length = 1;
+            if (this.value != "") {
+                var GetWards = {
+                    url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id="+this.value,
+                    method: "GET",
+                    responseType: "application/json",
+                    headers: {
+                        "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+                    },
+                };
+                var promiseWard = axios(GetWards);
+                promiseWard.then(function (dataWard){
+                    dataWard.data.data.forEach(function (ward){
+                        wards.options[wards.options.length] = new Option(ward.WardName, ward.WardCode);
+                    });
+                });
+            }
+            // document.getElementById('receive_deli').textContent = "";
+            // localStorage.removeItem("storeValid");
+        };
+        wards.onchange = function () {
             document.getElementById('error-message').textContent = "";
-            findStore();
         }
+
+        modal_citis.onchange = function () {
+            modal_districts.length = 1;
+            modal_wards.length = 1;
+
+            if (this.value != "") {
+                var GetDistrict = {
+                    url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id="+this.value,
+                    method: "GET",
+                    responseType: "application/json",
+                    headers: {
+                        "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+                    },
+                };
+                var promiseDistrict = axios(GetDistrict);
+                promiseDistrict.then(function (dataDistricts){
+                    dataDistricts.data.data.forEach(function (district){
+                        modal_districts.options[modal_districts.options.length] = new Option(district.DistrictName, district.DistrictID);
+                    });
+                });
+            }
+
+        };
+        modal_districts.onchange = function () {
+            modal_wards.length = 1;
+            if (this.value != "") {
+                var GetWards = {
+                    url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id="+this.value,
+                    method: "GET",
+                    responseType: "application/json",
+                    headers: {
+                        "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+                    },
+                };
+                var promiseWard = axios(GetWards);
+                promiseWard.then(function (dataWard){
+                    dataWard.data.data.forEach(function (ward){
+                        modal_wards.options[modal_wards.options.length] = new Option(ward.WardName, ward.WardCode);
+                    });
+                });
+            }
+        };
+        modal_wards.onchange = function () {
+
+        }
+
     }
+        // function renderCity(data) {
+    //     for (const x of data) {
+    //         citis.options[citis.options.length] = new Option(x.Name, x.Id);
+    //         citis1.options[citis1.options.length] = new Option(x.Name, x.Id);
+    //         modal_citis.options[modal_citis.options.length] = new Option(x.Name, x.Id);
+    //     }
+    //
+    //     citis1.onchange = function () {
+    //         district1.length = 1;
+    //         if (this.value != "") {
+    //             const result = data.filter(n => n.Id === this.value);
+    //             for (const k of result[0].Districts) {
+    //                 district1.options[district1.options.length] = new Option(k.Name, k.Id);
+    //             }
+    //         }
+    //         showStore();
+    //     }
+    //
+    //     district1.onchange = function () {
+    //         showStore();
+    //     };
+    //
+    //     citis.onchange =  function () {
+    //         districts.length = 1;
+    //         wards.length = 1;
+    //         if (this.value != "") {
+    //             const result = data.filter(n => n.Id === this.value);
+    //
+    //             for (const k of result[0].Districts) {
+    //                 districts.options[districts.options.length] = new Option(k.Name, k.Id);
+    //             }
+    //         }
+    //
+    //         // document.getElementById('receive_deli').textContent = "";
+    //         // localStorage.removeItem("storeValid");
+    //     };
+    //     districts.onchange =  function () {
+    //         console.log(this.value);
+    //         wards.length = 1;
+    //         const dataCity = data.filter((n) => n.Id === citis.value);
+    //         if (this.value != "") {
+    //             const dataWards = dataCity[0].Districts.filter(n => n.Id === this.value)[0].Wards;
+    //
+    //             for (const w of dataWards) {
+    //                 wards.options[wards.options.length] = new Option(w.Name, w.Id);
+    //             }
+    //         }
+    //         // document.getElementById('receive_deli').textContent = "";
+    //         // localStorage.removeItem("storeValid");
+    //     };
+    //     wards.onchange = function () {
+    //         document.getElementById('error-message').textContent = "";
+    //     }
+    //
+    //     modal_citis.onchange = function () {
+    //         modal_districts.length = 1;
+    //         modal_wards.length = 1;
+    //
+    //         if (this.value != "") {
+    //             const result = data.filter(n => n.Id === this.value);
+    //
+    //             for (const k of result[0].Districts) {
+    //                 modal_districts.options[modal_districts.options.length] = new Option(k.Name, k.Id);
+    //             }
+    //         }
+    //
+    //     };
+    //     modal_districts.onchange = function () {
+    //         modal_wards.length = 1;
+    //         const dataCity = data.filter((n) => n.Id === modal_citis.value);
+    //
+    //         if (this.value != "") {
+    //             const dataWards = dataCity[0].Districts.filter(n => n.Id === this.value)[0].Wards;
+    //
+    //             for (const w of dataWards) {
+    //                 modal_wards.options[modal_wards.options.length] = new Option(w.Name, w.Id);
+    //             }
+    //         }
+    //     };
+    //     modal_wards.onchange = function () {
+    //
+    //     }
+    //
+    // }
 
     function openTab(tabId) {
         document.getElementById('addressDetail').setAttribute('required', 'required');
@@ -1035,7 +1453,7 @@
         else {
             var city = document.getElementById('city');
             var district = document.getElementById('district');
-            var ward = document.getElementById('district');
+            var ward = document.getElementById('ward');
             var detail = document.getElementById('addressDetail').value;
 
             var valueCity = city.options[city.selectedIndex].textContent;
@@ -1089,8 +1507,6 @@
         }
     }
 </script>
-
-
 <%--Xử lý sự kiện khi trang load xong--%>
 <script>
     showCart();
@@ -1143,6 +1559,266 @@
             });
         });
     }
+</script>
+<%--Xử lý vị trí giao hàng--%>
+<script>
+    function renderModalAddress(city,districtValue,wardValue){
+        for (var i = 0; i < modal_citis.options.length; i++) {
+            if (modal_citis.options[i].value === city) {
+                modal_citis.selectedIndex = i;
+                break;
+            }
+        }
+        modal_districts.length = 1;
+        modal_wards.length = 1;
+
+        var GetDistrict = {
+            url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id="+city,
+            method: "GET",
+            responseType: "application/json",
+            headers: {
+                "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+            },
+        };
+        var promiseDistrict = axios(GetDistrict);
+        promiseDistrict.then(function (dataDistricts){
+            dataDistricts.data.data.forEach(function (district){
+                modal_districts.options[modal_districts.options.length] = new Option(district.DistrictName, district.DistrictID);
+
+                if(district.DistrictID==parseInt(districtValue)){
+                    modal_districts.selectedIndex = modal_districts.options.length-1;
+                }
+            });
+        });
+        var GetWards = {
+            url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id="+districtValue,
+            method: "GET",
+            responseType: "application/json",
+            headers: {
+                "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+            },
+        };
+        var promiseWard = axios(GetWards);
+        promiseWard.then(function (dataWard){
+            dataWard.data.data.forEach(function (ward){
+                modal_wards.options[modal_wards.options.length] = new Option(ward.WardName, ward.WardCode);
+                if(ward.WardCode==parseInt(wardValue)){
+                    modal_wards.selectedIndex = modal_wards.options.length-1;
+                }
+            });
+        });
+    }
+    var isAdd = true;
+    document.addEventListener("DOMContentLoaded", function() {
+        addEventClick();
+        if (localStorage.getItem('cart') !== null){
+            let placeAddress = JSON.parse(localStorage.getItem('placeAddress')) || [];
+            placeAddress.forEach(function (content){
+                if(content.isUse===true)
+                {
+                    document.getElementById("animated-text").textContent = content.reminiscentName;
+                    document.getElementById('name').value = content.name;
+                    document.getElementById('phone').value = content.phone;
+                    document.getElementById('addressDetail').value = content.detail;
+
+                    renderAddress(content.city.value,content.district.value,content.ward.value);
+                    return;
+                }
+            });
+            document.getElementById("animated-text").style.visibility = "visible";
+        }
+    });
+
+    function resetActive(){
+        var infoItems = document.querySelectorAll(".area-address .info-item");
+        // Lặp qua mỗi info-item và thêm sự kiện click
+        infoItems.forEach(function(otherItem) {
+            otherItem.classList.remove("active");
+        });
+    }
+    function addEventClick(){
+        var infoItems = document.querySelectorAll(".area-address .info-item");
+        // Lặp qua mỗi info-item và thêm sự kiện click
+        infoItems.forEach(function(item) {
+            item.addEventListener("click", function() {
+                // Xóa lớp active từ tất cả các info-item khác
+                infoItems.forEach(function(otherItem) {
+                    otherItem.classList.remove("active");
+                });
+
+                // Thêm lớp active cho info-item được nhấp vào
+                item.classList.add("active");
+            });
+        });
+    }
+
+    function addPlaceAddress(){
+        var name = document.getElementById("modal-name");
+        var phone = document.getElementById("modal-phone");
+        var reminiscentName = document.getElementById("modal-nameAddress");
+
+        var city = document.getElementById('modal-city');
+        var district = document.getElementById('modal-district');
+        var ward = document.getElementById('modal-ward');
+        var detail = document.getElementById('modal-addressDetail').value;
+
+        var valueCity = city.options[city.selectedIndex].textContent;
+        var valueDistrict = district.options[district.selectedIndex].textContent;
+        var valueWard = ward.options[ward.selectedIndex].textContent;
+
+        var address = "";
+        if (detail != "")
+            address += detail + ", "
+        if (ward !== "")
+            address += valueWard + ", "
+        if (district !== "")
+            address += valueDistrict + ", "
+        if (city != "")
+            address += valueCity;
+        let placeAddress = JSON.parse(localStorage.getItem('placeAddress')) || [];
+        var contentAddress = {
+            name: name.value,
+            phone: phone.value,
+            reminiscentName: reminiscentName.value,
+            city: {
+                value: city.value,
+                text: valueCity
+            },
+            district: {
+                value: district.value,
+                text: valueDistrict
+            },
+            ward: {
+                value: ward.value,
+                text: valueWard
+            },
+            detail: detail,
+            fullAddress: address,
+            isUse: false
+        };
+        if(isAdd) {
+            placeAddress.push(contentAddress);
+        }
+        else {
+            var infoItems = document.querySelectorAll(".info-item");
+            for (var i = 0; i < infoItems.length; i++) {
+                // Kiểm tra xem phần tử hiện tại có lớp active hay không
+                if (infoItems[i].classList.contains("active")) {
+                    placeAddress[i] = contentAddress;
+                    isAdd=true;
+                    break;
+                }
+            }
+            if(!isAdd){
+                isAdd=true;
+                placeAddress.push(contentAddress);
+            }
+        }
+        localStorage.setItem('placeAddress',JSON.stringify(placeAddress));
+        resetForm();
+        showListAddress();
+    }
+    function deleteItemPlaceAddress(){
+        var infoItems = document.querySelectorAll(".info-item");
+        for (var i = 0; i < infoItems.length; i++) {
+            // Kiểm tra xem phần tử hiện tại có lớp active hay không
+            if (infoItems[i].classList.contains("active")) {
+                let placeAddress = JSON.parse(localStorage.getItem('placeAddress')) || [];
+                placeAddress.splice(placeAddress.length-i-1, 1);
+                localStorage.setItem('placeAddress',JSON.stringify(placeAddress));
+                showListAddress();
+                break;
+            }
+        }
+    }
+    function btnAddNew(){
+        resetForm();
+        resetActive();
+        isAdd = true;
+    }
+    function resetForm() {
+        // Reset các giá trị của các trường input và select
+        document.getElementById("modal-name").value = "";
+        document.getElementById("modal-phone").value = "";
+        document.getElementById("modal-city").selectedIndex = 0;
+        document.getElementById("modal-district").selectedIndex = 0;
+        document.getElementById("modal-ward").selectedIndex = 0;
+        document.getElementById("modal-addressDetail").value = "";
+        document.getElementById("modal-nameAddress").value = "";
+    }
+    function usePlaceAddress(){
+        var infoItems = document.querySelectorAll(".info-item");
+        let placeAddress = JSON.parse(localStorage.getItem('placeAddress')) || [];
+        for (var i = 0; i < infoItems.length; i++) {
+            // Kiểm tra xem phần tử hiện tại có lớp active hay không
+            if (infoItems[i].classList.contains("active")) {
+                let content = placeAddress[placeAddress.length-i-1];
+                document.getElementById("name").value = content.name;
+                document.getElementById("phone").value = content.phone;
+                document.getElementById("addressDetail").value = content.detail;
+                renderAddress(content.city.value,content.district.value,content.ward.value);
+                document.getElementById("btn-close-modal").click();
+                usePlaceAddressIndex(placeAddress.length-i-1);
+                break;
+            }
+        }
+    }
+    function usePlaceAddressIndex(index){
+        let placeAddress = JSON.parse(localStorage.getItem('placeAddress')) || [];
+        for (var i = 0; i < placeAddress.length; i++) {
+            placeAddress[i].isUse = false;
+        }
+        placeAddress[index].isUse = true;
+
+        console.log(placeAddress);
+        document.getElementById("animated-text").style.visibility = "visible";
+        document.getElementById("animated-text").textContent = placeAddress[index].reminiscentName;
+        localStorage.setItem('placeAddress',JSON.stringify(placeAddress));
+    }
+    function replacePlaceAddress(){
+        var infoItems = document.querySelectorAll(".info-item");
+        for (var i = 0; i < infoItems.length; i++) {
+            // Kiểm tra xem phần tử hiện tại có lớp active hay không
+            if (infoItems[i].classList.contains("active")) {
+                let placeAddress = JSON.parse(localStorage.getItem('placeAddress')) || [];
+                let content = placeAddress[placeAddress.length-i-1];
+                document.getElementById("modal-name").value = content.name;
+                document.getElementById("modal-phone").value = content.phone;
+                renderModalAddress(content.city.value,content.district.value,content.ward.value);
+                document.getElementById("modal-addressDetail").value = content.detail;
+                document.getElementById("modal-nameAddress").value = content.reminiscentName;
+                isAdd=false;
+                break;
+            }
+        }
+    }
+
+    function showListAddress(){
+        let listPlaceAddress = JSON.parse(localStorage.getItem('placeAddress')) || [];
+        var content = document.getElementById('content-address');
+        content.innerHTML='';
+        for(let i =listPlaceAddress.length-1;i>=0;i--) {
+            let placeAddress = listPlaceAddress[i];
+            var divInfo = document.createElement('div');
+            divInfo.classList.add('info-item');
+
+            var h4 = document.createElement('h4');
+            h4.textContent = placeAddress.reminiscentName;
+            divInfo.appendChild(h4);
+
+            var pName = document.createElement('p');
+            pName.textContent = placeAddress.name + ' - ' + placeAddress.phone;
+            divInfo.appendChild(pName);
+
+            var pAddress = document.createElement('p');
+            pAddress.textContent = placeAddress.fullAddress;
+            divInfo.appendChild(pAddress);
+
+            content.appendChild(divInfo);
+        }
+        addEventClick();
+    }
+    showListAddress();
 </script>
 </body>
 

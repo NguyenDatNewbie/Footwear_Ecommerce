@@ -10,5 +10,6 @@ import java.util.List;
 public class CartRequest {
     Long id;
     String size;
+    Long color;
     int quantity;
 }

@@ -10,11 +10,14 @@ import com.reidshop.Service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,8 +46,9 @@ public class ProductDetailController {
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
 
-    @RequestMapping("/{productId}")
-    String productDetail(ModelMap modelMap, @PathVariable Long productId){
+    @GetMapping("")
+    String productDetail(ModelMap modelMap, @RequestParam("id") Long productId,
+                         @RequestParam(value = "color",required = false) Long colorId){
         Product product = productRepository.findByProductId(productId);
         List<Evaluate> evaluateList = evaluateRepository.findAllByProductId(productId);
         double rateAvg = evaluateService.rateAvg(evaluateList);
@@ -62,7 +66,11 @@ public class ProductDetailController {
         modelMap.addAttribute("imageRepository",imageRepository);
         modelMap.addAttribute("imageService",imageService);
         modelMap.addAttribute("colorRepository",colorRepository);
-        List<Image> images = imageService.imageFirstOfColor(productId);
+        List<Image> images = new ArrayList<>();
+        if (colorId!=null)
+            images = imageRepository.findAllByProductAndColor(colorId,productId);
+        else
+            images = imageService.imageFirstOfColor(productId);
         modelMap.addAttribute("images",images);
 
         return "user/product-details";
