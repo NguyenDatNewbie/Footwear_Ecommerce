@@ -63,6 +63,10 @@ public class Orders {
     Account account;
 
     @ManyToOne
+    @JoinColumn(name = "vourcher_id")
+    Vourcher vourcher;
+
+    @ManyToOne
     @JoinColumn(name="store_id")
     Store store;
 

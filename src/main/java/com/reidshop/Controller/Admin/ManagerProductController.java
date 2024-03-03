@@ -129,6 +129,7 @@ public class ManagerProductController {
                                       @RequestParam("category") Long categoryId,
                                       @RequestParam("selectedSizes") String selectedSizes,
                                       @RequestParam("image-file") MultipartFile[] imageFiles,
+                                      @RequestParam("video-file") MultipartFile[] videoFiles,
                                       BindingResult result){
         if(result.hasErrors()){
             return new ModelAndView("admin/detailOrEdit");
@@ -161,6 +162,8 @@ public class ManagerProductController {
         try {
             for (MultipartFile imageFile : imageFiles){
                 if (!imageFile.isEmpty()){
+                    Color color1 = new Color();
+                    color1.setId(1L);
                     Image image = new Image();
                     Map r = this.cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
                     String img = (String) r.get("secure_url");
@@ -168,6 +171,23 @@ public class ManagerProductController {
                     image.setProduct(product);
                     imageRepository.save(image);
                 }
+            }
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
+        System.out.println(videoFiles);
+        try {
+            for (MultipartFile videoFile : videoFiles){
+                Image image = new Image();
+                Color color1 = new Color();
+                color1.setId(1L);
+                Map r = this.cloudinary.uploader().upload(videoFile.getBytes(), ObjectUtils.asMap("resource_type", "video"));
+                String img = (String) r.get("secure_url");
+                image.setImg(img);
+                image.setProduct(product);
+                image.setColor(color1);
+                imageRepository.save(image);
             }
         }catch (IOException e){
             e.printStackTrace();
