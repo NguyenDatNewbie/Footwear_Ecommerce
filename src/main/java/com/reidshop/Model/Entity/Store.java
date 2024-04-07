@@ -22,9 +22,4 @@ public class Store {
     @JoinColumn(name="manager_id")
     Account account;
 
-    @OneToMany(mappedBy = "store")
-    List<Inventory> inventories = new ArrayList<>();
-
-    @OneToMany(mappedBy = "store")
-    List<Orders> orders = new ArrayList<>();
 }

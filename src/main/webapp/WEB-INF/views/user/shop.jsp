@@ -388,14 +388,14 @@
                                 <div class="single_product" id="item-${product.id}" style="border: 1px solid; padding-bottom: 10px; border-bottom-left-radius: 3%;border-bottom-right-radius: 3%">
                                     <div class="product_thumb">
                                         <c:if test="${product.images.size()>0}">
-                                            <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
+                                            <a class="primary_img" href="/product?id=${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
                                         </c:if>
                                         <c:if test="${product.images.size()>1}">
-                                            <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
+                                            <a class="secondary_img" href="/product?id=${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
                                         </c:if>
 
                                         <div class="quick_button">
-                                            <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
+                                            <a href="/product?id=${product.id}" title="quick_view">Xem sản phẩm</a>
                                         </div>
 
 
@@ -403,6 +403,11 @@
                                             <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
                                         </div>
 
+                                        <div class="favorite" id="favorite-${product.id}">
+                                           <button onclick="addToFavorite(${product.id})">
+                                               <img style="width: 20px" src="/assets/img/icon/add-to-favorites.png">
+                                           </button>
+                                        </div>
                                     </div>
                                     <div class="content" >
                                         <div class="product_content grid_content" >
@@ -440,10 +445,8 @@
                                             <div class="product_desc">
                                                 <p>${product.description}</p>
                                             </div>
-
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </c:forEach>
@@ -478,6 +481,38 @@
 <!-- Main JS -->
 <script src="<c:url value="/assets/js/main.js"/> "></script>
 <script>
+    function checkFavorite(productId){
+        let favorite = [];
+        let storage = localStorage.getItem('favorite');
+        if(storage!=null)
+            favorite= JSON.parse(storage);
+        for(let i=0;i<favorite.length;i++){
+            if(favorite[i]==productId)
+                return true;
+        }
+        return false;
+    }
+    function showIconAddFavorite(){
+        let favorites = document.querySelectorAll('.favorite');
+        for(let i=0;i<favorites.length;i++){
+            var productId = favorites[i].id.substring(9);
+            if (checkFavorite(productId)){
+                favorites[i].innerHTML='';
+            }
+        }
+    }
+    showIconAddFavorite();
+    function addToFavorite(productId){
+        let favorite = [];
+        let storage = localStorage.getItem('favorite');
+        if(storage!=null)
+            favorite= JSON.parse(storage);
+        favorite.push(productId)
+        localStorage.setItem('favorite',JSON.stringify(favorite));
+        document.getElementById('favorite-'+productId).innerHTML='';
+        showFavorite();
+    }
+
     function displayProductColor(img1,img2,divItem){
         var primaryImg = divItem.querySelector(".product_thumb .primary_img img");
         var secondaryImg = divItem.querySelector(".product_thumb .secondary_img img");
@@ -693,26 +728,42 @@
                 '">'
                 + '<div class="product_thumb">';
             if(products[i].images.length>0)
-                result += '<a class="primary_img" href="/product/' +
+                result += '<a class="primary_img" href="/product?id=' +
                     products.id +
                     '"><img src=' +
                     products[i].images[0].img +
                     ' alt=""></a>';
             if(products[i].images.length>1)
-                result += '<a class="secondary_img" href="/product/' +
-                    products.id +
+                result += '<a class="secondary_img" href="/product?id=' +
+                    products[i].id +
                     '"><img src='
                     + products[i].images[1].img
                     + ' alt=""></a>';
-            result+=' <div class="quick_button">'
-                +'<a href="product-details.html"title="quick_view">Xem sản phẩm</a>'
-                +'</div>'
-                +'   <div class="product_sale">'
+            result+='<div class="quick_button">\n' +
+                '                                            <a href="/product?id='
+                +products[i].id
+                +'" title="quick_view">Xem sản phẩm</a>\n' +
+                '                                        </div>\n'+
+                '   <div class="product_sale">'
                 +'       <span>';
             if(products[i].promotion>0)
                 result+='-'+products[i].promotion +'%';
-            result+= '</span></div>'
-                +'</div>'
+            result+= '</span></div>';
+
+            if(!checkFavorite(products[i].id))
+            {
+                result+='<div class="favorite" id="favorite-'
+                +products[i].id
+                +'">\n' +
+                    '                                           <button onclick="addToFavorite('
+                    +products[i].id
+                +')">\n' +
+                    '                                               <img style="width: 20px" src="/assets/img/icon/add-to-favorites.png">\n' +
+                    '                                           </button>\n' +
+                    '                                        </div>'
+            }
+
+            result+= '</div>'
                 +'<div class="content" >'
                 +'<div class="product_content grid_content">'
                 +'<h3><a href="product-details.html">'

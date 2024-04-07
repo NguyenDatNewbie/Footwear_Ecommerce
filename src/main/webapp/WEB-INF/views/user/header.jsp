@@ -24,7 +24,13 @@
         border-bottom-right-radius: 4px;
         display: none;
     }
-
+    #mini_favorite{
+        max-height: 400px; /* Giới hạn chiều cao của danh sách */
+        overflow-y: auto; /* Tạo ra thanh cuộn khi nội dung vượt quá chiều cao */
+    }
+    #mini_favorite .cart_remove{
+        margin-right: 15px;
+    }
     #autocomplete-list li {
         padding: 8px;
         cursor: pointer;
@@ -33,6 +39,33 @@
 
     #autocomplete-list li:hover {
         background-color: #ddd;
+    }
+    .mini_cart .cart_info a{
+        color: black;
+        font-weight: 500;
+    }
+    .mini_cart .cart_info a:hover{
+        color: #ff6a28;
+    }
+    .mini_cart .cart_info span{
+        color: red;
+    }
+    .listFavorite li:focus{
+        outline: none!important;
+    }
+    .listFavorite li:hover{
+        background: #ff6a28;
+        color: #ffffff;
+    }
+    .listFavorite .active{
+        background: #ff6a28;
+        color: #ffffff;
+    }
+    .mini_cart .pagination{
+        margin-top: 10px;
+    }
+    .mini_cart{
+        padding: 25px 20px 10px;
     }
 </style>
 <!--header area start-->
@@ -75,15 +108,21 @@
                             <a href="index.jsp"><img src="<c:url value="/assets/img/logo/logo.png" />" ></a>
                         </div>
                     </div>
-                    <div class="col-lg-4">
-                        <div class="cart_area">
-                            <div  class="cart_link" >
-<%--                                    <a href="/cart" ><i class="fa fa-shopping-basket"><span style="margin-left: 3px" id="cart_link2"></span></i></a>--%>
-                                <a href="/cart" style="display: flex; align-items: center;">
-                                    <img src="<c:url value="/assets/img/icon/shopping-cart.png" />" alt="Cart Icon" style="width: 20px; height: 20px; margin-right: 5px; margin-bottom: 4px;">
-                                    <span style="margin-left: 3px; font-size: 17px" id="cart_link2"></span>
-                                </a>
 
+                    <div class="col-lg-4" >
+                        <div class="cart_area">
+                            <div  class="cart_link">
+                                <a href="" ><i class="far fa-heart"></i></a>
+                                <div class="mini_cart">
+                                    <div id="mini_favorite"></div>
+                                    <div class="pagination" >
+                                        <ul class="listFavorite">
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div  class="cart_link">
+                                <a href="/cart" ><i class="fa fa-shopping-basket"><span style="margin-left: 3px" id="cart_link2"></span></i></a>
                             </div>
                         </div>
                     </div>
@@ -139,6 +178,8 @@
 </header>
 <!--header area end-->
 <%--Get data--%>
+<!-- Plugins JS -->
+<script src="<c:url value="/assets/js/plugins.js"/>"></script>
 <script>
     let arraysData = [];
     var inputElement = document.getElementById("searchName");
@@ -228,7 +269,43 @@
             }
         });
     }
+    function showFavorite(){
+        let favorite = [];
+        let storage = localStorage.getItem('favorite');
+        if(storage!=null)
+        {
+            favorite= JSON.parse(storage);
+            $.ajax({
+                url: '/shop/favorite',
+                type: "post",
+                data: JSON.stringify(favorite),
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    document.getElementById("mini_favorite").innerHTML=response;
+                    listFavorite = document.querySelectorAll('.favorites-item');
+                    loadFavorites();
+                }
+            });
+        }
+    }
+    function deleteItemFavorites(id){
+        let favorite = [];
+        let storage = localStorage.getItem('favorite');
+        if (storage!=null){
+            favorite= JSON.parse(storage);
+            var indexToRemove = favorite.indexOf(id);
 
+            // Nếu phần tử có tồn tại trong mảng, thì loại bỏ nó
+            if (indexToRemove !== -1) {
+                favorite.splice(indexToRemove, 1);
+            }
+            localStorage.setItem('favorite', JSON.stringify(favorite));
+        }
+        showFavorite();
+
+    }
+
+    showFavorite();
 
 </script>
 <script>
@@ -297,4 +374,69 @@
     reloadCartLength();
     resetActive();
     checkAccount();
+</script>
+
+<script>
+
+    // Xử lý phân trang
+    let thisPageFavorite = 1;
+    let limitFavorite = 5;
+    let listFavorite = document.querySelectorAll('.favorites-item');
+
+    function changeFavorites(i) {
+        thisPageFavorite = i;
+        loadFavorites();
+    }
+
+    function loadFavorites() {
+        let beginGet = limitFavorite * (thisPageFavorite - 1);
+        let endGet = limitFavorite * thisPageFavorite - 1;
+        listFavorite.forEach((item, key) => {
+            if (key >= beginGet && key <= endGet) {
+                item.style.display = 'flex';
+            } else {
+                item.style.display = 'none';
+            }
+        })
+        listPageFavorite();
+    }
+
+
+    function listPageFavorite() {
+        let count = Math.ceil(listFavorite.length / limitFavorite);
+        document.querySelector('.listFavorite').innerHTML = '';
+
+        if (thisPageFavorite != 1) {
+            let prev = document.createElement('li');
+            let icon = document.createElement('i');
+            icon.classList.add('fas', 'fa-angle-double-left');
+            prev.appendChild(icon);
+            prev.setAttribute('onclick', "changeFavorites(" + (thisPageFavorite - 1) + ")");
+            document.querySelector('.listFavorite').appendChild(prev);
+        }
+
+        for (i = 1; i <= count; i++) {
+            let newPage = document.createElement('li');
+            newPage.innerText = i;
+            if (i == thisPageFavorite) {
+                newPage.classList.add('active');
+            }
+            newPage.setAttribute('onclick', "changeFavorites(" + i + ")");
+            document.querySelector('.listFavorite').appendChild(newPage);
+        }
+
+        if (thisPageFavorite != count) {
+            let next = document.createElement('li');
+            let icon = document.createElement('i');
+            icon.classList.add('fas', 'fa-angle-double-right');
+            next.appendChild(icon);
+            next.setAttribute('onclick', "changeFavorites(" + (thisPageFavorite + 1) + ")");
+            document.querySelector('.listFavorite').appendChild(next);
+        }
+    }
+    document.addEventListener("DOMContentLoaded", function () {
+        listFavorite = document.querySelectorAll('.favorites-item');
+        loadFavorites();
+    });
+
 </script>

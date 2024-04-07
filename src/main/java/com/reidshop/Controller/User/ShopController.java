@@ -131,4 +131,71 @@ public class ShopController {
     public List<Image> findImageByProduct(@PathVariable Long productId){
         return imageService.imageFirstOfColor(productId);
     }
+
+    @PostMapping("/favorite")
+    @ResponseBody
+    public String showFavorite(@RequestBody List<Long> ids){
+        String result = "";
+        boolean isFirstElement = true;
+
+        for(int i=ids.size()-1;i>=0 ;--i) {
+            Long id = ids.get(i);
+            Product product = productRepository.findByProductId(id);
+            if (product != null) {
+                if (isFirstElement) {
+                    isFirstElement = false;
+                    result += "<div class=\"cart_item top favorites-item\">\n" +
+                            "                                        <div class=\"cart_img\">\n" +
+                            "                                            <a href=\"/product?id=" +
+                            id +
+                            "\"><img src=\"" +
+                            product.getImages().get(0).getImg() +
+                            "\" alt=\"\"></a>\n" +
+                            "                                        </div>\n" +
+                            "                                        <div class=\"cart_info\">\n" +
+                            "                                            <a href=\"/product?id=" +
+                            id +
+                            "\">" +
+                            product.getName() +
+                            "</a>\n" +
+                            "                                            <span>" +
+                            String.valueOf(product.getPrice()*(1-product.getPromotion()/100.0)) +
+                            "</span>\n" +
+                            "                                        </div>\n" +
+                            "                                        <div class=\"cart_remove\">\n" +
+                            "                                            <a href=\"#\" onclick=\"deleteItemFavorites(" +
+                            id+
+                            ")\"><i class=\"fas fa-trash\"></i></a>\n" +
+                            "                                        </div>\n" +
+                            "                                    </div>\n";
+                }
+                else
+                    result += "<div class=\"cart_item bottom favorites-item\">\n" +
+                            "                                        <div class=\"cart_img\">\n" +
+                            "                                            <a href=\"/product?id=" +
+                            id +
+                            "\"><img src=\"" +
+                            product.getImages().get(0).getImg() +
+                            "\" alt=\"\"></a>\n" +
+                            "                                        </div>\n" +
+                            "                                        <div class=\"cart_info\">\n" +
+                            "                                            <a href=\"/product?id=" +
+                            id +
+                            "\">" +
+                            product.getName() +
+                            "</a>\n" +
+                            "                                            <span>" +
+                            String.valueOf(product.getPrice()*(1-product.getPromotion()/100.0)) +
+                            "</span>\n" +
+                            "                                        </div>\n" +
+                            "                                        <div class=\"cart_remove\">\n" +
+                            "                                            <a href=\"#\" onclick=\"deleteItemFavorites(" +
+                            id+
+                            ")\"><i class=\"fas fa-trash\"></i></a>\n" +
+                            "                                        </div>\n" +
+                            "                                    </div>\n";
+            }
+        }
+        return result;
+    }
 }

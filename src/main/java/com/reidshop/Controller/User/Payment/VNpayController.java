@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -45,8 +48,9 @@ public class VNpayController {
         // Giao dịch thất bại
         response.sendRedirect("/cart?payment=failed");
         }
-    }
 
+
+    }
     @GetMapping("/vnpay")
     public ModelAndView getPay(@PathParam("receive") String receive, @PathParam("price") long price, HttpSession session) throws UnsupportedEncodingException {
         System.out.println(receive);

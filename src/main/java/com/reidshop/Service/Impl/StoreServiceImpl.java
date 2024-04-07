@@ -7,6 +7,7 @@ import com.reidshop.Model.Mapper.StoreMapper;
 import com.reidshop.Model.Request.CartRequest;
 import com.reidshop.Model.Request.StoreValidRequest;
 import com.reidshop.Model.Response.StoreValidResponse;
+import com.reidshop.Reponsitory.InventoryRepository;
 import com.reidshop.Reponsitory.SizeRepository;
 import com.reidshop.Reponsitory.StoreRepository;
 import com.reidshop.Service.IStoreService;
@@ -25,6 +26,8 @@ public class StoreServiceImpl implements IStoreService {
     @Autowired
     SizeRepository sizeRepository;
     final StoreMapper storeMapper;
+    @Autowired
+    InventoryRepository inventoryRepository;
 
     @Override
     public List<StoreValidRequest> findAll(){
@@ -66,11 +69,11 @@ public class StoreServiceImpl implements IStoreService {
                     store = storeRepository.findById(storeValid.get(i).getStore().getId()).orElse(new Store());
                 }
 
-                List<Inventory> inventories = store.getInventories();
+                List<Inventory> inventories = inventoryRepository.findAllInventoryByStoreID(store.getId());
                 if (index > 0 || inventories.size() > 0) { // inventories.size() > 0 Nếu như store đầu tiên chưa có tạo kho còn bắt lỗi được
                     for (int j = 0; j < inventories.size(); j++) {
-                        if (store.getInventories().get(j).getSize() == sizeRepository.findAllByProductIdAndSize(cart.getId(), cart.getSize())
-                                && store.getInventories().get(j).getQuantity() >= cart.getQuantity()) {
+                        if (inventories.get(j).getSize() == sizeRepository.findAllByProductIdAndSize(cart.getId(), cart.getSize())
+                                && inventories.get(j).getQuantity() >= cart.getQuantity() && inventories.get(j).getColor().getId()== cart.getColor()) {
                             StoreValidResponse storeResponse = new StoreValidResponse();
                             storeResponse.setStatus(1);
                             storeResponse.setStore(storeMapper.toResponse(store));

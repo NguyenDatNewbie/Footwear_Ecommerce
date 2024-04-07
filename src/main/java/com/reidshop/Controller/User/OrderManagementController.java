@@ -3,11 +3,15 @@ package com.reidshop.Controller.User;
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.Account;
 import com.reidshop.Model.Entity.Evaluate;
+import com.reidshop.Model.Entity.OrderItem;
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Enum.OrderStatus;
+import com.reidshop.Model.Mapper.CartRequestMapper;
+import com.reidshop.Model.Request.CartRequest;
 import com.reidshop.Model.Request.EvaluateRequest;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Reponsitory.EvaluateRepository;
+import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
 import com.reidshop.Service.IEvaluateServiceImpl;
 import com.reidshop.Service.IOrderItemService;
@@ -24,6 +28,7 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,7 +46,11 @@ public class OrderManagementController {
     @Autowired
     EvaluateRepository evaluateRepository;
     @Autowired
+    ImageRepository imageRepository;
+    @Autowired
     JwtService jwtService;
+    @Autowired
+    CartRequestMapper cartRequestMapper;
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
     @GetMapping("")
@@ -49,12 +58,16 @@ public class OrderManagementController {
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(null);
+        List<Orders> ordersTabPrepare = ordersRepository.findOrdersByAccountAndStatus(account.getId(),OrderStatus.WAIT);
+        ordersTabPrepare.addAll(ordersRepository.findOrdersByAccountAndStatus(account.getId(),OrderStatus.PREPARE));
+        modelMap.addAttribute("ordersTabPrepare",ordersTabPrepare);
         modelMap.addAttribute("account",account);
         modelMap.addAttribute("orders",ordersRepository.findOrdersByAccount(account.getId()));
         modelMap.addAttribute("ordersRepository",ordersService);
         modelMap.addAttribute("ordersService",ordersRepository);
         modelMap.addAttribute("evaluateRepository",evaluateRepository);
         modelMap.addAttribute("formatVND",formatVND);
+        modelMap.addAttribute("imageRepository",imageRepository);
         return "user/order";
     }
 
@@ -71,6 +84,7 @@ public class OrderManagementController {
         modelMap.addAttribute("ordersService",ordersRepository);
         modelMap.addAttribute("evaluateRepository",evaluateRepository);
         modelMap.addAttribute("formatVND",formatVND);
+        modelMap.addAttribute("imageRepository",imageRepository);
         return "user/order";
     }
 
@@ -86,7 +100,18 @@ public class OrderManagementController {
         }
         return "success";
     }
-
+    @GetMapping("/repurchase/{id}")
+    @ResponseBody
+    List<CartRequest> repurchase(@PathVariable Long id){
+        Orders orders = ordersRepository.findById(id).orElse(null);
+        List<CartRequest> cartRequestList = new ArrayList<>();
+        if(orders!=null){
+            List<OrderItem> orderItems = orders.getOrderItems();
+            cartRequestList = cartRequestMapper.toListCartRequest(orderItems);
+            cartRequestList.addAll(cartRequestMapper.toListCartRequestOutStock(orders.getProductOutOfStocks()));
+        }
+        return cartRequestList;
+    }
     @PostMapping(value = "/evaluate/{id}",consumes = {"application/x-www-form-urlencoded"})
     ModelAndView evaluate(@ModelAttribute Evaluate evaluate, @PathVariable long id, HttpServletRequest request){
         String token = CookieHandle.getCookieValue(request, "token");

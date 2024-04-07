@@ -21,6 +21,10 @@ public class Inventory {
     Size size;
 
     @ManyToOne
+    @JoinColumn(name = "color_id")
+    Color color;
+
+    @ManyToOne
     @JoinColumn(name = "store_id")
     Store store;
 

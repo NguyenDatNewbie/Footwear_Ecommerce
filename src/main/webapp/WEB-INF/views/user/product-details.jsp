@@ -13,6 +13,8 @@
           href="/assets/img/logo/logo.png" style="width: 20px;">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/assets/img/favicon.ico"/>
 ">
@@ -27,7 +29,6 @@
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="<c:url value="/assets/css/style.css"/>">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
 
     <style>
@@ -45,7 +46,10 @@
             transition: background-color 0.3s;
             cursor: pointer;
         }
-
+        .product_d_right h1{
+            font-weight: 500;
+            color: #242424;
+        }
         .size_product .active {
             background: #ff6a28;
             color: #ffffff;
@@ -254,23 +258,28 @@
             width: 50px;
             margin-right: 2%;
         }
-        .thumb-color button:active{
+        .thumb-color a img:hover{
             background: #ff6a28;
-            padding: 1px;
+            padding: 2px;
             border-radius: 50%;
         }
-        .thumb-color button{
+        .thumb-color a{
             border: none;
             padding: 0;
             background: transparent;
         }
-        .thumb-color button img{
+        .thumb-color a img{
             border-radius: 50%;
         }
         .activeColor{
             background: #ff6a28!important;
             padding: 2px!important;
             border-radius: 50%;
+        }
+        .thumb-color p{
+            text-align: center;
+            color: #0b0b0b;
+            font-weight: 500;
         }
         @keyframes slideIn {
             from {
@@ -404,7 +413,11 @@
                             <div class="color-more" style="display: flex">
                                 <c:forEach var="product_color" items="${imageService.imageFirstOfColor(productCurrent.id)}">
                                     <div class="thumb-color">
-                                        <button onclick="selectColor(${productCurrent.id},${product_color.id},this)" class="product-color" type="button"><img src="${product_color.img}" alt=""></button>
+                                        <a class="product-color" href="/product?id=${productCurrent.id}&color=${product_color.color.id}">
+                                            <img src="${product_color.img}" alt="">
+                                            <input value="${product_color.color.id}" id="color-${product_color.color.id}" hidden="hidden">
+                                        </a>
+                                        <p style="text-align: center">${product_color.color.color_name}</p>
                                     </div>
                                 </c:forEach>
                             </div>
@@ -628,7 +641,8 @@
                                     </div>
                                 </div>
                                 <div class="product_content">
-                                    <h3><a href="product-details.jsp">${product.name}</a></h3>
+                                    <h3><a href="product-details.jsp">${product.name}</a>
+                                    </h3>
                                     <c:choose>
                                         <c:when test="${product.promotion>0}">
                                             <span class="current_price">${formatVND.format(product.price*(1-product.promotion/100))}</span>
@@ -763,8 +777,8 @@
                                 <div class="col-lg-7 col-md-7">
                                     <div class="product_d_right">
                                         <form action="javascript:addToCart(${productCurrent.id})">
-
-                                            <h1 style="margin-bottom: 0px">${product.name}</h1>
+                                            <h1 style="margin-bottom: 0px; color: #242424;font-weight: 500;">${product.name}
+                                            </h1>
                                             <c:set var="evaluates"
                                                    value="${evaluateRepository.findAllByProductId(product.id)}"/>
                                             <c:if test="${evaluates.size()>0}">
@@ -919,49 +933,20 @@
         }
     }
 
-    function displayProductColor(imgs){
-        var div = document.getElementById("single-zoom");
-        var content1 = '<div id="img-1" class="zoomWrapper single-zoom">\n' +
-            '                        <img id="zoom1" src="'
-            + imgs[0].img
-            +'"\n'
-            +'                             data-zoom-image="'
-            + imgs[0].img
-            +'"\n' +
-            '                             alt="big-1">\n' +
-            '                    </div>';
-        var content2 ='<div class="single-zoom-thumb">\n' +
-            '                        <ul class="s-tab-zoom owl-carousel single-product-active"\n' +
-            '                            id="gallery_01">';
-        for(let i =0;i<imgs.length;i++)
-        {
 
-            content2 += '<li><a href="#" class="elevatezoom-gallery active"\n' +
-                '                                       data-update="" data-image="'
-                +imgs[i].img
-                + '" '
-                +'                                       data-zoom-image="'
-                +imgs[i].img
-                + '">' +
-                ' <img src="'
-                + imgs[i].img
-                + '"\n' +
-                '                                                                          alt="zo-th-1"/>\n' +
-                '                                </a></li>\n';
+    function addActive(){
+        // Lấy URL hiện tại
+        var urlParams = new URLSearchParams(window.location.search);
+        // Lấy giá trị của tham số "color"
+        var colorValue = urlParams.get('color');
+        if(colorValue!=null)
+        {
+            var imgActive = document.getElementById("color-"+colorValue);
+            imgActive.parentElement.querySelector('img').classList.add("activeColor");
         }
-        console.log(content2);
-        content2+='</ul>\n' +
-            '                    </div>';
-        div.innerHTML = content2;
+
     }
-    function addActive(current){
-        var buttons = document.querySelectorAll(".thumb-color button");
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove("activeColor");
-            // Thêm lớp 'active' cho button đang được nhấn
-            current.classList.add("activeColor");
-        }
-    }
+    addActive();
     function selectColor(product_id,color_id,current){
         let query = "productId="+product_id+"&"+"colorId="+color_id;
         $.ajax({
@@ -985,19 +970,24 @@
     function addToCart(id) {
         let cart = [];
         let storage = localStorage.getItem('cart');
+        // Lấy URL hiện tại
+        var urlParams = new URLSearchParams(window.location.search);
+        // Lấy giá trị của tham số "color"
+        var colorValue = urlParams.get('color');
         if (storage)
             cart = JSON.parse(storage);
         let quantity = parseInt(document.getElementById("number_text").value);
-        if(document.querySelector('.box_size.active')==null){
+        if(document.querySelector('.box_size.active')==null || colorValue==null){
             showMessageBox(1);
         }
         else if(quantity > 0) {
+            colorValue = parseInt(colorValue);
             var size = document.querySelector('.box_size.active').textContent;
-            let item = cart.find(c => c.id == id && c.size == size);
+            let item = cart.find(c => c.id == id && c.size == size && c.color==colorValue);
             if (item) {
                 item.quantity += quantity;
             } else {
-                cart.push({id: id, size: size, quantity: quantity});
+                cart.push({id: id, size: size, color: colorValue, quantity: quantity});
             }
             localStorage.setItem('cart', JSON.stringify(cart));
             showMessageBox(0);
@@ -1017,7 +1007,7 @@
         }
         else {
             messageBox.classList.add("warning");
-            messageBox.innerHTML = '<p><i class="fas fa-exclamation" style="margin-right: 3px"></i> Vui lòng chọn kích thước</p>';
+            messageBox.innerHTML = '<p><i class="fas fa-exclamation" style="margin-right: 3px"></i> Vui lòng chọn kích thước, màu sắc</p>';
         }
 
         messageBox.classList.remove("hidden");
