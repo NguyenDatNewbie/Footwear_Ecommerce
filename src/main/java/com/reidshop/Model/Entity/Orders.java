@@ -3,6 +3,7 @@ package com.reidshop.Model.Entity;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
+import com.reidshop.Model.Enum.VoucherType;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -47,6 +48,13 @@ public class Orders {
     @Column
     @Enumerated(EnumType.STRING)
     PaymentType paymentType;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    VoucherType voucherType;
+
+    @Column
+    double voucherValue;
 
     @Column
     @Temporal(TemporalType.DATE) // Chỉ lấy ngày, bỏ qua giờ và phút

@@ -70,6 +70,7 @@ public class StoreServiceImpl implements IStoreService {
                 }
 
                 List<Inventory> inventories = inventoryRepository.findAllInventoryByStoreID(store.getId());
+
                 if (index > 0 || inventories.size() > 0) { // inventories.size() > 0 Nếu như store đầu tiên chưa có tạo kho còn bắt lỗi được
                     for (int j = 0; j < inventories.size(); j++) {
                         if (inventories.get(j).getSize() == sizeRepository.findAllByProductIdAndSize(cart.getId(), cart.getSize())

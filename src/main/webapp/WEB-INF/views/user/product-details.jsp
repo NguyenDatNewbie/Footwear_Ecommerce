@@ -16,8 +16,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
     <!-- Favicon -->
-    <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/assets/img/favicon.ico"/>
-">
+    <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/assets/img/favicon.ico"/>">
 
     <!-- CSS 
     ========================= -->
@@ -302,6 +301,10 @@
                 opacity: 0;
             }
         }
+        .video-product{
+            width: 100px;
+            height: 100px;
+        }
     </style>
 
 </head>
@@ -338,12 +341,19 @@
                     <div class="single-zoom-thumb">
                         <ul class="s-tab-zoom owl-carousel single-product-active"
                             id="gallery_01">
-                            <c:forEach items="${images}"
-                                       var="img">
+                            <c:forEach items="${images}" var="img">
+                                <c:set var="isVideo" value="${img.img.indexOf('/video') != -1 ? 0 : -1}" />
                                 <li><a href="#" class="elevatezoom-gallery active"
-                                       data-update="" data-image="${img.img}"
-                                       data-zoom-image="${img.img}"> <img src="${img.img}"
-                                                                          alt="zo-th-1"/>
+                                   data-update="" data-image="${img.img}"
+                                   data-zoom-image="${img.img}">
+                                    <c:choose>
+                                        <c:when test="${isVideo == 0}">
+                                            <video controls src="${img.img}" height="100px" width="100px">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${img.img}" alt="zo-th-1"/>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </a></li>
                             </c:forEach>
                         </ul>
@@ -744,10 +754,18 @@
                                                 id="gallery_02">
                                                 <c:forEach items="${product.images}"
                                                            var="img">
+                                                    <c:set var="isVideo" value="${img.img.indexOf('/video') != -1 ? 0 : -1}" />
                                                     <li><p href="#" class="elevatezoom-gallery active"
                                                            data-update="" data-image="${img.img}"
-                                                           data-zoom-image="${img.img}"> <img src="${img.img}"
-                                                                                              alt="zo-th-1"/>
+                                                           data-zoom-image="${img.img}">
+                                                            <c:choose>
+                                                                <c:when test="${isVideo == 0}">
+                                                                    <video controls src="${img.img}" height="84px" width="84px">
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <img src="${img.img}" alt="zo-th-1"/>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                     </p></li>
                                                 </c:forEach>
 
@@ -1039,8 +1057,36 @@
         }
     });
 
+    //Kiểm tra chuỗi img
+    function checkVideoLink(link) {
+        return link.indexOf('/video') !== -1 ? 0 : -1;
+    }
 </script>
 
+<%--Phóng to viddeo--%>
+<script>
+    document.querySelectorAll('.elevatezoom-gallery video').forEach(video => {
+        video.addEventListener('click', function() {
+            const videoDisplayHTML = '<video controls src="'+this.src+'" height="448px" width="448px"></video>';
+
+            const videoDisplay = document.getElementById('img-1');
+            videoDisplay.innerHTML = videoDisplayHTML;
+        });
+    });
+    document.querySelectorAll('.elevatezoom-gallery img').forEach(img => {
+        img.addEventListener('click', function() {
+            const imageDisplayHTML = '<img id="zoom1" src="' + this.src + '" data-zoom-image="' + this.src + '"alt="big-1""></img> ';
+
+            const imageDisplay = document.getElementById('img-1');
+            imageDisplay.innerHTML = imageDisplayHTML;
+
+            // var zoomWindow = document.getElementById('zoomWindowContainer');
+            //
+            // // Thay đổi URL trong thuộc tính background-image của thẻ div
+            // zoomWindow.style.backgroundImage = 'url("' + this.src + '")';
+        });
+    });
+</script>
 
 </body>
 
