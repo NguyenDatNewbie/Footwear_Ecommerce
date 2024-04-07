@@ -26,7 +26,12 @@
         <span>Orders</span>
       </a>
     </li><!-- End Order Page Nav -->
-
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/voucher"/>">
+        <i class="bi bi-gift"></i>
+        <span>Voucher</span>
+      </a>
+    </li><!-- End Category Page Nav -->
     <li class="nav-item">
       <a class="nav-link collapsed" href="<c:url value="/admin/stores"/>">
         <i class="bi bi-diagram-3"></i>
@@ -47,7 +52,6 @@
         <span>Categories</span>
       </a>
     </li><!-- End Category Page Nav -->
-
 
   </ul>
 

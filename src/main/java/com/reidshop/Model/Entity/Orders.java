@@ -3,6 +3,7 @@ package com.reidshop.Model.Entity;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
+import com.reidshop.Model.Enum.VoucherType;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -49,6 +50,13 @@ public class Orders {
     PaymentType paymentType;
 
     @Column
+    @Enumerated(EnumType.STRING)
+    VoucherType voucherType;
+
+    @Column
+    double voucherValue;
+
+    @Column
     @Temporal(TemporalType.DATE) // Chỉ lấy ngày, bỏ qua giờ và phút
     @DateTimeFormat(pattern = "dd--MM--yyyy") // Định dạng ngày theo ý muốn
     Date createdAt;
@@ -61,10 +69,6 @@ public class Orders {
     @ManyToOne
     @JoinColumn(name = "account_id")
     Account account;
-
-    @ManyToOne
-    @JoinColumn(name = "vourcher_id")
-    Vourcher vourcher;
 
     @ManyToOne
     @JoinColumn(name="store_id")
