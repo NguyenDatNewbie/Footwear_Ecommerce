@@ -13,6 +13,7 @@ import com.reidshop.Service.Handle.DistanceService;
 import com.reidshop.Service.ICartService;
 import com.reidshop.Service.IOrdersService;
 import com.reidshop.Service.IStoreService;
+import com.reidshop.Service.IVoucherService;
 import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -47,16 +50,25 @@ public class CartController {
     JwtService jwtService;
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    IVoucherService voucherService;
 
     Locale locale = new Locale("vi","VN");
 
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
 
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", locale);
+
+    NumberFormat formatterDecimal = new DecimalFormat("#0");
+
     @GetMapping("")
     String index(ModelMap modelMap) throws Exception {
         modelMap.addAttribute("productRepository",productRepository);
         modelMap.addAttribute("formatVND",formatVND);
+        modelMap.addAttribute("formatterDecimal",formatterDecimal);
+        modelMap.addAttribute("dateFormat",dateFormat);
         modelMap.addAttribute("imageRepository",imageRepository);
+        modelMap.addAttribute("vourcher_sv", voucherService);
         modelMap.addAttribute("store",storeRepository.findAll());
         return "user/cart";
     }

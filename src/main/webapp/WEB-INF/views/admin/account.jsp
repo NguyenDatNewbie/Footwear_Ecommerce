@@ -63,9 +63,10 @@
                   </div>
                 </c:if>
                 <c:if test="${not empty errorMessage}">
-                  <div class="alert alert-danger bg-danger text-light border-0 alert-dismissible fade show" role="alert">
+                  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-octagon me-1"></i>
                     ${errorMessage}
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                   </div>
                 </c:if>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">

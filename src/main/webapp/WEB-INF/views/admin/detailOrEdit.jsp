@@ -152,6 +152,11 @@
               <input type="file" id="image-file" name="image-file" multiple/>
               <img id="uploaded-image" />
             </div>
+            <div class="col-12 upload-video">
+              <span class="card-title" style="font-size: 1em; margin-left: 5px;">Videos</span>
+              <input type="file" id="video-file" name="video-file" accept="video/*" multiple/>
+              <%--                            <img id="uploaded-video" />--%>
+            </div>
             <div class="text-center">
               <button type="submit" class="btn btn-success">Update Product</button>
               <button type="reset" class="btn btn-secondary" id="listProductBtn">Cancel</button>

@@ -12,6 +12,9 @@
           href="/assets/img/logo/logo.png" style="width: 20px;">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/admin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/admin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+    <link href="/admin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
     <!-- Favicon -->
@@ -129,6 +132,194 @@
 
         .hidden {
             display: none;
+        }
+
+        .coupon-area {
+            margin-top: 15px;
+            display: flex;
+            align-items: baseline;
+            position: relative;
+            justify-content: space-between;
+        }
+
+        .coupon-area p {
+            /*margin-right: 10px;*/
+        }
+
+        #modal-voucher .modal-lg{
+            max-height: 38.75rem;
+            max-width: 38.75rem;
+        }
+
+        .coupon-area .voucher-button {
+            appearance: none;
+            background: transparent;
+            float: right;
+            border: 0;
+            width: auto;
+            height: auto;
+            box-shadow: 0 0 0 0;
+            color: #05a !important;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 21px;
+            padding: 0;
+            text-transform: capitalize;
+        }
+
+        .coupon-area .voucher-button:hover {
+            background: #FFFFFF;
+            color: #05a !important;
+        }
+
+        .section-coupon {
+            max-height: 250px; /* Đặt chiều cao tối đa cho phần tử */
+            overflow-y: auto; /* Hiển thị thanh cuộn dọc khi nội dung vượt quá chiều cao */
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .coupon_inner .coupon-item {
+            width: 100%;
+        }
+
+        .section-coupon .coupon-item {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 5px 10px;
+            background: #f5f5f5;
+            display: flex;
+            border-radius: 15px;
+            margin-right: 10px;
+        }
+
+        .section-coupon .coupon-item-left {
+            width: auto;
+            padding-right: 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            border-right: 1px dashed #ccc;
+        }
+
+        .dt-width-auto {
+            width: auto;
+            height: auto;
+        }
+
+        .modal-search-voucher {
+            display: flex;
+            background-color: #f8f8f8;
+            align-items: center;
+            padding: .9375rem;
+            margin-bottom: 10px;
+            width: 95%;
+        }
+
+        .modal-search-voucher .search-area {
+            flex: 1;
+        }
+
+        .input-with-validator-wrapper {
+            position: relative;
+        }
+
+        .input-with-validator {
+            align-items: center;
+            background-color: #fff;
+            border: 1px solid rgba(0, 0, 0, .14);
+            border-radius: 2px;
+            box-shadow: inset 0 2px 0 0 rgba(0,0,0,.02);
+            box-sizing: border-box;
+            color: #222;
+            display: flex;
+            height: 40px;
+            padding: 10px;
+            position: relative;
+            transition: border-color .1s ease;
+        }
+
+        /*.YcRvku .LxsvzT.qFr_OU {*/
+        /*    color: #ccc;*/
+        /*}*/
+
+        .input-with-validator input {
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            flex: 1;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .modal-search-voucher .input-with-validator>input {
+            flex: none;
+            width: 100%;
+        }
+
+        .stardust-button {
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 10px;
+            border: 0.5px solid black;
+            background-color: #FFFFFF;
+        }
+
+        .search-title {
+            flex-shrink: 0;
+            margin-right: .6875rem;
+            text-transform: capitalize;
+        }
+
+        .section-coupon .coupon-item-right {
+            padding-left: 10px;
+            position: relative;
+            width: 70%;
+        }
+
+        .section-coupon .coupon-item-right h4 {
+            font-size: 14px;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .section-coupon .coupon-item-right > p {
+            line-height: normal;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .section-coupon .coupon-item-right .coupon-item-des {
+            display: flex;
+            justify-content: space-between;
+            align-items: self-end;
+            font-size: 10px;
+        }
+
+        .section-coupon .coupon-button {
+            width: 10%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .section-coupon .coupon-item-right .coupon-item-des p {
+            line-height: normal;
+            margin: 0;
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .section-coupon .coupon-item-right .coupon-item-des .right {
+            font-weight: 700;
+            padding: 5px 7px;
+            background: #f1c14f;
+            color: #fff;
+            border-radius: 15px;
+            cursor: pointer;
         }
 
         .cart_subtotal p.cart_amount_deli {
@@ -374,6 +565,8 @@
             user-select: none;
         }
     </style>
+
+
 </head>
 
 <body>
@@ -820,28 +1013,51 @@
         if (ward.value == "")
             valueWard = "";
 
+        var getFeeAPI = {
+            url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
+            method: "GET",
+            responseType: "application/json",
+            headers: {
+                "token": token
+            },
+            params: {
+                "shop_id": shop_id,
+                "service_id": service_id,
+                "to_ward_code": valueWard,
+                "to_district_id": valueDistrict,
+                "weight": weight
+            }
+        };
+
         return new Promise((resolve, reject) => {
             var store = localStorage.getItem('storeValid');
 
             if (ward.value === "" || ward.value === null) {
                 return resolve(0);
             } else {
-                $.ajax({
-                    url: '/getCostShip/' + valueWard + '/' + valueDistrict + '/' + valueCity,
-                    type: "POST",
-                    contentType: "application/json; charset=utf-8",
-                    data: store !== null ? store : [],
-                    success: function (response) {
-                        return resolve(response);
-                    },
-                    error: function (error) {
-                        reject(error);
-                    }
-
+                const calFee = axios(getFeeAPI);
+                calFee.then(function (result) {
+                    document.getElementById('receive_deli').textContent = formatter.format(result.data.data.total);
+                    return resolve(result.data.data.total);
+                })
+                .catch(error => {
+                    console.error('Error retrieving total:', error);
                 });
+                // $.ajax({
+                //     url: '/getCostShip/' + valueWard + '/' + valueDistrict + '/' + valueCity,
+                //     type: "POST",
+                //     contentType: "application/json; charset=utf-8",
+                //     data: store !== null ? store : [],
+                //     success: function (response) {
+                //         return resolve(response);
+                //     },
+                //     error: function (error) {
+                //         reject(error);
+                //     }
+                //
+                // });
             }
         });
-
     }
 </script>
 <script>
@@ -960,20 +1176,22 @@
             wards.length = 1;
 
             if (this.value != "") {
-                    var GetDistrict = {
-                        url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id="+this.value,
-                        method: "GET",
-                        responseType: "application/json",
-                        headers: {
-                            "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
-                        },
-                    };
-                    var promiseDistrict = axios(GetDistrict);
-                    promiseDistrict.then(function (dataDistricts){
-                        dataDistricts.data.data.forEach(function (district){
-                            districts.options[districts.options.length] = new Option(district.DistrictName, district.DistrictID);
-                        });
+                var GetDistrict = {
+                    url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id="+this.value,
+                    method: "GET",
+                    responseType: "application/json",
+                    headers: {
+                        "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
+                    },
+                };
+                var promiseDistrict = axios(GetDistrict);
+                promiseDistrict.then(function (dataDistricts){
+                    // console.log(dataDistricts.data.data);
+
+                    dataDistricts.data.data.forEach(function (district){
+                        districts.options[districts.options.length] = new Option(district.DistrictName, district.DistrictID);
                     });
+                });
             }
         };
         districts.onchange =  function () {
@@ -988,7 +1206,10 @@
                     },
                 };
                 var promiseWard = axios(GetWards);
+
                 promiseWard.then(function (dataWard){
+                    // console.log(dataWard.data.data);
+
                     dataWard.data.data.forEach(function (ward){
                         wards.options[wards.options.length] = new Option(ward.WardName, ward.WardCode);
                     });
@@ -999,6 +1220,34 @@
         };
         wards.onchange = function () {
             document.getElementById('error-message').textContent = "";
+            calCostShip()
+                .then(cost => showOrder(cost))
+                .catch(error => console.log(error));
+            getExpectDeliveryTime()
+                .then(time => {
+                    const date = new Date(time*1000);
+
+                    const weekdays = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+
+                    const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+
+                    const dayOfWeek = weekdays[date.getDay()];
+
+                    const month = months[date.getMonth()];
+
+
+                    var timeExpect = document.getElementById('time-expect');
+                    timeExpect.innerHTML = '';
+
+                    const newParagraph = document.createElement("p");
+
+                    const paragraphText = document.createTextNode("Thời gian nhận hàng dự kiến: " + dayOfWeek + ", " + date.getDate() + " " + month + " " + date.getFullYear());
+
+                    newParagraph.appendChild(paragraphText);
+
+                    timeExpect.appendChild(newParagraph);
+                })
+                .catch(error => console.log("Error:", error));
         }
 
         modal_citis.onchange = function () {
@@ -1345,6 +1594,10 @@
 
 </script>
 <script>
+    const formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    });
     function showMessage(){
         let messageBox = document.getElementById("messageBox");
         messageBox.classList.remove("hidden");
@@ -1817,6 +2070,169 @@
         addEventClick();
     }
     showListAddress();
+</script>
+
+<script>
+    var temp_subtotal = 0;
+    var temp_ship_value = 0;
+    // Định nghĩa hàm xử lý sự kiện khi nhấn vào nút "Áp dụng"
+    function applyButtonClicked(button) {
+        // Lấy giá trị của radio button được chọn
+        var selectedRadioButton = document.querySelector('input[name="voucherRadio"]:checked');
+        if (selectedRadioButton) {
+            var voucherCode = selectedRadioButton.value;        //Lấy voucher code
+            var voucherMinimum = selectedRadioButton.getAttribute('data-minimum');      //Lấy giá trị tối thiểu
+            var voucherDiscount = selectedRadioButton.getAttribute('data-discount');    //Lấy giá trị giảm giá
+            var voucherType = selectedRadioButton.getAttribute('data-type');        //Lấy loại voucher
+
+            //Lấy tổng tiền của cart
+            var total_price = document.getElementById('total_cart');
+            //Lấy thành tiền
+            var subtotal = document.getElementById('subtotal');
+
+            //Total
+            var totalPriceElm = total_price.getElementsByClassName('cart_amount');
+            total_price_value = totalPriceElm[0].textContent.trim();
+
+            //Subtotal
+            var subtotalElm = subtotal.getElementsByClassName('cart_amount');
+            subtotal_value = subtotalElm[0].textContent.trim();
+
+            //Shipping value
+            var ship_value_elm = document.getElementById('receive_deli');
+            ship_value = ship_value_elm.textContent.trim();
+
+            var totalPriceNumber = parseFloat(total_price_value.replace(/[.₫]/g, ''));
+            var subtotalNumber = parseFloat(subtotal_value.replace(/[.₫]/g, ''));
+            var shipValueNumber = parseFloat(ship_value.replace(/[.₫]/g, ''));
+
+            // // Tiến hành tính toán dựa trên các giá trị thu được
+            console.log("Voucher code được chọn: " + voucherCode);
+            console.log("Giảm giá của voucher: " + voucherDiscount);
+            console.log("Loại voucher: " + voucherType);
+            console.log("Giá trị tối thiểu: " + voucherMinimum);
+            console.log("Giá trị total_price: " + total_price_value);
+            console.log("Giá trị subtotal: " + subtotal_value);
+            console.log("Gía trị vận chuyển: " + shipValueNumber);
+
+            if (temp_subtotal == 0){
+                temp_subtotal = subtotalNumber;
+            }
+            if (temp_ship_value == 0) {
+                temp_ship_value = shipValueNumber;
+            }
+
+            if (totalPriceNumber >= voucherMinimum){
+                if (voucherType === "DISCOUNT_DIRECT"){
+                    var promotionElement = document.getElementById('promotion_value');
+
+                    promotionElement.innerText = "-" + formatter.format(voucherDiscount);
+
+                    promotionElement.classList.remove("hidden");
+
+                    var new_subtotal = temp_subtotal - voucherDiscount;
+
+                    subtotalElm[0].textContent = formatter.format(new_subtotal);
+
+                    document.getElementById("btn-dimiss-voucher-modal").click();
+                } else if (voucherType === "DISCOUNT_PERCENT") {
+                    var promotionElement = document.getElementById('promotion_value');
+
+                    //Nếu là giảm theo % sẽ thực hiện
+                    //Tính số tiền được giảm
+                    var discountValue = (voucherDiscount / 100) * totalPriceNumber;
+
+                    promotionElement.innerText = "-" + formatter.format(discountValue);
+
+                    promotionElement.classList.remove("hidden");
+
+                    var new_subtotal = temp_subtotal - discountValue;
+
+                    subtotalElm[0].textContent = formatter.format(new_subtotal);
+
+                    //Đưa shipping value về default
+                    //Tắt free ship
+                    var free_ship = document.getElementById("free_ship_promotion");
+                    free_ship.classList.add("hidden");
+                    free_ship.classList.remove("active");
+
+                    //Bật giá trị
+                    //tắt thẻ giá trị
+                    ship_value_elm.innerText = formatter.format(temp_ship_value);
+                    ship_value_elm.classList.remove("hidden");
+                    ship_value_elm.classList.add("active");
+
+                    //tắt thẻ ship giảm giá
+                    var promotion_ship = document.getElementById("promotion_ship");
+
+                    //Hiển thị giá trị ban đầu
+                    promotion_ship.classList.add("hidden");
+                    promotion_ship.classList.remove("active");
+
+                    document.getElementById("btn-dimiss-voucher-modal").click();
+                } else if (voucherType === "FREE_SHIPPING") {
+                    var promotionElement = document.getElementById('promotion_value');
+                    promotionElement.classList.add("hidden");
+                    promotionElement.classList.remove("active");
+
+                    //Hiển thị giá trị cũ
+                    var promotion_ship = document.getElementById("promotion_ship");
+
+                    //Hiển thị giá trị ban đầu
+                    promotion_ship.classList.add("active");
+                    promotion_ship.classList.remove("hidden");
+
+                    promotion_ship.innerText = formatter.format(temp_ship_value);
+
+                    //Tính toán
+                    var new_ship_value = temp_ship_value - voucherDiscount;
+
+                    if (new_ship_value <=0){
+                        //Hiện thẻ free-ship
+                        var free_ship = document.getElementById("free_ship_promotion");
+                        free_ship.classList.add("active");
+                        free_ship.classList.remove("hidden");
+
+                        //tắt thẻ giá trị
+                        ship_value_elm.classList.remove("active");
+                        ship_value_elm.classList.add("hidden");
+
+                        var new_subtotal = temp_subtotal - temp_ship_value;
+
+                        subtotalElm[0].textContent = formatter.format(new_subtotal);
+                    } else {
+                        //Tắt free ship
+                        var free_ship = document.getElementById("free_ship_promotion");
+                        free_ship.classList.add("hidden");
+                        free_ship.classList.remove("active");
+
+                        //Bật giá trị
+                        ship_value_elm.classList.remove("hidden");
+                        ship_value_elm.classList.add("active");
+
+                        //Hiển thị giá trị ship mới
+                        ship_value_elm.innerText = formatter.format(new_ship_value);
+
+                        var new_subtotal = temp_subtotal - voucherDiscount;
+
+                        subtotalElm[0].textContent = formatter.format(new_subtotal);
+                    }
+
+                    document.getElementById("btn-dimiss-voucher-modal").click();
+                }
+                var subtotal_first = document.getElementById("subtotal_first");
+                subtotal_first.innerText=formatter.format(temp_subtotal);
+            } else {
+                console.log("hhhhh");
+            }
+
+            // Thực hiện các thao tác tính toán khác ở đây
+
+        } else {
+            // Nếu không có radio button nào được chọn
+            console.log("Bạn chưa chọn voucher nào.");
+        }
+    }
 </script>
 </body>
 

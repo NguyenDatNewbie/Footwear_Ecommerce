@@ -18,7 +18,7 @@
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon" href="<c:url value="/assets/img/favicon.ico"/>">
 
-    <!-- CSS
+    <!-- CSS 
     ========================= -->
 
 
@@ -44,12 +44,10 @@
             transition: background-color 0.3s;
             cursor: pointer;
         }
-
-        .product_d_right h1 {
+        .product_d_right h1{
             font-weight: 500;
             color: #242424;
         }
-
         .size_product .active {
             background: #ff6a28;
             color: #ffffff;
@@ -268,29 +266,24 @@
             padding: 2px;
             border-radius: 50%;
         }
-
-        .thumb-color a {
+        .thumb-color a{
             border: none;
             padding: 0;
             background: transparent;
         }
-
-        .thumb-color a img {
+        .thumb-color a img{
             border-radius: 50%;
         }
-
-        .activeColor {
-            background: #ff6a28 !important;
-            padding: 2px !important;
+        .activeColor{
+            background: #ff6a28!important;
+            padding: 2px!important;
             border-radius: 50%;
         }
-
-        .thumb-color p {
+        .thumb-color p{
             text-align: center;
             color: #0b0b0b;
             font-weight: 500;
         }
-
         @keyframes slideIn {
             from {
                 top: -50px;
@@ -312,150 +305,6 @@
                 opacity: 0;
             }
         }
-
-        .btn-measurement {
-            width: 200px;
-            font-size: 13px;
-            background-color: #f3f4f4;
-            color: #242424;
-            border: solid 1px #f3f4f4;
-            font-weight: 500;
-            text-decoration: underline;
-        }
-
-        .btn-measurement:hover {
-            color: #ff6a28;
-        }
-
-        .flex {
-            display: flex;
-        }
-
-        #modal-box-measurement .modal-content button.close {
-            left: 92%;
-            top: -55px;
-        }
-
-        #modal-box-measurement {
-            /*top: -60px;*/
-        }
-        .instruction {
-            padding-bottom: 20px;
-        }
-        #modal-box-measurement .modal-dialog.modal-dialog-centered {
-            min-width: 640px;
-        }
-
-        #modal-box-measurement .flex .col-lg-3 {
-            margin-left: 20px;
-        }
-
-        .coupon_inner p {
-            width: 350px;
-            margin: 10px 0;
-            color: #242424;
-            font-family: emoji;
-            font-size: 16px;
-        }
-
-        .coupon_inner input {
-            border: unset;
-            height: unset;
-            background: none;
-            padding: 0;
-            margin-right: 0;
-            color: unset;
-
-        }
-
-        #modal-box-measurement .grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Hai cột có chiều rộng bằng nhau */
-            grid-gap: 10px; /* Khoảng cách giữa các ô */
-            margin: 0 20px;
-            font-size: 12px;
-        }
-
-        .grid-item img {
-            width: 200px;
-        }
-
-        .grid-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .image-container {
-            display: flex;
-            align-items: center; /* Căn giữa theo chiều ngang */
-            justify-content: center; /* Căn giữa theo chiều dọc */
-            margin-bottom: 10px; /* Khoảng cách giữa hình ảnh và đoạn văn bản */
-        }
-
-        .image-container img {
-            max-width: 100%; /* Đảm bảo hình ảnh không vượt quá kích thước của container */
-            max-height: 100%; /* Đảm bảo hình ảnh không vượt quá kích thước của container */
-        }
-
-        #instruction-measurement {
-            width: 300px;
-        }
-        #modal-box-measurement .modal_body{
-            padding: 0;
-        }
-        #modal-box-measurement .product-size {
-            padding: 20px;
-            font-size: 12px;
-            border-top: 1px solid rgba(0, 0, 0, .2);
-        }
-        .title{
-            text-align: center;
-        }
-        #modal-box-measurement .title h4{
-            font-size: 24px;
-            font-weight: bold;
-            color: #242424;
-            font-family: Emoji;
-            margin-bottom: 20px;
-        }
-        /* CSS để hiển thị spinner */
-        .loader-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: none;
-            justify-content: center; /* Căn giữa theo chiều ngang */
-            align-items: center; /* Căn giữa theo chiều dọc */
-            z-index: 9999; /* Đảm bảo loader hiển thị trên cùng */
-            background-color: rgba(0, 0, 0, 0.5); /* Màu nền tối */
-        }
-
-        .loader {
-            height: 50px;
-            aspect-ratio: 2;
-            border: 10px solid #000;
-            box-sizing: border-box;
-            background:
-                    radial-gradient(farthest-side,#fff 98%,#0000) left/20px 20px,
-                    radial-gradient(farthest-side,#fff 98%,#0000) left/20px 20px,
-                    radial-gradient(farthest-side,#fff 98%,#0000) center/20px 20px,
-                    radial-gradient(farthest-side,#fff 98%,#0000) right/20px 20px,
-                    rgba(0, 0, 0, 0.5);
-            background-repeat: no-repeat;
-            filter: blur(4px) contrast(10);
-            animation: l14 1s infinite;
-            justify-content: space-between;
-
-        }
-        @keyframes l14 {
-            100%  {background-position:right,left,center,right}
-        }
     </style>
 
 </head>
@@ -468,10 +317,6 @@
         <img style="width: 90%"
              src="<c:url value="/assets/img/ShoeSizeChart.png"/>"/>
     </div>
-</div>
-<!-- Spinner sẽ được hiển thị tại đây -->
-<div class="loader-container" id="loader-container">
-    <div class="loader"></div>
 </div>
 
 <jsp:include page="header.jsp"/>
@@ -495,12 +340,19 @@
                     <div class="single-zoom-thumb">
                         <ul class="s-tab-zoom owl-carousel single-product-active"
                             id="gallery_01">
-                            <c:forEach items="${images}"
-                                       var="img">
+                            <c:forEach items="${images}" var="img">
+                                <c:set var="isVideo" value="${img.img.indexOf('/video') != -1 ? 0 : -1}" />
                                 <li><a href="#" class="elevatezoom-gallery active"
-                                       data-update="" data-image="${img.img}"
-                                       data-zoom-image="${img.img}"> <img src="${img.img}"
-                                                                          alt="zo-th-1"/>
+                                   data-update="" data-image="${img.img}"
+                                   data-zoom-image="${img.img}">
+                                    <c:choose>
+                                        <c:when test="${isVideo == 0}">
+                                            <video controls src="${img.img}" height="100px" width="100px">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${img.img}" alt="zo-th-1"/>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </a></li>
                             </c:forEach>
                         </ul>
@@ -1279,6 +1131,35 @@
         }
     });
 
+    //Kiểm tra chuỗi img
+    function checkVideoLink(link) {
+        return link.indexOf('/video') !== -1 ? 0 : -1;
+    }
+</script>
+
+<%--Phóng to viddeo--%>
+<script>
+    document.querySelectorAll('.elevatezoom-gallery video').forEach(video => {
+        video.addEventListener('click', function() {
+            const videoDisplayHTML = '<video controls src="'+this.src+'" height="448px" width="448px"></video>';
+
+            const videoDisplay = document.getElementById('img-1');
+            videoDisplay.innerHTML = videoDisplayHTML;
+        });
+    });
+    document.querySelectorAll('.elevatezoom-gallery img').forEach(img => {
+        img.addEventListener('click', function() {
+            const imageDisplayHTML = '<img id="zoom1" src="' + this.src + '" data-zoom-image="' + this.src + '"alt="big-1""></img> ';
+
+            const imageDisplay = document.getElementById('img-1');
+            imageDisplay.innerHTML = imageDisplayHTML;
+
+            // var zoomWindow = document.getElementById('zoomWindowContainer');
+            //
+            // // Thay đổi URL trong thuộc tính background-image của thẻ div
+            // zoomWindow.style.backgroundImage = 'url("' + this.src + '")';
+        });
+    });
 </script>
 <%--Xử lý đo kích thước--%>
 <script>
@@ -1434,6 +1315,7 @@
     }
 
 </script>
+
 
 </body>
 
