@@ -1,4 +1,4 @@
-package com.reidshop.Controller.Config;
+package com.reidshop.Config;
 
 import jakarta.servlet.http.HttpServletRequest;
 

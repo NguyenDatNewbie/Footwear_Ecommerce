@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 public class ReidShopApplication {
 
 	public static void main(String[] args) {
+
 		SpringApplication.run(ReidShopApplication.class, args);
 	}
 

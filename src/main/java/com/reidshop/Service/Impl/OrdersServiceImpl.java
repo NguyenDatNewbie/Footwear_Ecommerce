@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -157,7 +158,7 @@ public class OrdersServiceImpl implements IOrdersService {
                 double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
                 orders.setCostShip(cost);
             }
-            orders.setCreatedAt(Date.valueOf(LocalDate.now()));
+            orders.setCreatedAt();
             // Hết hàng status = 0 add 7 ngày còn hàng = 1
             orders.setLimitReceiveAt(Date.valueOf(LocalDate.now().plusDays(orderCombineRequest.getStoreValid().get(0).getStatus()==1 ? 1 : 7)));
             Orders complete = ordersRepository.save(orders);

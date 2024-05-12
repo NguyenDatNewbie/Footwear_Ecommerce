@@ -77,6 +77,9 @@ public class OrderManagementController {
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(null);
+        List<Orders> ordersTabPrepare = ordersRepository.findOrdersByAccountAndStatus(account.getId(),OrderStatus.WAIT);
+        ordersTabPrepare.addAll(ordersRepository.findOrdersByAccountAndStatus(account.getId(),OrderStatus.PREPARE));
+        modelMap.addAttribute("ordersTabPrepare",ordersTabPrepare);
         modelMap.addAttribute("orders",ordersService.findOrderByAccountQuery(account.getId(), keyword));
         modelMap.addAttribute("keyword",keyword);
         modelMap.addAttribute("account",account);
@@ -121,5 +124,20 @@ public class OrderManagementController {
         evaluate.setCreatedAt(Date.valueOf(LocalDate.now()));
         ordersService.rateSave(evaluate, id);
         return new ModelAndView("redirect:/orders");
+    }
+
+    @GetMapping("/{id}")
+    String detail(@PathVariable Long id,ModelMap modelMap,HttpServletRequest request){
+        String token = CookieHandle.getCookieValue(request, "token");
+        String email = jwtService.extractUsername(token);
+        Account account = accountRepository.findByEmail(email).orElse(null);
+        modelMap.addAttribute("account",account);
+        modelMap.addAttribute("ordersRepository",ordersService);
+        modelMap.addAttribute("ordersService",ordersRepository);
+        modelMap.addAttribute("evaluateRepository",evaluateRepository);
+        modelMap.addAttribute("formatVND",formatVND);
+        modelMap.addAttribute("imageRepository",imageRepository);
+        modelMap.addAttribute("order",ordersRepository.findById(id).orElse(null));
+        return "user/order-detail";
     }
 }
