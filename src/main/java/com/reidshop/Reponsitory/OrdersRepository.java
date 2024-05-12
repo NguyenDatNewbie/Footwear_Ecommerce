@@ -3,6 +3,7 @@ package com.reidshop.Reponsitory;
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Entity.Size;
 import com.reidshop.Model.Enum.OrderStatus;
+import com.reidshop.Model.Enum.PaymentType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,14 +34,14 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     @Query("SELECT COUNT(o) FROM Orders o WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE)")
     Long countOrdersInCurrenYear();
     //Tổng doanh thu toàn bộ của hàng
-    @Query("SELECT COALESCE(SUM(p.totalPrice), 0) FROM Orders p\n")
+    @Query("SELECT COALESCE(SUM(p.totalPrice), 0) FROM Orders p WHERE p.status = 'COMPLETE'")
     double revenueAll();
     //Tổng doanh thu theo ngày
     @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE AND o.status = 'COMPLETE'")
     double totalSalesOfToday();
     @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE (FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')) AND o.status = 'COMPLETE'")
     double totalSalesOfThisMonth();
-    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE)")
+    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE) AND o.status = 'COMPLETE'")
     double totalSalesOfThisYear();
 
     //Lấy tất cả order_id trong ngày
@@ -57,6 +58,19 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     //Lấy order_id trong 1 tháng
     @Query("SELECT o.id FROM Orders o WHERE (FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m')) AND o.status = 'COMPLETE'")
     List<Integer> findAllOrderOfThisMonth();
+
+    @Query("SELECT o.id FROM Orders o WHERE MONTH(o.createdAt) = ?1 AND o.status = 'COMPLETE'")
+    List<Integer> findOrdersByMonth(int month);
+
+//    @Query("SELECT COALESCE(COUNT(o), 0) FROM Orders o WHERE o.paymentType=?1 AND (FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m'))")
+    @Query("SELECT COALESCE(COUNT(o), 0) FROM Orders o WHERE o.paymentType=?1")
+    Long countOrdersByPaymentType(PaymentType paymentType);
+
+    @Query("SELECT COALESCE(COUNT(o), 0) FROM Orders o WHERE o.status=?1")
+    Long countOrdersByStatus(OrderStatus orderStatus);
+
+    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE MONTH(o.createdAt) = ?1 AND o.status = 'COMPLETE'")
+    double totalSalesOfMonth(int month);
 
     //List total_price của các order trong tuần
     @Query("SELECT SUM(o.totalPrice) AS dailyTotal " +
