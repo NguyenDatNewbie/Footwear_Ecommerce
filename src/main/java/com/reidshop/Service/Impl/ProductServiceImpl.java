@@ -31,6 +31,18 @@ public class ProductServiceImpl implements IProductService {
 	}
 
 	@Override
+	public List<Product> top5ProductSoldTop() {
+		List<Product> result = new ArrayList<>();
+		List<Product> products = productRepository.findAllByProductSold();
+		for(int i=0;i<products.size();i++){
+			if(i==4)
+				break;
+			result.add(products.get(i));
+		}
+		return result;
+	}
+
+	@Override
 	public List<Product> findProductsByColors(List<String> colors, List<Product> products){
 		List<Product> result = new ArrayList<>();
 		for (Product p: products) {

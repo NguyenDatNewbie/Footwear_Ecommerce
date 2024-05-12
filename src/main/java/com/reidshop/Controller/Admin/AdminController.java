@@ -1,7 +1,11 @@
 package com.reidshop.Controller.Admin;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reidshop.Model.Entity.Category;
 import com.reidshop.Model.Entity.Orders;
+import com.reidshop.Model.Enum.OrderStatus;
+import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Reponsitory.CategoryRepository;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
@@ -27,6 +31,8 @@ import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Controller
@@ -49,11 +55,28 @@ public class AdminController {
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
     @RequestMapping("")
-    public String index(ModelMap modelMap){
-        List<Category> categoryList = categoryRepository.findAll();
-        List<Double> listRevenue = listRevenueOfThisWeek();
-        modelMap.addAttribute("categories",categoryList);
-        modelMap.addAttribute("listRevenue",listRevenue);
+    public String index(ModelMap modelMap) throws JsonProcessingException {
+        List<Integer> listMonthRecently = getList5MonthRecently(4);
+        List<String> listMonthNames = convertToMonthNames(listMonthRecently);
+
+        modelMap.addAttribute("listMonth", listMonthNames);
+
+        // Chuyển đổi danh sách thành chuỗi JSON
+        ObjectMapper objectMapper = new ObjectMapper();
+        String labelsJson = objectMapper.writeValueAsString(listMonthNames);
+
+        modelMap.addAttribute("labels", labelsJson);
+        modelMap.addAttribute("listRevenue", listRevenue5Month());
+        modelMap.addAttribute("numRecv", ordersRepository.countOrdersByPaymentType(PaymentType.RECEIVE));
+        modelMap.addAttribute("numPayPal", ordersRepository.countOrdersByPaymentType(PaymentType.PAYPAL));
+        modelMap.addAttribute("numMOMO", ordersRepository.countOrdersByPaymentType(PaymentType.MOMO));
+        modelMap.addAttribute("numVNpay", ordersRepository.countOrdersByPaymentType(PaymentType.VNPAY));
+        modelMap.addAttribute("waitOrders", ordersRepository.countOrdersByStatus(OrderStatus.WAIT));
+        modelMap.addAttribute("preOrders", ordersRepository.countOrdersByStatus(OrderStatus.PREPARE));
+        modelMap.addAttribute("readyOrders", ordersRepository.countOrdersByStatus(OrderStatus.ALREADY));
+        modelMap.addAttribute("deliOrders", ordersRepository.countOrdersByStatus(OrderStatus.DELIVERY));
+        modelMap.addAttribute("completeOrders", ordersRepository.countOrdersByStatus(OrderStatus.COMPLETE));
+        modelMap.addAttribute("cancelOrders", ordersRepository.countOrdersByStatus(OrderStatus.CANCEL));
         modelMap.addAttribute("productService",productService);
         modelMap.addAttribute("formatVND",formatVND);
         modelMap.addAttribute("productRepository",productRepository);
@@ -168,8 +191,9 @@ public class AdminController {
         double salesToday = ordersService.totalSalesOfToday();
         double originalPrice = 0;
         for (int i = 0; i < orderIdList.size(); i++){
-            Integer orderId =orderIdList.get(i);
-            originalPrice += orderItemService.totalPriceOriginalOrders(orderId);
+            Integer orderId = orderIdList.get(i);
+            Optional<Orders> order = ordersRepository.findById(Long.valueOf(orderId));
+            originalPrice += (orderItemService.totalPriceOriginalOrders(orderId) + order.get().getVoucherValue());
         }
         double revenueToday = salesToday - originalPrice;
         return revenueToday;
@@ -189,7 +213,8 @@ public class AdminController {
         //Tính số tiền vốn của các hóa đơn bán ra trong 1 tuần
         for (int i = 0; i < listId.size(); i++){
             Integer orderId =listId.get(i);
-            originalPrice += orderItemService.totalPriceOriginalOrders(orderId);
+            Optional<Orders> order = ordersRepository.findById(Long.valueOf(orderId));
+            originalPrice += (orderItemService.totalPriceOriginalOrders(orderId) + order.get().getVoucherValue());
         }
         double revenueThisWeek = salesThisWeek - originalPrice;
         return revenueThisWeek;
@@ -210,11 +235,77 @@ public class AdminController {
         //Tính số tiền vốn của các hóa đơn bán ra trong 1 tuần
         for (int i = 0; i < listId.size(); i++){
             Integer orderId =listId.get(i);
-            originalPrice += orderItemService.totalPriceOriginalOrders(orderId);
+            Optional<Orders> order = ordersRepository.findById(Long.valueOf(orderId));
+            originalPrice += (orderItemService.totalPriceOriginalOrders(orderId) + order.get().getVoucherValue());
         }
         double revenueThisMonth = salesThisMonth - originalPrice;
         return revenueThisMonth;
     }
+
+    public List<Double> listRevenue5Month() {
+        List<Double> List_Revenue = new ArrayList<>();  //danh sách 5 tháng gần đây
+
+        List<Integer> listMonthRecently = getList5MonthRecently(4);  //Hàm lấy 5 tháng gần nhất
+
+        for (Integer month : listMonthRecently){
+            List_Revenue.add(getRevenueOfMonth(month));
+        }
+
+        return List_Revenue;
+    }
+
+    //Funtion tính lợi nhuận theo tháng
+    public Double getRevenueOfMonth(int month){
+        //List order of this month
+        List<Integer> listId = ordersRepository.findOrdersByMonth(month);
+
+        if (listId == null || listId.isEmpty())
+            return 0.0;
+
+        //Doanh số của 1 tháng
+        double salesOfMonth = ordersRepository.totalSalesOfMonth(month);
+
+        double originalPrice = 0;
+
+        //Tính số tiền vốn của các hóa đơn bán ra trong 1 tuần
+        for (int i = 0; i < listId.size(); i++){
+            Integer orderId = listId.get(i);
+            Optional<Orders> order = ordersRepository.findById(Long.valueOf(orderId));
+            originalPrice += (orderItemService.totalPriceOriginalOrders(orderId) + order.get().getVoucherValue());
+        }
+        double revenueThisMonth = salesOfMonth - originalPrice;
+        return revenueThisMonth;
+    }
+
+    //Hàm trả về danh sách 5 tháng gần nhất
+    List<Integer> getList5MonthRecently(int n){
+        //Lấy danh sách 5 tháng gần đây
+        LocalDate currentDate = LocalDate.now();
+        int currentMonth = currentDate.getMonthValue();
+        List<Integer> List_5_Months = new ArrayList<>();  //danh sách 5 tháng gần đây
+
+        for (int i = n; i >= 1; i--) {
+            // Tính toán tháng trước đó
+            int previousMonth = currentMonth - i;
+            if (previousMonth <= 0) {
+                previousMonth += 12;
+            }
+            List_5_Months.add(previousMonth); // Thêm vào danh sách
+        }
+        List_5_Months.add(currentMonth);
+        //Kết thúc việc lấy 5 tháng --> List_5_Months
+        return List_5_Months;
+    }
+
+    List<String> convertToMonthNames(List<Integer> months) {
+        List<String> monthNames = new ArrayList<>();
+        for (int month : months) {
+            monthNames.add(Month.of(month).name());
+        }
+        System.out.println(monthNames);
+        return monthNames;
+    }
+
 
     @GetMapping("/salesThisWeek")
     @ResponseBody
@@ -241,7 +332,7 @@ public class AdminController {
             String[] orderIdArray = orderIds.split(",");
 
             for (String orderId : orderIdArray) {
-                Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderId));
+                Optional<Orders> order = ordersRepository.findById(Long.valueOf(orderId));
                 System.out.println(orderId);
                 double totalOriginalOfOrder = orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
                 System.out.println(totalOriginalOfOrder);
