@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class SpringbootImageApplication {
+
     public Cloudinary cloudinary(){
         Cloudinary c = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", "dhmeeqkgr",

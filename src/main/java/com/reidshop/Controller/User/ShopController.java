@@ -3,6 +3,7 @@ package com.reidshop.Controller.User;
 import com.reidshop.Model.Entity.Category;
 import com.reidshop.Model.Entity.Image;
 import com.reidshop.Model.Entity.Product;
+import com.reidshop.Model.Enum.GENDER;
 import com.reidshop.Reponsitory.CategoryRepository;
 import com.reidshop.Reponsitory.ColorRepository;
 import com.reidshop.Reponsitory.ImageRepository;
@@ -23,7 +24,7 @@ import java.text.NumberFormat;
 import java.util.*;
 
 @Controller
-@RequestMapping("shop")
+@RequestMapping("/shop")
 public class ShopController {
     @Autowired
     IProductService productService;
@@ -74,9 +75,10 @@ public class ShopController {
                                              @RequestParam(value = "sort",defaultValue = "0") int option,
                                              @RequestParam(value = "sizes",required = false) List<String> sizes,
                                              @RequestParam(value = "colors",required = false) List<String> colors,
+                                         @RequestParam(value = "genders",required = false) List<GENDER> genders,
                                             @RequestParam("min") double min, @RequestParam("max") double max)
     {
-        List<Product>  products = getNullableCoursesFiltered(categoryId,sizes);
+        List<Product>  products = getNullableCoursesFiltered(categoryId,sizes,genders);
         products = productService.filterRange(products,min,max);
         if(colors!=null)
             products = productService.findProductsByColors(colors,products);
@@ -113,10 +115,12 @@ public class ShopController {
         return maps;
     }
 
-    public List<Product> getNullableCoursesFiltered(Long categoryId,List<String> sizes) {
+    public List<Product> getNullableCoursesFiltered(Long categoryId,List<String> sizes,List<GENDER> genders) {
         if(sizes == null) {
             sizes = Arrays.asList("DUMMYVALUE");
         }
+        if(genders!=null)
+            return productRepository.getProductsByMulti(categoryId, sizes,genders);
         return productRepository.getProductsByMulti(categoryId, sizes);
     }
 

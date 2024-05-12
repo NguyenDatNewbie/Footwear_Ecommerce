@@ -1,8 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
          isELIgnored="false"%>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
 
-<!-- Main Wrapper Start -->
+
+<df-messenger
+        intent="WELCOME"
+        chat-title="Chat bot reid store"
+        agent-id="d3acc877-6758-47ca-bac6-10f42e0ebe5c"
+        language-code="vi-vn"
+></df-messenger>
 <style>
     #autocomplete-container {
         position: relative;
@@ -66,6 +73,10 @@
     }
     .mini_cart{
         padding: 25px 20px 10px;
+    }
+    .widget-visible iframe{
+        right: 15px !important;
+        bottom: 90px !important;
     }
 </style>
 <!--header area start-->
@@ -144,26 +155,16 @@
                                 <ul>
                                     <li class="active"><a href="<c:url value="/"/>">Trang chủ </a></li>
                                     <li><a href="<c:url value="/shop"/>">Sản phẩm</a></li>
-                                    <li><a href="#">Về chúng tôi<i class="fa fa-angle-down"></i></a>
-                                        <ul class="sub_menu pages">
-                                            <li><a href="about.html">About Us</a></li>
-                                            <li><a href="services.html">services</a></li>
-                                            <li><a href="faq.html">Frequently Questions</a></li>
-                                            <li><a href="login.jsp">login</a></li>
-                                            <li><a href="my-account.html">my account</a></li>
-                                            <li><a href="wishlist.html">Wishlist</a></li>
-                                            <li><a href="404.html">Error 404</a></li>
-                                            <li><a href="compare.html">compare</a></li>
-                                            <li><a href="privacy-policy.html">privacy policy</a></li>
-                                            <li><a href="coming-soon.html">coming soon</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="blog.html">Sự kiện</a></li>
-
                                     <li><a href="#">Liên hệ<i class="fa fa-angle-down"></i></a>
                                         <ul class="sub_menu pages">
                                              <li><a href="/contact/address">Cửa hàng</a></li>
                                             <li><a href="/contact">Hỗ trợ</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#">Chia sẻ<i class="fa fa-angle-down"></i></a>
+                                        <ul class="sub_menu pages">
+                                            <li><a href="/blogs?type=SIZE">Tư vấn chọn size</a></li>
+                                            <li><a href="/blogs?type=TREND">Xu hướng thời trang</a></li>
                                         </ul>
                                     </li>
                                 </ul>
@@ -437,6 +438,62 @@
     document.addEventListener("DOMContentLoaded", function () {
         listFavorite = document.querySelectorAll('.favorites-item');
         loadFavorites();
+
+        const dfMessenger = document.querySelector( 'df-messenger' );
+        if( dfMessenger )
+        {
+            dfMessenger.addEventListener( 'df-messenger-loaded', function( event )
+            {
+
+                // CUSTOMIZE THE DIALOGUE WINDOW
+                $(this.shadowRoot.querySelector( '.df-messenger-wrapper' ).style.bottom = "80px");
+                if(!this.shadowRoot.querySelector('.df-messenger-wrapper').querySelector('df-messenger-chat').shadowRoot.querySelector('df-message-list').shadowRoot)
+                {
+                    console.log(this.shadowRoot.querySelector('.df-messenger-wrapper').querySelector('df-messenger-chat').shadowRoot.querySelector('.chat-min'));
+                }
+                const observer = new MutationObserver(function(mutationsList, observer) {
+                    const messageList = this.shadowRoot.querySelector('.df-messenger-wrapper').querySelector('df-messenger-chat');
+                    if (messageList.shadowRoot) {
+                        // Nếu shadowRoot đã tồn tại, ngừng quan sát và thực hiện thao tác mong muốn
+                        observer.disconnect();
+                        // Thực hiện các thao tác mong muốn khi shadowRoot mở
+                        console.log(messageList.shadowRoot.querySelector('.chat-min'));
+                    }
+                });
+
+                observer.observe(dfMessenger, {
+                    childList: true,
+                    subtree: true
+                });
+
+                // event.preventDefault();
+            });
+
+
+
+        }
     });
+
+
+</script>
+<%--<!--Start of Tawk.to Script-->--%>
+<%--<script type="text/javascript">--%>
+<%--    var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();--%>
+<%--    (function(){--%>
+<%--        var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];--%>
+<%--        s1.async=true;--%>
+<%--        s1.src='https://embed.tawk.to/65fee6271ec1082f04da6dec/1hplr63l3';--%>
+<%--        s1.charset='UTF-8';--%>
+<%--        s1.setAttribute('crossorigin','*');--%>
+<%--        s0.parentNode.insertBefore(s1,s0);--%>
+
+<%--    })();--%>
+<%--</script>--%>
+<!--End of Tawk.to Script-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<script>
+
 
 </script>

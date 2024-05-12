@@ -29,8 +29,6 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
-
-
     <style>
         .grid_list .product_thumb {
             margin-bottom: 0;
@@ -97,7 +95,10 @@
             color: #ffffff;
             outline: none;
         }
+        span{
+            text-decoration: none;
 
+        }
         /* The container */
         .container-color {
             display: block;
@@ -160,6 +161,7 @@
         .container-color p{
             display: none;
         }
+
         .brand-sidebar{
             margin-bottom: 5px;
         }
@@ -198,9 +200,9 @@
             color: #ff6a28;
             width: fit-content;
         }
-        .fa-times:before{
-            margin-right: 5px;
-        }
+        /*.fa-times:before{*/
+        /*    margin-right: 5px;*/
+        /*}*/
         .widget_list {
             margin-bottom: 30px;
         }
@@ -280,6 +282,22 @@
         .content{
             padding-left: 10px;
         }
+        .container-gender{
+            width: 100%;
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .container-gender input{
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .container-gender span{
+            font-size: 14px;
+            line-height: 20px;
+            color: #242424;
+        }
     </style>
 </head>
 
@@ -305,10 +323,23 @@
                             </form>
                         </div>
                         <div class="filter" style="display: none">
-                            <i class="fas fa-times"style="margin-bottom: 10px;font-size: 18px;">Clear Filter</i>
+                            <i class="fas fa-times"style="margin-bottom: 10px;font-size: 18px;"> Xóa bộ lọc</i>
+                        </div>
+                        <div class="widget_list gender">
+                            <h2>Giới tính</h2>
+                            <div>
+                                <label class="container-gender">
+                                    <input type="checkbox" name="gender-checkbox" value="MALE">
+                                    <span>Nam</span>
+                                </label>
+                                <label class="container-gender">
+                                    <input type="checkbox" name="gender-checkbox" value="FEMALE">
+                                    <span>Nữ</span>
+                                </label>
+                            </div>
                         </div>
                         <div class="widget_list sidebar_widget">
-                            <h2>Brand</h2>
+                            <h2>Thương hiệu</h2>
                             <ul style="font-size: 14px" class="ul_menu">
                                 <c:forEach var="category" items="${categoryRepository.findAll()}">
                                     <li class="brand-sidebar">
@@ -326,7 +357,7 @@
 
                         </div>
                         <div class="widget_list size">
-                            <h2>Size</h2>
+                            <h2>Kích thước</h2>
                             <div class="size_product" >
                                 <div class="box box_size" onclick="changeSize(this)">37</div>
                                 <div class="box box_size" onclick="changeSize(this)">38</div>
@@ -342,7 +373,7 @@
                         </div>
 
                         <div class="widget_list color">
-                            <h2>Color</h2>
+                            <h2>Màu sắc</h2>
                             <div style="display: flex">
                                 <c:forEach var="color" items="${colorRepository.findAll()}">
                                     <label class="container-color">
@@ -352,6 +383,8 @@
                                 </c:forEach>
                             </div>
                         </div>
+
+
                     </div>
                     <!--sidebar widget end-->
                 </div>
@@ -642,7 +675,7 @@
         return result;
     }
 
-    function getColor(list){
+    function getValue(list){
         var result = ""
         for(let i =0;i < list.length;i++){
             if(i==list.length-1)
@@ -662,9 +695,10 @@
         var boxSizeClass = document.querySelectorAll('.box_size.active');
         var sizeQuery = getText(boxSizeClass);
         var colorClass = document.querySelectorAll('.container-color.active input');
-        var colorQuery = getColor(colorClass);
+        var colorQuery = getValue(colorClass);
         var query="";
         var categoryDiv = document.querySelector('.brand-sidebar.active');
+        var genders = document.querySelectorAll(".container-gender input[name='gender-checkbox']:checked");
         if(categoryDiv!=null) {
             var categoryId = categoryDiv.querySelector('input').value;
             query += "categoryId=" + categoryId + "&";
@@ -676,7 +710,10 @@
         if(sizeQuery!="")
             query+="sizes="+sizeQuery+"&";
         if(colorQuery!="")
-            query+="colors="+colorQuery;
+            query+="colors="+colorQuery+"&";
+        if (genders.length>0){
+            query+="genders="+getValue(genders);;
+        }
         $.ajax({
             url: "/shop/filter",
             type: "Get",
@@ -843,6 +880,15 @@
             });
         });
 
+        var genderFilter = document.querySelectorAll(".container-gender input[name='gender-checkbox']");
+        console.log(genderFilter);
+        genderFilter.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                filterAll();
+            });
+        });
+
+
         var brands = document.querySelectorAll('.brand-sidebar p')
         brands.forEach(function (button) {
             button.addEventListener("click", function () {
@@ -857,7 +903,14 @@
             });
         });
 
-        document.querySelector('.filter i').addEventListener("click", function () {
+        document.querySelector('.filter i').addEventListener("click", function () {// Lấy tất cả các checkbox
+            var checkboxes = document.querySelectorAll('.container-gender input[name="gender-checkbox"]:checked');
+
+            // Duyệt qua mỗi checkbox và bỏ chọn
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+
             var boxes = document.querySelectorAll('.sidebar_widget .active');
             boxes.forEach(function (box) {
                 if(box.querySelector(".checkmark")) {

@@ -12,10 +12,10 @@
           href="/assets/img/logo/logo.png" style="width: 20px;">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
     <link href="/admin/assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link href="/admin/assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
     <link href="/admin/assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
 
     <!-- Favicon -->
     <link rel="shortcut icon" type="image/x-icon"
@@ -332,39 +332,6 @@
             color: #10a702;
             font-size: 14px;
             font-weight: 600;
-        }
-
-        .promotion_ship {
-            margin-bottom: 0px !important;
-        }
-
-        .vourcher p {
-            color: #242424;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .input-voucher-group {
-            display: flex;
-            align-items: center; /* Để căn giữa theo chiều dọc */
-            margin-bottom: 10px;
-        }
-
-        .input-voucher-group input {
-            margin-right: 5px;
-            width: 70%;
-        }
-
-        .promotion p {
-            color: #242424;
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 15px;
-        }
-
-        .input-vourcher-btn button {
-            /*flex: 4; !* Để chia đều không gian *!*/
         }
 
         .ri-secure-payment-line ul li {
@@ -741,10 +708,7 @@
                                                    type="text" required>
                                         </div>
                                     </div>
-                                    <div class="coupon-area">
-                                        <h4>MÃ KHUYẾN MÃI</h4>
-                                        <button type="button" class="voucher-button" data-bs-toggle="modal" data-bs-target="#modal-voucher">Chọn voucher</button>
-                                    </div>
+
                                     <div id="radio-error-message" class="error-message"></div>
                                     <div class="tab-content" id="tab2">
                                         <div class="flex-2">
@@ -767,82 +731,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="modal fade" id="modal-voucher" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered modal-lg" style="min-width: auto !important;">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" style="font-size: 1.25rem !important; font-weight: 600; color: #242424">Chọn mã khuyến mãi</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
 
-                                    <div class="modal-body">
-                                        <div class="modal-search-voucher">
-                                            <span class="search-title" aria-label="Mã Voucher" tabindex="0">Mã Voucher</span>
-                                            <div class="search-area">
-                                                <div class="input-with-validator-wrapper">
-                                                    <div class="input-with-validator">
-                                                        <input type="text" value="" placeholder="Mã Reid Voucher" maxlength="255">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button class="stardust-button" role="button" tabindex="0" aria-label="Tìm kiếm" aria-disabled="false">
-                                                <span>Tìm kiếm</span>
-                                            </button>
-                                        </div>
-                                        <div class="section section-coupon">
-                                            <c:forEach items="${vourcher_sv.findAllVourcherNotExpired()}" var="vourcher">
-                                                <div class="coupon-item">
-                                                    <div class="coupon-item-left">
-                                                        <img class="dt-width-auto" width="50" height="50" src="https://file.hstatic.net/1000230642/file/icon-coupon-3_c002643e1e1f4f4197daf580deed043a.png" alt="Giảm 120.000đ">
-                                                    </div>
-                                                    <div class="coupon-item-right">
-                                                        <h4 class="discountValue"> Giảm
-                                                            <c:choose>
-                                                                <c:when test="${vourcher.voucherType == 'DISCOUNT_PERCENT'}">
-                                                                    ${formatterDecimal.format(vourcher.discountValue)} %
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    ${formatVND.format(vourcher.discountValue)}
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </h4>
-                                                        <p class="minimumValue">
-                                                            Đơn hàng tối thiểu ${formatVND.format(vourcher.minimumValue)}
-                                                        </p>
-                                                        <p style="font-size: 12px;">
-                                                                ${vourcher.description}
-                                                        </p>
-                                                        <div class="coupon-item-des">
-                                                            <div class="left">
-                                                                <p>
-                                                                    Mã: <b class="code">${vourcher.voucherCode}</b>
-                                                                </p>
-                                                                <p class="expirationDate">
-                                                                    HSD: ${dateFormat.format(vourcher.expirationDate)}
-                                                                </p>
-                                                                <p>
-                                                                    SL: ${vourcher.quantity}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="coupon-button">
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" name="voucherRadio" id="radioVoucherSelect" value="${vourcher.voucherCode}" data-discount="${vourcher.discountValue}" data-type="${vourcher.voucherType}" data-minimum="${vourcher.minimumValue}">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </c:forEach>
-                                            <p class="alert alert-warning mb-2">Coupon không dùng chung với chương trình khuyến mãi, quà tặng</p>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btn-dimiss-voucher-modal">Trở lại</button>
-                                        <button type="button" class="btn btn-danger" style="background-color: #ff6a28; border: none" onclick="applyButtonClicked(this)">Áp dụng</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div><!-- End Large Modal-->
                         <div class="col-lg-6 col-md-6">
                             <div class="coupon_code right" id="cart-sub">
                                 <h3>Hóa đơn</h3>
@@ -852,41 +741,12 @@
                                     </div>
                                     <div class="cart_subtotal" id="price_deli">
                                         <p>Phí giao hàng</p>
+                                        <p class="cart_amount_deli hidden" id="receive_deli"></p>
 
-                                        <div>
-                                            <p class="cart_amount_deli hidden" id="receive_deli" style="margin-bottom: 0px!important;"></p>
-                                            <p class="cart_amount_store hidden" id="free_ship_promotion" style="margin-bottom: 0px!important;">Miễn phí</p>
-
-                                            <p class="promotion_ship hidden" id="promotion_ship"
-                                               style="color: #a7bcb9;
-                                               font-weight: 300;
-                                               text-decoration: line-through;
-                                               font-style: italic;
-                                               font-size: 14px"></p>
-                                        </div>
                                         <p class="cart_amount_store active" id="receive_store">Miễn phí</p>
-                                    </div>
-                                    <div class="cart_subtotal" id="promotion">
-                                        <p>Giảm giá</p>
-                                        <p class="cart_amount_deli hidden" id="promotion_value"></p>
                                     </div>
                                     <div class="cart_subtotal" id="subtotal">
                                         <p>Thành tiền</p>
-
-                                    </div>
-                                    <div class="cart_subtotal" id="subtotal_pro">
-                                        <p></p>
-                                        <p class="subtotal_first active" id="subtotal_first"
-                                           style="color: #a7bcb9;
-                                               font-weight: 300;
-                                               margin-bottom: 0px;
-                                               text-decoration: line-through;
-                                               font-style: italic;
-                                               margin-top: -20px;
-                                               font-size: 14px"></p>
-                                    </div>
-                                    <div id="time-expect">
-
                                     </div>
                                     <div class="ri-secure-payment-line">
                                         <h4 style="font-size: 14px">Chọn phương thức thanh toán:</h4>
@@ -1007,9 +867,6 @@
 
 <!-- Main JS -->
 <script src="<c:url value="/assets/js/main.js"/>"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/admin/assets/vendor/apexcharts/apexcharts.min.js"></script>
-<script src="/admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
@@ -1140,74 +997,15 @@
         }
     }
 
-    function getExpectDeliveryTime(){
-        var city = document.getElementById('city');
-        var district = document.getElementById('district');
-        var ward = document.getElementById('ward');
-        const token = "31d3a81c-d94f-11ee-8026-f29d8335aebb";
-        const shop_id = 4932018;
-        const service_id = 53320;
-
-        var valueCity = city.options[city.selectedIndex].value;
-        var valueDistrict = district.options[district.selectedIndex].value;
-        var valueWard = ward.options[ward.selectedIndex].value;
-
-        if (city.value == "")
-            valueCity = "";
-        if (district.value == "")
-            valueDistrict = "";
-        if (ward.value == "")
-            valueWard = "";
-
-        var getDeliveryTime = {
-            url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/leadtime",
-            method: "GET",
-            responseType: "application/json",
-            headers: {
-                "token": token
-            },
-            params: {
-                "shop_id": shop_id,
-                "service_id": service_id,
-                "from_district_id": 1451,
-                "from_ward_code": 20912,
-                "to_ward_code": valueWard,
-                "to_district_id": valueDistrict
-            }
-        };
-
-        return new Promise((resolve, reject) => {
-            var store = localStorage.getItem('storeValid');
-
-            if (ward.value === "" || ward.value === null) {
-                return resolve(0);
-            } else {
-                const time = axios(getDeliveryTime);
-                time.then(function (result) {
-                    var leadtime = result.data.data.leadtime;
-                    return resolve(leadtime);
-                })
-                .catch(error => {
-                    console.error('Error retrieving total:', error);
-                });
-            }
-        });
-    }
-
     function calCostShip() {
         var city = document.getElementById('city');
         var district = document.getElementById('district');
         var ward = document.getElementById('ward');
-        const token = "31d3a81c-d94f-11ee-8026-f29d8335aebb";
-        const shop_id = 4932018;
-        const service_id = 53320;
-        const weight = 2000;
-
-        var valueCity = city.options[city.selectedIndex].value;
-        var valueDistrict = district.options[district.selectedIndex].value;
-        var valueWard = ward.options[ward.selectedIndex].value;
 
 
+        var valueCity = city.options[city.selectedIndex].textContent;
+        var valueDistrict = district.options[district.selectedIndex].textContent;
+        var valueWard = ward.options[ward.selectedIndex].textContent;
         if (city.value == "")
             valueCity = "";
         if (district.value == "")
@@ -1498,7 +1296,7 @@
         }
 
     }
-    // function renderCity(data) {
+        // function renderCity(data) {
     //     for (const x of data) {
     //         citis.options[citis.options.length] = new Option(x.Name, x.Id);
     //         citis1.options[citis1.options.length] = new Option(x.Name, x.Id);
@@ -1807,7 +1605,6 @@
             messageBox.classList.add("hidden");
         }, 2000);
     }
-
     // Show Value Order
     function showOrder(cost) {
         var total_price = document.getElementById('total_cart');
@@ -1815,6 +1612,11 @@
         let price = 0;
         if (cost === null)
             cost = 0;
+
+        const formatter = new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND'
+        });
 
         if (document.querySelector('.product-price.product_total')) {
             // Xóa đơn vị tiền tệ và xóa , và số sau ,

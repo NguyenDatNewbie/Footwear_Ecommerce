@@ -278,31 +278,31 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
 /*-- 
     Scroll Up 
 -----------------------------------------*/
-#scrollUp {
-  background: #242424 none repeat scroll 0 0;
-  bottom: 85px;
-  color: #ffffff;
-  cursor: pointer;
-  display: none;
-  font-size: 20px;
-  height: 45px;
-  line-height: 39px;
-  position: fixed;
-  right: 12px;
-  text-align: center;
-  width: 45px;
-  z-index: 9999;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  -webkit-transition: .3s;
-  transition: .3s;
-}
-#scrollUp:hover i {
-  animation-name: fadeInUp;
-  animation-duration: 1s;
-  animation-fill-mode: both;
-  animation-iteration-count: infinite;
-}
+/*#scrollUp {*/
+/*  background: #242424 none repeat scroll 0 0;*/
+/*  bottom: 85px;*/
+/*  color: #ffffff;*/
+/*  cursor: pointer;*/
+/*  display: none;*/
+/*  font-size: 20px;*/
+/*  height: 45px;*/
+/*  line-height: 39px;*/
+/*  position: fixed;*/
+/*  right: 12px;*/
+/*  text-align: center;*/
+/*  width: 45px;*/
+/*  z-index: 9999;*/
+/*  border-radius: 50%;*/
+/*  border: 2px solid #fff;*/
+/*  -webkit-transition: .3s;*/
+/*  transition: .3s;*/
+/*}*/
+/*#scrollUp:hover i {*/
+/*  animation-name: fadeInUp;*/
+/*  animation-duration: 1s;*/
+/*  animation-fill-mode: both;*/
+/*  animation-iteration-count: infinite;*/
+/*}*/
 
 /*-- 
     - Main Wrapper
@@ -1504,7 +1504,7 @@ input:-ms-input-placeholder, textarea:-ms-input-placeholder {
   display: block;
   padding: 15px 25px;
   color: #242424;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 26px;
   text-transform: capitalize;
   font-weight: 500;
