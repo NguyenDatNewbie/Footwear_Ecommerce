@@ -8,8 +8,10 @@ import lombok.Data;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Table
@@ -49,13 +51,15 @@ public class Orders {
     PaymentType paymentType;
 
     @Column
-    @Temporal(TemporalType.DATE) // Chỉ lấy ngày, bỏ qua giờ và phút
-    @DateTimeFormat(pattern = "dd--MM--yyyy") // Định dạng ngày theo ý muốn
+    @DateTimeFormat(pattern = "hh:mm dd--MM--yyyy") // Định dạng ngày theo ý muốn
     Date createdAt;
 
     @Column
-    @Temporal(TemporalType.DATE)
-    @DateTimeFormat(pattern = "dd--MM--yyyy")
+    @DateTimeFormat(pattern = "hh:mm dd--MM--yyyy") // Định dạng ngày theo ý muốn
+    Date updatedAt;
+
+    @Column
+    @DateTimeFormat(pattern = "hh:mm dd--MM--yyyy")
     Date limitReceiveAt; // Thời gian hạn nhận khi order tại cửa hàng
 
     @ManyToOne
@@ -71,4 +75,41 @@ public class Orders {
 
     @OneToMany(mappedBy = "orders")
     List<ProductOutOfStock> productOutOfStocks;
+
+    public void setCreatedAt() {
+        createdAt = Calendar.getInstance().getTime();
+    }
+    public String getCreatedAt() {
+        if (createdAt == null) {
+            return ""; // Hoặc bạn có thể trả về null nếu không có giá trị
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+        return formatter.format(createdAt);
+    }
+
+    public String getUpdatedAt() {
+        if (updatedAt == null) {
+            return ""; // Hoặc bạn có thể trả về null nếu không có giá trị
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+        return formatter.format(updatedAt);
+    }
+
+    public void setUpdatedAt() {
+        this.updatedAt = Calendar.getInstance().getTime();
+    }
+
+    public String getLimitReceiveAt() {
+        if (limitReceiveAt == null) {
+            return ""; // Hoặc bạn có thể trả về null nếu không có giá trị
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+        return formatter.format(limitReceiveAt);
+    }
+
+    public void setLimitReceiveAt() {
+        limitReceiveAt = Calendar.getInstance().getTime();
+    }
+
+
 }

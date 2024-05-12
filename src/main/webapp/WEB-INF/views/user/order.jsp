@@ -325,7 +325,7 @@
                                     </div>
                                 </div>
                                 <div class="solid">
-                                    <div class="products">
+                                    <div class="products" onclick="detail(${order.id})">
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -425,7 +425,7 @@
                                     </div>
                                 </div>
                                 <div class="solid">
-                                    <div class="products">
+                                    <div class="products" onclick="detail(${order.id})">
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -525,7 +525,7 @@
                                     </div>
                                 </div>
                                 <div class="solid">
-                                    <div class="products">
+                                    <div class="products" onclick="detail(${order.id})">
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -623,7 +623,7 @@
                                     </div>
                                 </div>
                                 <div class="solid">
-                                    <div class="products">
+                                    <div class="products" onclick="detail(${order.id})">
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -721,7 +721,7 @@
                                     </div>
                                 </div>
                                 <div class="solid">
-                                    <div class="products">
+                                    <div class="products" onclick="detail(${order.id})">
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -819,7 +819,7 @@
                                     </div>
                                 </div>
                                 <div class="solid">
-                                    <div class="products">
+                                    <div class="products" onclick="detail(${order.id})">
                                         <c:forEach items="${order.productOutOfStocks}" var="item">
                                             <div class="product">
                                                 <div><img
@@ -1059,7 +1059,11 @@
        document.getElementById('order-search').addEventListener('click',function (){
            tranferLink();
        });
+
     });
+    function detail(id){
+        location.href = "/orders/"+id;
+    }
 </script>
 
 </body>

@@ -48,7 +48,12 @@
       </a>
     </li><!-- End Category Page Nav -->
 
-
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/posts"/>">
+        <i class="bi bi-file-earmark-word"></i>
+        <span>Posts</span>
+      </a>
+    </li><!-- End Category Page Nav -->
   </ul>
 
 </aside><!-- End Sidebar-->

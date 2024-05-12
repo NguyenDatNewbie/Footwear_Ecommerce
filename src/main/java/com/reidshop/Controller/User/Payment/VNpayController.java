@@ -1,17 +1,13 @@
 package com.reidshop.Controller.User.Payment;
 
-import com.reidshop.Controller.Config.VnpayConfig;
+import com.reidshop.Config.VnpayConfig;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Model.Request.OrderCombineRequest;
-import com.reidshop.Model.Request.StoreValidRequest;
-import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
-import com.reidshop.Service.Impl.OrdersServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jakarta.websocket.Session;
 import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,9 +18,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 

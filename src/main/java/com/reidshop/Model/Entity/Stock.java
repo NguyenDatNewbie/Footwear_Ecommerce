@@ -30,6 +30,4 @@ public class Stock {
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
 
-    @OneToMany(mappedBy = "stock")
-    List<Inventory> inventories;
 }
