@@ -931,8 +931,8 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="/admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="/admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="/admin/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/admin/assets/vendor/tinymce/tinymce.min.js"></script>
 <!-- Plugins JS -->
 <script src="<c:url value="/assets/js/plugins.js"/>"></script>

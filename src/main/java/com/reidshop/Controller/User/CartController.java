@@ -82,6 +82,7 @@ public class CartController {
     @ResponseBody
     List<StoreValidResponse> getStore (@RequestBody OrderCombineRequest orderCombineRequest,@PathVariable ReceiveType receiveType){
         List<StoreValidResponse> stores =  storeService.findAllStoreIsStock(orderCombineRequest.getCarts(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard(), receiveType);
+        System.out.println(stores.size());
         return stores;
     }
 

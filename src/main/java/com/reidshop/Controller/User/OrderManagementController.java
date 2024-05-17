@@ -1,10 +1,7 @@
 package com.reidshop.Controller.User;
 
 import com.reidshop.Model.Cookie.CookieHandle;
-import com.reidshop.Model.Entity.Account;
-import com.reidshop.Model.Entity.Evaluate;
-import com.reidshop.Model.Entity.OrderItem;
-import com.reidshop.Model.Entity.Orders;
+import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Mapper.CartRequestMapper;
 import com.reidshop.Model.Request.CartRequest;
@@ -120,6 +117,7 @@ public class OrderManagementController {
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(null);
+        evaluate.setOrders(ordersRepository.findById(id).orElse(null));
         evaluate.setAccount(account);
         evaluate.setCreatedAt(Date.valueOf(LocalDate.now()));
         ordersService.rateSave(evaluate, id);
@@ -140,4 +138,6 @@ public class OrderManagementController {
         modelMap.addAttribute("order",ordersRepository.findById(id).orElse(null));
         return "user/order-detail";
     }
+
+
 }
