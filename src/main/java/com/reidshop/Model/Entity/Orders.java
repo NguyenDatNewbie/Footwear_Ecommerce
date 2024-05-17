@@ -1,8 +1,10 @@
 package com.reidshop.Model.Entity;
 
+import com.nimbusds.openid.connect.sdk.assurance.evidences.Voucher;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
+import com.reidshop.Model.Enum.VoucherType;
 import lombok.Data;
 
 import jakarta.persistence.*;
@@ -75,6 +77,12 @@ public class Orders {
 
     @OneToMany(mappedBy = "orders")
     List<ProductOutOfStock> productOutOfStocks;
+
+    @ManyToOne
+    @JoinColumn(name = "voucher_id")
+    Vourcher vourcher;
+
+    double voucherValue;
 
     public void setCreatedAt() {
         createdAt = Calendar.getInstance().getTime();

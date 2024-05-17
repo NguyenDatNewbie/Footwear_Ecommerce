@@ -13,4 +13,5 @@ public class OrderCombineRequest {
     String city;
     String district;
     String ward;
+    String voucher;
 }

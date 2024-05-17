@@ -91,11 +91,11 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12">
-                        <div class="slider_content content_one">
-                            <img src="../assets/img/slider/content3.png" alt="">
-                            <p>the wooboom clothing summer collection is back at half price</p>
-                            <a href="shop.html">Discover Now</a>
-                        </div>    
+<%--                        <div class="slider_content content_one">--%>
+<%--                            <img src="../assets/img/slider/content3.png" alt="">--%>
+<%--                            <p>the wooboom clothing summer collection is back at half price</p>--%>
+<%--                            <a href="shop.html">Discover Now</a>--%>
+<%--                        </div>    --%>
                     </div>
                 </div>
             </div>    
@@ -104,11 +104,11 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12">
-                        <div class="slider_content content_two">
-                            <img src="../assets/img/slider/content4.png" alt="">
-                            <p>the wooboom clothing summer collection is back at half price</p>
-                            <a href="shop.html">Discover Now</a>
-                        </div>    
+<%--                        <div class="slider_content content_two">--%>
+<%--                            <img src="../assets/img/slider/content4.png" alt="">--%>
+<%--                            <p>the wooboom clothing summer collection is back at half price</p>--%>
+<%--                            <a href="shop.html">Discover Now</a>--%>
+<%--                        </div>    --%>
                     </div>
                 </div>
             </div>
@@ -117,11 +117,11 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-12">
-                        <div class="slider_content content_three">
-                            <img src="../assets/img/slider/content5.png" alt="">
-                            <p>the wooboom clothing summer collection is back at half price</p>
-                            <a href="shop.html">Discover Now</a>
-                        </div>    
+<%--                        <div class="slider_content content_three">--%>
+<%--                            <img src="../assets/img/slider/content5.png" alt="">--%>
+<%--                            <p>the wooboom clothing summer collection is back at half price</p>--%>
+<%--                            <a href="shop.html">Discover Now</a>--%>
+<%--                        </div>    --%>
                     </div>
                 </div>
             </div>
@@ -129,44 +129,13 @@
     </div>
     <!--slider area end-->
 
-    <!--banner area start-->
-    <div class="banner_section banner_section_three">
-        <div class="container-fluid">
-            <div class="row" style="justify-content: center;">
-               <div class="col-lg-3 col-md-6">
-                    <div class="banner_area">
-                        <div class="banner_thumb">
-                            <a href="shop.html"><img src="/assets/img/slider/20shoes_5.jpg" alt="#"></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="banner_area">
-                        <div class="banner_thumb">
-                            <a href="shop.html"><img src="/assets/img/slider/9899439.jpg" alt="#"></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="banner_area bottom">
-                        <div class="banner_thumb">
-                            <a href="shop.html"><img src="/assets/img/slider/27shoes_1.jpg" alt="#"></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--banner area end-->
-
     <!--product section area start-->
     <section class="product_section womens_product">
         <div class="container">
             <div class="row">   
                 <div class="col-12">
-                   <div class="section_title">
-                       <h2>Sản phẩm của chúng tôi</h2>
-                       <p>Các sản phẩm thiết kế hiện đại,mới nhất</p>
+                   <div class="section_title" style="margin-bottom: 0px">
+                       <h2>Sản phẩm bán chạy</h2>
                    </div>
                 </div> 
             </div>    
@@ -175,116 +144,191 @@
                     <div class="col-12">
                         <div class="product_tab_button">
                             <ul class="nav" role="tablist">
-                                <c:forEach var="category" items="${categories}">
-                                    <li>
-                                    <c:choose>
-                                        <c:when test="${category.id==1}">
-                                            <a class="active" data-toggle="tab" href="#${category.name}" role="tab" aria-controls="${category.name}" aria-selected="true">${category.name}</a>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <a data-toggle="tab" href="#${category.name}" role="tab" aria-controls="${category.name}" aria-selected="false">${category.name}</a>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    </li>
-                                </c:forEach>
+                                <li>
+                                    <a class="active" data-toggle="tab" href="#byAll" role="tab"  aria-selected="true">Tất cả</a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" href="#byYear" role="tab"  aria-selected="true">Năm</a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" href="#byMonth" role="tab"  aria-selected="true">Tháng</a>
+                                </li>
+                                <li>
+                                    <a data-toggle="tab" href="#byWeek" role="tab"  aria-selected="true">Tuần</a>
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
                 <div class="tab-content">
-                    <c:forEach var="category" items="${categories}">
-                        <c:choose>
-                            <c:when test="${category.id==1}">
-                                <div class="tab-pane fade show active" id="${category.name}" role="tabpanel">
-                                    <div class="product_container">
-                                        <div class="row product_column4">
-                                            <c:forEach items="${productRepository.findAllByCategoryAndIsParent(category.id)}" var="product">
-                                                <div class="col-lg-3">
-                                                    <div class="single_product">
-                                                        <div class="product_thumb">
-                                                            <c:if test="${product.images.size()>0}">
-                                                                <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
-                                                            </c:if>
-                                                            <c:if test="${product.images.size()>1}">
-                                                                <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
-                                                            </c:if>
+                        <div class="tab-pane fade show active" id="byAll" role="tabpanel">
+                            <div class="product_container">
+                                <div class="row product_column4">
+                                    <c:forEach items="${productSoldAll}" var="product">
+                                        <div class="col-lg-3">
+                                            <div class="single_product">
+                                                <div class="product_thumb">
+                                                    <c:if test="${product.images.size()>0}">
+                                                        <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
+                                                    </c:if>
+                                                    <c:if test="${product.images.size()>1}">
+                                                        <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
+                                                    </c:if>
 
-                                                            <div class="quick_button">
-                                                                <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
-                                                            </div>
+                                                    <div class="quick_button">
+                                                        <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
+                                                    </div>
 
 
-                                                            <div class="product_sale">
-                                                                <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="product_content grid_content" >
-                                                            <h3><a href="product-details.jsp">${product.name}</a></h3>
-                                                            <c:choose>
-                                                                <c:when test="${product.promotion>0}">
-                                                                    <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
-                                                                    <span class="old_price">${formatVND.format(product.price)}</span>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <span class="current_price">${formatVND.format(product.price)}</span>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </div>
+                                                    <div class="product_sale">
+                                                        <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
                                                     </div>
                                                 </div>
-                                            </c:forEach>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="tab-pane fade" id="${category.name}" role="tabpanel">
-                                    <div class="product_container">
-                                        <div class="row product_column4">
-                                            <c:forEach items="${productRepository.findAllByCategory(category.id)}" var="product">
-                                                <div class="col-lg-3">
-                                                    <div class="single_product">
-                                                        <div class="product_thumb">
-                                                            <c:if test="${product.images.size()>0}">
-                                                                <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
-                                                            </c:if>
-                                                            <c:if test="${product.images.size()>1}">
-                                                                <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
-                                                            </c:if>
-
-                                                            <div class="quick_button">
-                                                                <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
-                                                            </div>
-
-
-                                                            <div class="product_sale">
-                                                                <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
-                                                            </div>
-
-                                                        </div>
-                                                        <div class="product_content grid_content" >
-                                                            <h3><a href="product-details.jsp">${product.name}</a></h3>
-                                                            <c:choose>
-                                                                <c:when test="${product.promotion>0}">
-                                                                    <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
-                                                                    <span class="old_price">${formatVND.format(product.price)}</span>
-                                                                </c:when>
-                                                                <c:otherwise>
-                                                                    <span class="current_price">${formatVND.format(product.price)}</span>
-                                                                </c:otherwise>
-                                                            </c:choose>
-                                                        </div>
-                                                    </div>
+                                                <div class="product_content grid_content" >
+                                                    <h3><a href="product-details.jsp">${product.name}</a></h3>
+                                                    <c:choose>
+                                                        <c:when test="${product.promotion>0}">
+                                                            <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                                            <span class="old_price">${formatVND.format(product.price)}</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="current_price">${formatVND.format(product.price)}</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </div>
-                                            </c:forEach>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="byYear" role="tabpanel">
+                            <div class="product_container">
+                                <div class="row product_column4">
+                                    <c:forEach items="${productSoldOfYear}" var="product">
+                                        <div class="col-lg-3">
+                                            <div class="single_product">
+                                                <div class="product_thumb">
+                                                    <c:if test="${product.images.size()>0}">
+                                                        <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
+                                                    </c:if>
+                                                    <c:if test="${product.images.size()>1}">
+                                                        <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
+                                                    </c:if>
+
+                                                    <div class="quick_button">
+                                                        <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
+                                                    </div>
+
+
+                                                    <div class="product_sale">
+                                                        <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
+                                                    </div>
+
+                                                </div>
+                                                <div class="product_content grid_content" >
+                                                    <h3><a href="product-details.jsp">${product.name}</a></h3>
+                                                    <c:choose>
+                                                        <c:when test="${product.promotion>0}">
+                                                            <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                                            <span class="old_price">${formatVND.format(product.price)}</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="current_price">${formatVND.format(product.price)}</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </div>
+                    <div class="tab-pane fade" id="byMonth" role="tabpanel">
+                        <div class="product_container">
+                            <div class="row product_column4">
+                                <c:forEach items="${productSoldOfMonth}" var="product">
+                                    <div class="col-lg-3">
+                                        <div class="single_product">
+                                            <div class="product_thumb">
+                                                <c:if test="${product.images.size()>0}">
+                                                    <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
+                                                </c:if>
+                                                <c:if test="${product.images.size()>1}">
+                                                    <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
+                                                </c:if>
+
+                                                <div class="quick_button">
+                                                    <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
+                                                </div>
+
+
+                                                <div class="product_sale">
+                                                    <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
+                                                </div>
+
+                                            </div>
+                                            <div class="product_content grid_content" >
+                                                <h3><a href="product-details.jsp">${product.name}</a></h3>
+                                                <c:choose>
+                                                    <c:when test="${product.promotion>0}">
+                                                        <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                                        <span class="old_price">${formatVND.format(product.price)}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="current_price">${formatVND.format(product.price)}</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="byWeek" role="tabpanel">
+                        <div class="product_container">
+                            <div class="row product_column4">
+                                <c:forEach items="${productSoldOfWeek}" var="product">
+                                    <div class="col-lg-3">
+                                        <div class="single_product">
+                                            <div class="product_thumb">
+                                                <c:if test="${product.images.size()>0}">
+                                                    <a class="primary_img" href="/product/${product.id}"><img src="${product.images.get(0).img}" alt=""></a>
+                                                </c:if>
+                                                <c:if test="${product.images.size()>1}">
+                                                    <a class="secondary_img" href="/product/${product.id}"><img src="${product.images.get(1).img}" alt=""></a>
+                                                </c:if>
 
-                    </c:forEach>
+                                                <div class="quick_button">
+                                                    <a href="/product/${product.id}" title="quick_view">Xem sản phẩm</a>
+                                                </div>
+
+
+                                                <div class="product_sale">
+                                                    <c:if test="${product.promotion>0}"><span>-${product.promotion}%</span></c:if>
+                                                </div>
+
+                                            </div>
+                                            <div class="product_content grid_content" >
+                                                <h3><a href="product-details.jsp">${product.name}</a></h3>
+                                                <c:choose>
+                                                    <c:when test="${product.promotion>0}">
+                                                        <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                                        <span class="old_price">${formatVND.format(product.price)}</span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="current_price">${formatVND.format(product.price)}</span>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:forEach>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
                
@@ -292,52 +336,21 @@
     </section>
     <!--product section area end-->
     
-    <!--banner area start-->
-    <section class="banner_section banner_section_three">
-        <div class="container-fluid">
-            <div class="row ">
-               <div class="col-lg-6 col-md-6">
-                    <div class="banner_area">
-                        <div class="banner_thumb">
-                            <a href="shop.html"><img src="../assets/img/bg/banner11.jpg" alt="#"></a>
-                            <div class="banner_content">
-                               <h1>Handbag <br> Men’s Collection</h1>
-                                <a href="shop.html">Discover Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6">
-                    <div class="banner_area">
-                        <div class="banner_thumb">
-                            <a href="shop.html"><img src="../assets/img/bg/banner12.jpg" alt="#"></a>
-                            <div class="banner_content">
-                               <h1>Sneaker <br> Men’s Collection</h1>
-                                <a href="shop.html">Discover Now</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--banner area end-->
-    
     <!--product section area start-->
-    <section class="product_section womens_product bottom">
+    <section class="product_section womens_product bottom" id="recommend" style="display: none">
         <div class="container">
             <div class="row">   
                 <div class="col-12">
                    <div class="section_title">
-                       <h2>Sản phẩm thịnh hành</h2>
-                       <p>Sản phẩm ấn tượng và bán chạy nhất</p>
+                       <h2>Sản phẩm đề xuất</h2>
+                       <p>Dựa theo sở thích của bạn</p>
                    </div>
                 </div> 
             </div>    
             <div class="product_area"> 
                  <div class="row">
                     <div class="product_carousel product_three_column4 owl-carousel">
-                        <c:forEach items="${productService.findAllByProductSoldTop()}" var="product">
+                        <c:forEach items="${productRecommend}" var="product">
                             <div class="col-lg-3">
                                 <div class="single_product">
                                     <div class="product_thumb">
@@ -381,7 +394,36 @@
     </section>
     <!--product section area end-->
 
-
+    <!--banner area start-->
+    <section class="banner_section banner_section_three">
+        <div class="container-fluid">
+            <div class="row ">
+                <div class="col-lg-6 col-md-6">
+                    <div class="banner_area" style="height: 100%">
+                        <div class="banner_thumb" style="height: 100%">
+                            <a href="shop.html"><img src="../assets/img/bg/shoes-banner.jpg" alt="#" style="width: 100%; height: 100%"></a>
+                            <div class="banner_content">
+                                <h1>Adidas <br> Men’s Collection</h1>
+                                <a href="shop.html">Discover Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div class="banner_area">
+                        <div class="banner_thumb">
+                            <a href="shop.html"><img src="../assets/img/bg/banner12.jpg" alt="#"></a>
+                            <div class="banner_content">
+                                <h1>Balenciaga <br> Men’s Collection</h1>
+                                <a href="shop.html">Discover Now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--banner area end-->
 
     <jsp:include page="footer.jsp"/>
     <!-- modal area start-->
@@ -515,6 +557,13 @@
 <!-- Main JS -->
 <script src="<c:url value="/assets/js/main.js"/>"></script>
 
+<script>
+    window.addEventListener('load',function (){
+        var recommend = document.getElementById("recommend");
+        if(recommend.querySelectorAll('.single_product').length>0)
+            recommend.style.display = 'block';
+    });
+</script>
 
 
 </body>

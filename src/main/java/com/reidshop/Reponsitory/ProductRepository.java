@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +29,14 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findAllByCategoryAndIsParent(Long id);
     @Query("SELECT p from Product p where p.enable=true order by p.sold desc ")
     List<Product> findAllByProductSold();
+    @Query("SELECT p from Product p inner join OrderItem oi where p.enable=true and YEAR(oi.order.createdAt)=YEAR(CURRENT_DATE()) order by p.sold desc ")
+    List<Product> findAllByProductSoldOfYear();
 
+    @Query("SELECT p from Product p inner join OrderItem oi where p.enable=true and MONTH(oi.order.createdAt)=MONTH(CURRENT_DATE()) order by p.sold desc ")
+    List<Product> findAllByProductSoldOfMonth();
+
+    @Query("SELECT p from Product p inner join OrderItem oi where DATE(oi.order.createdAt)>= DATE(:startOfWeek)  AND DATE(oi.order.createdAt)<=DATE(:endOfWeek) and p.enable=true order by p.sold desc ")
+    List<Product> findAllBySoldOfWeek(@Param("startOfWeek") Date startOfWeek, @Param("endOfWeek") Date endOfWeek);
     @Query("SELECT p from Product p where p.id=?1 and p.enable=true")
     Product findByProductId(Long productId);
 

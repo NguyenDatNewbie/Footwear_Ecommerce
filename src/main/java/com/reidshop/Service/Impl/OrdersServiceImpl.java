@@ -1,15 +1,14 @@
 package com.reidshop.Service.Impl;
 
+import com.nimbusds.openid.connect.sdk.assurance.evidences.Voucher;
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
+import com.reidshop.Model.Enum.VoucherType;
 import com.reidshop.Model.Request.OrderCombineRequest;
-import com.reidshop.Reponsitory.AccountRepository;
-import com.reidshop.Reponsitory.EvaluateRepository;
-import com.reidshop.Reponsitory.OrdersRepository;
-import com.reidshop.Reponsitory.ProductOutOfStockRepository;
+import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.Handle.DistanceService;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
@@ -46,6 +45,8 @@ public class OrdersServiceImpl implements IOrdersService {
     DistanceService distanceService;
     @Autowired
     EvaluateRepository evaluateRepository;
+    @Autowired
+    VoucherRepository voucherRepository;
 
 
     public OrdersServiceImpl(OrdersRepository ordersRepository) {
@@ -139,12 +140,16 @@ public class OrdersServiceImpl implements IOrdersService {
     public void savePayment(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request){
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
-
         Orders orders = orderCombineRequest.getOrders();
+        Vourcher voucher = voucherRepository.findByVoucherCode(orderCombineRequest.getVoucher()).orElse(null);
+        orders.setVourcher(voucher);
+
         Account account = accountRepository.findByEmail(email).orElse(null);
         orders.setAccount(account);
         Store store = new Store();
         store.setId(orderCombineRequest.getStoreValid().get(0).getStore().getId());
+        double totalPrice = 0.0;
+        Orders complete;
         // Nhận tại store hoặc sản phẩm hết hàng
         if (receiveType==ReceiveType.STORE || orderCombineRequest.getStoreValid().get(0).getStatus()==0)
         {
@@ -161,10 +166,9 @@ public class OrdersServiceImpl implements IOrdersService {
             orders.setCreatedAt();
             // Hết hàng status = 0 add 7 ngày còn hàng = 1
             orders.setLimitReceiveAt(Date.valueOf(LocalDate.now().plusDays(orderCombineRequest.getStoreValid().get(0).getStatus()==1 ? 1 : 7)));
-            Orders complete = ordersRepository.save(orders);
-            double totalPrice = productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
+            complete = ordersRepository.save(orders);
+            totalPrice = productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
             complete.setTotalPrice(totalPrice);
-            ordersRepository.save(complete);
         }
         else{
             orders.setStore(store);
@@ -172,15 +176,42 @@ public class OrdersServiceImpl implements IOrdersService {
             orders.setStatus(OrderStatus.PREPARE);
             orders.setReceiveType(ReceiveType.DELIVERY);
             orders.setCreatedAt(Date.valueOf(LocalDate.now()));
-            double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
+//            double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
+            double cost = 0;
             orders.setCostShip(cost);
-            Orders complete = ordersRepository.save(orders);
-            double totalPrice = orderItemService.save(orderCombineRequest,orders);
+            complete = ordersRepository.save(orders);
+            totalPrice = orderItemService.save(orderCombineRequest,orders);
             complete.setTotalPrice(totalPrice);
-            ordersRepository.save(complete);
+            if(voucher==null)
+                orders.setVoucherValue(0.0);
+            else
+            {
+                if(receiveType==ReceiveType.STORE && voucher.getVoucherType().equals(VoucherType.FREE_SHIPPING))
+                    orders.setVoucherValue(0.0);
+                else orders.setVoucherValue(calVoucherValue(totalPrice,voucher));
+            }
         }
+
+        if(voucher==null)
+            orders.setVoucherValue(0.0);
+        else
+        {
+            if(receiveType==ReceiveType.STORE && voucher.getVoucherType().equals(VoucherType.FREE_SHIPPING))
+                orders.setVoucherValue(0.0);
+            else orders.setVoucherValue(calVoucherValue(totalPrice,voucher));
+        }
+        ordersRepository.save(complete);
     }
 
+    double calVoucherValue(double priceOriginal, Vourcher voucher){
+        if(voucher.getMinimumValue()>priceOriginal)
+            return 0;
+        if(voucher.getVoucherType().equals(VoucherType.DISCOUNT_PERCENT))
+            return priceOriginal * voucher.getDiscountValue() / 100.0;
+        else if(voucher.getVoucherType().equals(VoucherType.DISCOUNT_DIRECT))
+            return voucher.getDiscountValue();
+        return 0;
+    }
     @Override
     public void rateSave(Evaluate evaluate, long orderId){
         Orders orders = ordersRepository.findById(orderId).orElse(null);

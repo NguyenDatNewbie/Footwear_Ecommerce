@@ -221,8 +221,10 @@ public class CollaborativeFiltering {
 
         // Tạo ma trận similarity từ ma trận rating
         Map<Long, Map<Long, Double>> similarityMatrix = createSimilarityMatrix(matrix);
+        System.out.println("Similarity Matrix");
         printMatrix(similarityMatrix);
         Map<Long, Map<Long, Double>> resultMatrix = calculatorNormalizedRatingsNull(matrix,similarityMatrix);
+        System.out.println("Result Matrix");
         printMatrix(resultMatrix);
 
         if(evaluates.isEmpty()){

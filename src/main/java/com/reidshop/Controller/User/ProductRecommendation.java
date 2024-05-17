@@ -32,10 +32,14 @@ public class ProductRecommendation {
     @Autowired
     CollaborativeFiltering collaborativeFiltering;
 
-//    @GetMapping("")
-//    List<Product> collaborativeFilter(){
-//
-//    }
+    @GetMapping("")
+    List<Product> collaborativeFilter(HttpServletRequest request){
+        String token = CookieHandle.getCookieValue(request, "token");
+        String email = jwtService.extractUsername(token);
+        Account account = accountRepository.findByEmail(email).orElse(null);
+        List<Product> products = collaborativeFiltering.collaborativeFilter(account,true,null);
+        return products;
+    }
 
 
 }
