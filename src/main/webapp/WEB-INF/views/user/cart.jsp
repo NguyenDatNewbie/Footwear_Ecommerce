@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
          isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
@@ -1181,7 +1181,7 @@
         }
     }
 </script>
-<script>
+<script >
     function loadEmpty() {
         document.getElementById('content').innerHTML = '<div class="shopping_cart_area" >' +
             '<div class="container">\n' +
@@ -1217,70 +1217,86 @@
         }
     }
 
-    function getExpectDeliveryTime() {
-        var city = document.getElementById('city');
-        var district = document.getElementById('district');
-        var ward = document.getElementById('ward');
-        const token = "31d3a81c-d94f-11ee-8026-f29d8335aebb";
-        const shop_id = 4932018;
-        const service_id = 53320;
+    // function getExpectDeliveryTime() {
+    //     var city = document.getElementById('city');
+    //     var district = document.getElementById('district');
+    //     var ward = document.getElementById('ward');
+    //     const token = "31d3a81c-d94f-11ee-8026-f29d8335aebb";
+    //     const shop_id = 4932018;
+    //     const service_id = 53320;
+    //
+    //
+    //     var valueCity = city.options[city.selectedIndex].value;
+    //     var valueDistrict = district.options[district.selectedIndex].value;
+    //     var valueWard = ward.options[ward.selectedIndex].value;
+    //
+    //     console.log(valueCity, valueDistrict, valueWard);
+    //     if (city.value == "")
+    //         valueCity = "";
+    //     if (district.value == "")
+    //         valueDistrict = "";
+    //     if (ward.value == "")
+    //         valueWard = "";
+    //
+    //     var getDeliveryTime = {
+    //         url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/leadtime",
+    //         method: "GET",
+    //         responseType: "application/json",
+    //         headers: {
+    //             "token": token
+    //         },
+    //         params: {
+    //             "shop_id": shop_id,
+    //             "service_id": service_id,
+    //             "from_district_id": 1451,
+    //             "from_ward_code": 20912,
+    //             "to_ward_code": valueWard,
+    //             "to_district_id": valueDistrict
+    //         }
+    //     };
+    //
+    //     return new Promise((resolve, reject) => {
+    //         var store = localStorage.getItem('storeValid');
+    //
+    //         if (ward.value === "" || ward.value === null) {
+    //             return resolve(0);
+    //         } else {
+    //             const time = axios(getDeliveryTime);
+    //             time.then(function (result) {
+    //                 var leadtime = result.data.data.leadtime;
+    //                 return resolve(leadtime);
+    //             })
+    //                 .catch(error => {
+    //                     console.error('Error retrieving total:', error);
+    //                 });
+    //         }
+    //     });
+    // }
 
+    function getExpectDeliveryTime(expectTime) {
+        // Lấy thời gian hiện tại
+        const currentTime = new Date();
 
-        var valueCity = city.options[city.selectedIndex].value;
-        var valueDistrict = district.options[district.selectedIndex].value;
-        var valueWard = ward.options[ward.selectedIndex].value;
+        // Thêm số giờ vào thời gian hiện tại
+        currentTime.setHours(currentTime.getHours() + expectTime);
 
-        console.log(valueCity, valueDistrict, valueWard);
-        if (city.value == "")
-            valueCity = "";
-        if (district.value == "")
-            valueDistrict = "";
-        if (ward.value == "")
-            valueWard = "";
-
-        var getDeliveryTime = {
-            url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/leadtime",
-            method: "GET",
-            responseType: "application/json",
-            headers: {
-                "token": token
-            },
-            params: {
-                "shop_id": shop_id,
-                "service_id": service_id,
-                "from_district_id": 1451,
-                "from_ward_code": 20912,
-                "to_ward_code": valueWard,
-                "to_district_id": valueDistrict
-            }
-        };
-
-        return new Promise((resolve, reject) => {
-            var store = localStorage.getItem('storeValid');
-
-            if (ward.value === "" || ward.value === null) {
-                return resolve(0);
-            } else {
-                const time = axios(getDeliveryTime);
-                time.then(function (result) {
-                    var leadtime = result.data.data.leadtime;
-                    return resolve(leadtime);
-                })
-                    .catch(error => {
-                        console.error('Error retrieving total:', error);
-                    });
-            }
-        });
+        const day = currentTime.getDate().toString().padStart(2, '0');
+        const month = (currentTime.getMonth() + 1).toString().padStart(2, '0');
+        const year = currentTime.getFullYear();
+        const hours = currentTime.getHours().toString().padStart(2, '0');
+        const minutes = "00";
+        return "Thời gian nhận hàng dự kiến: " + hours + ":" + minutes + " giờ," + " ngày " + day + "/" + month + "/" + year;
     }
 
     function calCostShip() {
         var city = document.getElementById('city');
         var district = document.getElementById('district');
         var ward = document.getElementById('ward');
-        const token = "31d3a81c-d94f-11ee-8026-f29d8335aebb";
-        const shop_id = 4932018;
-        const service_id = 53320;
-        const weight = 2000;
+
+        const order_service = "VCN";
+        const weight = 3000;
+        const product_type = "HH";
+        const national_type = 1;
 
         var valueCity = city.options[city.selectedIndex].value;
         var valueDistrict = district.options[district.selectedIndex].value;
@@ -1296,20 +1312,22 @@
         if (ward.value == "")
             valueWard = "";
 
+        const priceData = {
+            PRODUCT_WEIGHT: 1000,
+            ORDER_SERVICE: "VTK",
+            SENDER_PROVINCE: "2",
+            SENDER_DISTRICT: "1231",
+            RECEIVER_PROVINCE: valueCity,
+            RECEIVER_DISTRICT: valueDistrict,
+            PRODUCT_TYPE: "HH",
+            NATIONAL_TYPE: 1
+        };
+
         var getFeeAPI = {
-            url: "https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee",
-            method: "GET",
+            url: "http://localhost:8083/api/getPrice",
+            method: "POST",
             responseType: "application/json",
-            headers: {
-                "token": token
-            },
-            params: {
-                "shop_id": shop_id,
-                "service_id": service_id,
-                "to_ward_code": valueWard,
-                "to_district_id": valueDistrict,
-                "weight": weight
-            }
+            data: priceData
         };
 
         return new Promise((resolve, reject) => {
@@ -1320,26 +1338,24 @@
             } else {
                 const calFee = axios(getFeeAPI);
                 calFee.then(function (result) {
-                    document.getElementById('receive_deli').textContent = formatter.format(result.data.data.total);
-                    console.log(result.data.data.total);
-                    return resolve(result.data.data.total);
+                    document.getElementById('receive_deli').textContent = formatter.format(result.data.data.MONEY_TOTAL);
+                    console.log(getExpectDeliveryTime(result.data.data.KPI_HT))
+                    var timeExpect = document.getElementById('time-expect');
+                    timeExpect.innerHTML = '';
+
+                    const newParagraph = document.createElement("p");
+
+                    const paragraphText = document.createTextNode(getExpectDeliveryTime(result.data.data.KPI_HT));
+
+                    newParagraph.appendChild(paragraphText);
+
+                    timeExpect.appendChild(newParagraph);
+                    return resolve(result.data.data.MONEY_TOTAL);
+                    return 0;
                 })
                     .catch(error => {
                         console.error('Error retrieving total:', error);
                     });
-                // $.ajax({
-                //     url: '/getCostShip/' + valueWard + '/' + valueDistrict + '/' + valueCity,
-                //     type: "POST",
-                //     contentType: "application/json; charset=utf-8",
-                //     data: store !== null ? store : [],
-                //     success: function (response) {
-                //         return resolve(response);
-                //     },
-                //     error: function (error) {
-                //         reject(error);
-                //     }
-                //
-                // });
             }
         });
 
@@ -1356,12 +1372,9 @@
     var modal_wards = document.getElementById("modal-ward");
 
     var GetCity = {
-        url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province",
+        url: "http://localhost:8083/api/listProvinceById",
         method: "GET",
         responseType: "application/json",
-        headers: {
-            "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
-        },
     };
     // var promise = axios(Parameter);
     var promise1 = axios(GetCity);
@@ -1378,44 +1391,37 @@
             }
             districts.length = 1;
             wards.length = 1;
+            console.log("City:" + city);
             var GetDistrict = {
-                url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + city,
+                url: "http://localhost:8083/api/listDistrictById?provinceId=" + city,
                 method: "GET",
                 responseType: "application/json",
-                headers: {
-                    "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
-                },
             };
             var promiseDistrict = axios(GetDistrict);
             promiseDistrict.then(function (dataDistricts) {
                 dataDistricts.data.data.forEach(function (district) {
-                    districts.options[districts.options.length] = new Option(district.DistrictName, district.DistrictID);
+                    districts.options[districts.options.length] = new Option(district.DISTRICT_NAME, district.DISTRICT_ID);
 
-                    if (district.DistrictID == parseInt(districtValue)) {
+                    if (district.DISTRICT_ID == parseInt(districtValue)) {
                         districts.selectedIndex = districts.options.length - 1;
                     }
                 });
             });
             var GetWards = {
-                url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + districtValue,
+                url: "http://localhost:8083/api/listWardsById?districtId=" + districtValue,
                 method: "GET",
                 responseType: "application/json",
-                headers: {
-                    "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
-                },
             };
             var promiseWard = axios(GetWards);
             promiseWard.then(function (dataWard) {
                 dataWard.data.data.forEach(function (ward) {
-                    wards.options[wards.options.length] = new Option(ward.WardName, ward.WardCode);
-                    if (ward.WardCode == parseInt(wardValue)) {
+                    wards.options[wards.options.length] = new Option(ward.WARDS_NAME, ward.WARDS_ID);
+                    if (ward.WARDS_ID == parseInt(wardValue)) {
                         wards.selectedIndex = wards.options.length - 1;
                     }
                 });
                 resolve();
             });
-
-
         })
     }
 
@@ -1429,17 +1435,14 @@
         citis1.onchange = function () {
             districts1.length = 1;
             var GetDistrict = {
-                url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + this.value,
+                url: "http://localhost:8083/api/listDistrictById?provinceId=" + this.value,
                 method: "GET",
                 responseType: "application/json",
-                headers: {
-                    "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
-                },
             };
             var promiseDistrict = axios(GetDistrict);
             promiseDistrict.then(function (dataDistricts) {
                 dataDistricts.data.data.forEach(function (district) {
-                    districts1.options[districts1.options.length] = new Option(district.DistrictName, district.DistrictID);
+                    districts1.options[districts1.options.length] = new Option(district.DISTRICT_NAME, district.DISTRICT_ID);
                 });
             });
             showStore();
@@ -1455,19 +1458,16 @@
 
             if (this.value != "") {
                 var GetDistrict = {
-                    url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + this.value,
+                    url: "http://localhost:8083/api/listDistrictById?provinceId=" + this.value,
                     method: "GET",
                     responseType: "application/json",
-                    headers: {
-                        "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
-                    },
                 };
                 var promiseDistrict = axios(GetDistrict);
                 promiseDistrict.then(function (dataDistricts) {
-                    // console.log(dataDistricts.data.data);
+                    console.log(dataDistricts.data.data);
 
                     dataDistricts.data.data.forEach(function (district) {
-                        districts.options[districts.options.length] = new Option(district.DistrictName, district.DistrictID);
+                        districts.options[districts.options.length] = new Option(district.DISTRICT_NAME, district.DISTRICT_ID);
                     });
                 });
             }
@@ -1476,20 +1476,15 @@
             wards.length = 1;
             if (this.value != "") {
                 var GetWards = {
-                    url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + this.value,
+                    url: "http://localhost:8083/api/listWardsById?districtId=" + this.value,
                     method: "GET",
                     responseType: "application/json",
-                    headers: {
-                        "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
-                    },
                 };
                 var promiseWard = axios(GetWards);
 
                 promiseWard.then(function (dataWard) {
-                    // console.log(dataWard.data.data);
-
                     dataWard.data.data.forEach(function (ward) {
-                        wards.options[wards.options.length] = new Option(ward.WardName, ward.WardCode);
+                        wards.options[wards.options.length] = new Option(ward.WARDS_NAME, ward.WARDS_ID);
                     });
                 });
             }
@@ -1501,31 +1496,32 @@
             calCostShip()
                 .then(cost => showOrder(cost))
                 .catch(error => console.log(error));
-            getExpectDeliveryTime()
-                .then(time => {
-                    const date = new Date(time * 1000);
-
-                    const weekdays = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-
-                    const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
-
-                    const dayOfWeek = weekdays[date.getDay()];
-
-                    const month = months[date.getMonth()];
-
-
-                    var timeExpect = document.getElementById('time-expect');
-                    timeExpect.innerHTML = '';
-
-                    const newParagraph = document.createElement("p");
-
-                    const paragraphText = document.createTextNode("Thời gian nhận hàng dự kiến: " + dayOfWeek + ", " + date.getDate() + " " + month + " " + date.getFullYear());
-
-                    newParagraph.appendChild(paragraphText);
-
-                    timeExpect.appendChild(newParagraph);
-                })
-                .catch(error => console.log("Error:", error));
+            // getExpectDeliveryTime()
+            //     .then(time => {
+            //         console.log("Time: ", time);
+            //         const date = new Date(time * 1000);
+            //
+            //         const weekdays = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+            //
+            //         const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
+            //
+            //         const dayOfWeek = weekdays[date.getDay()];
+            //
+            //         const month = months[date.getMonth()];
+            //
+            //
+            //         var timeExpect = document.getElementById('time-expect');
+            //         timeExpect.innerHTML = '';
+            //
+            //         const newParagraph = document.createElement("p");
+            //
+            //         const paragraphText = document.createTextNode("Thời gian nhận hàng dự kiến: " + dayOfWeek + ", " + date.getDate() + " " + month + " " + date.getFullYear());
+            //
+            //         newParagraph.appendChild(paragraphText);
+            //
+            //         timeExpect.appendChild(newParagraph);
+            //     })
+            //     .catch(error => console.log("Error:", error));
         }
 
         modal_citis.onchange = function () {
@@ -1534,17 +1530,14 @@
 
             if (this.value != "") {
                 var GetDistrict = {
-                    url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=" + this.value,
+                    url: "http://localhost:8083/api/listDistrictById?provinceId=" + this.value,
                     method: "GET",
                     responseType: "application/json",
-                    headers: {
-                        "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
-                    },
                 };
                 var promiseDistrict = axios(GetDistrict);
                 promiseDistrict.then(function (dataDistricts) {
                     dataDistricts.data.data.forEach(function (district) {
-                        modal_districts.options[modal_districts.options.length] = new Option(district.DistrictName, district.DistrictID);
+                        modal_districts.options[modal_districts.options.length] = new Option(district.DISTRICT_NAME, district.DISTRICT_ID);
                     });
                 });
             }
@@ -1554,17 +1547,14 @@
             modal_wards.length = 1;
             if (this.value != "") {
                 var GetWards = {
-                    url: "https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward?district_id=" + this.value,
+                    url: "http://localhost:8083/api/listWardsById?districtId=" + this.value,
                     method: "GET",
                     responseType: "application/json",
-                    headers: {
-                        "token": "ae2ba0ea-d902-11ee-b1d4-92b443b7a897"
-                    },
                 };
                 var promiseWard = axios(GetWards);
                 promiseWard.then(function (dataWard) {
                     dataWard.data.data.forEach(function (ward) {
-                        modal_wards.options[modal_wards.options.length] = new Option(ward.WardName, ward.WardCode);
+                        modal_wards.options[modal_wards.options.length] = new Option(ward.WARDS_NAME, ward.WARDS_ID);
                     });
                 });
             }
@@ -2497,12 +2487,13 @@
             localStorage.removeItem("storeValid");
             addEventClick();
             promise1.then(function (result) {
+                console.log(result);
                 var objectData = result.data.data;
                 var dataCity = [];
                 objectData.reverse().forEach(function (data) {
                     dataCity.push({
-                        Id: data.ProvinceID,
-                        Name: data.NameExtension[2]
+                        Id: data.PROVINCE_ID,
+                        Name: data.PROVINCE_NAME.toUpperCase()
                     })
                 })
                 renderCity(dataCity);

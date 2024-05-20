@@ -53,6 +53,13 @@ public class Orders {
     PaymentType paymentType;
 
     @Column
+    @Enumerated(EnumType.STRING)
+    VoucherType voucherType;
+
+    @Column
+    double voucherValue;
+
+    @Column
     @DateTimeFormat(pattern = "hh:mm dd--MM--yyyy") // Định dạng ngày theo ý muốn
     Date createdAt;
 
@@ -81,8 +88,6 @@ public class Orders {
     @ManyToOne
     @JoinColumn(name = "voucher_id")
     Vourcher vourcher;
-
-    double voucherValue;
 
     public void setCreatedAt() {
         createdAt = Calendar.getInstance().getTime();

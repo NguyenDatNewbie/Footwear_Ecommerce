@@ -2,7 +2,6 @@ package com.reidshop.Controller.Admin;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.reidshop.Model.Entity.Category;
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
@@ -13,16 +12,11 @@ import com.reidshop.Reponsitory.ProductRepository;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
 import com.reidshop.Service.IProductService;
-import com.reidshop.Service.Impl.OrdersServiceImpl;
-import com.reidshop.dto.DailyTotalDTO;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
