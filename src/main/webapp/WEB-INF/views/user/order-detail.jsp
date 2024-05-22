@@ -389,10 +389,11 @@
         </div>
         <div class="status">
             <ol class="stepper">
-                <li><i class="fas fa-file-alt"></i><span>12:00 3-3-2024</span><span>Đặt hàng</span></li>
-                <li ><i class="fas fa-truck-loading"></i><span> Chuẩn bị hàng</span></li>
-                <li ><i class="fas fa-truck"></i><span>Vận chuyển</span></li>
-                <li class="active"><i class="fas fa-star"></i><span>Đánh giá</span></li>
+                <li><i class="fas fa-file-alt"></i><span>${order.createdAt}</span><span>Đặt hàng</span></li>
+                <li id="wait"><i class="fas fa-dolly-flatbed"></i><span> Chuẩn bị hàng</span></li>
+                <li id="already"><i class="fas fa-box"></i><span>Đã chuẩn bị xong</span></li>
+                <li id="delivery"><i class="fas fa-shipping-fast"></i><span>Vận chuyển</span></li>
+                <li id="complete"><i class="fas fa-clipboard-check"></i><span>Đã giao</span></li>
             </ol>
         </div>
         <div>
@@ -513,13 +514,13 @@
                         <div class="info-row">
                             <div class="subject"><span>Giảm giá từ voucher</span></div>
                             <div class="detail">
-                                <div>${formatVND.format(0)}</div>
+                                <div>${formatVND.format(order.voucherValue)}</div>
                             </div>
                         </div>
                         <div class="info-row">
                             <div class="subject"><span>Thành tiền</span></div>
                             <div class="detail">
-                                <div style="color: red; font-size: 16px">${formatVND.format(order.totalPrice+order.costShip)}</div>
+                                <div style="color: red; font-size: 16px">${formatVND.format(order.totalPrice+order.costShip-order.voucherValue)}</div>
                             </div>
                         </div>
                         <div class="info-row">
@@ -594,6 +595,20 @@
         back.addEventListener("click", function() {
             location.href = "/orders";
         });
+
+        function orderState(state){
+            // console.log(state);
+            if(state == "ALREADY")
+                document.getElementById("already").classList.add("active");
+            else if(state == "DELIVERY")
+                document.getElementById("delivery").classList.add("active");
+            else if(state == "COMPLETE")
+                document.getElementById("complete").classList.add("active");
+            else
+                document.getElementById("wait").classList.add("active");
+        }
+        orderState("${order.status}");
+
     });
 
 </script>
