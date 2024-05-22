@@ -1287,23 +1287,104 @@
         const minutes = "00";
         return "Thời gian nhận hàng dự kiến: " + hours + ":" + minutes + " giờ," + " ngày " + day + "/" + month + "/" + year;
     }
+    
+    function getClosestStore(){
+        //gọi hàm để lấy các store còn hàng
+        var minShipFee = 0;
+        findStore().then((result) => {
+            let stores = JSON.parse(localStorage.getItem("storeValid"));
+            if (stores !== null){
+                calCostShipByTextAddress(stores[0].store.department).then((minShip) => {
+                    minShipFee = minShip;
+                    stores.forEach(item => {
+                        calCostShipByTextAddress(item.store.department).then((fee) => {
+                            //Lấy giá trị nhỏ nhất
+                            if( fee <= minShipFee ){
+                                minShipFee = fee;
+                                // Kiểm tra xem item có tồn tại trong localStorage hay không
+                                // if (localStorage.getItem("closestStore") !== null) {
+                                //     // Nếu tồn tại, xóa item đó
+                                //     localStorage.removeItem("closestStore");
+                                // }
+                                localStorage.setItem("closestStore", JSON.stringify(item))
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error retrieving total:', error);
+                        });
+                    });
+                }).catch(error => {
+                    console.error('Error retrieving total:', error);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error retrieving total:', error);
+        });        
+    }
+
+    function calCostShipByTextAddress(send_add) {
+        var city = document.getElementById('city');
+        var district = document.getElementById('district');
+        
+        var valueCity = city.options[city.selectedIndex].textContent;
+        var valueDistrict = district.options[district.selectedIndex].textContent;
+
+        var recv_add = valueDistrict + ", " + valueCity;
+
+        if (city.value == "")
+            valueCity = "";
+        if (district.value == "")
+            valueDistrict = "";
+
+        const priceData = {
+            PRODUCT_WEIGHT: 500,
+            ORDER_SERVICE: "VCN",
+            SENDER_ADDRESS: send_add,
+            RECEIVER_ADDRESS: recv_add,
+            PRODUCT_TYPE: "HH",
+            NATIONAL_TYPE: 1
+        };
+
+        var getFeeAPI = {
+            url: "http://localhost:8083/api/getPriceNlp",
+            method: "POST",
+            responseType: "application/json",
+            data: priceData
+        };
+
+        return new Promise((resolve, reject) => {
+            var store = localStorage.getItem('storeValid');
+
+            if (district.value === "" || district.value === null) {
+                return resolve(0);
+            } else {
+                const calFeeWithText = axios(getFeeAPI);
+                calFeeWithText.then(function (result) {
+                    return resolve(result.data.data.MONEY_TOTAL);
+                })
+                    .catch(error => {
+                        console.error('Error retrieving total:', error);
+                    });
+            }
+        });
+
+    }
 
     function calCostShip() {
+        let cart = JSON.parse(localStorage.getItem('cart'));
         var city = document.getElementById('city');
         var district = document.getElementById('district');
         var ward = document.getElementById('ward');
 
-        const order_service = "VCN";
-        const weight = 3000;
-        const product_type = "HH";
-        const national_type = 1;
+        var total_pro = 0;
+        cart.forEach(item => {
+            total_pro += item.quantity;
+        });
 
         var valueCity = city.options[city.selectedIndex].value;
         var valueDistrict = district.options[district.selectedIndex].value;
         var valueWard = ward.options[ward.selectedIndex].value;
-        console.log(valueCity);
-        console.log(valueDistrict);
-        console.log(valueWard);
 
         if (city.value == "")
             valueCity = "";
@@ -1313,7 +1394,7 @@
             valueWard = "";
 
         const priceData = {
-            PRODUCT_WEIGHT: 1000,
+            PRODUCT_WEIGHT: total_pro * 1000,
             ORDER_SERVICE: "VTK",
             SENDER_PROVINCE: "2",
             SENDER_DISTRICT: "1231",
@@ -1338,27 +1419,25 @@
             } else {
                 const calFee = axios(getFeeAPI);
                 calFee.then(function (result) {
-                    document.getElementById('receive_deli').textContent = formatter.format(result.data.data.MONEY_TOTAL);
-                    console.log(getExpectDeliveryTime(result.data.data.KPI_HT))
-                    var timeExpect = document.getElementById('time-expect');
-                    timeExpect.innerHTML = '';
+                    // document.getElementById('receive_deli').textContent = formatter.format(result.data.data.MONEY_TOTAL);
+                    // console.log(getExpectDeliveryTime(result.data.data.KPI_HT))
+                    // var timeExpect = document.getElementById('time-expect');
+                    // timeExpect.innerHTML = '';
 
-                    const newParagraph = document.createElement("p");
+                    // const newParagraph = document.createElement("p");
 
-                    const paragraphText = document.createTextNode(getExpectDeliveryTime(result.data.data.KPI_HT));
+                    // const paragraphText = document.createTextNode(getExpectDeliveryTime(result.data.data.KPI_HT));
 
-                    newParagraph.appendChild(paragraphText);
+                    // newParagraph.appendChild(paragraphText);
 
-                    timeExpect.appendChild(newParagraph);
+                    // timeExpect.appendChild(newParagraph);
                     return resolve(result.data.data.MONEY_TOTAL);
-                    return 0;
                 })
                     .catch(error => {
                         console.error('Error retrieving total:', error);
                     });
             }
         });
-
     }
 </script>
 <script>
