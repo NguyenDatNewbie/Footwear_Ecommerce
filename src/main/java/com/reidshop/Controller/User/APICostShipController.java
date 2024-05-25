@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class APICostShipController {
-    private String apiToken = "eyJhbGciOiJFUzI1NiJ9.eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiIwMzM1NDQxODk1IiwiVXNlcklkIjoxNDE1NjA0OCwiRnJvbVNvdXJjZSI6NSwiVG9rZW4iOiJVSzZVMjVYNVgxWUIiLCJleHAiOjE3MTY0NzY4NzEsIlBhcnRuZXIiOjE0MTU2MDQ4fQ.IcdCDakwLTMDapzAOFtKNAmPVWEjGcV54B5NTjLlGV3vBcUwCurNuh6pr4vRR4Jjv6jmmHU39pwfyfmuZhO2cQ.8KG-toqi9-X9w5UwrJ9wV6oILvVuWXAj3caM8DLygmCvrMkdZMPLuqTzRWCYAztlmqBrspvmUoQK3okX1nDVxQ";
+    private String apiToken = "eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiIwMzM1NDQxODk1IiwiVXNlcklkIjoxNDE1NjA0OCwiRnJvbVNvdXJjZSI6NSwiVG9rZW4iOiJVSzZVMjVYNVgxWUIiLCJleHAiOjE3MTY3MDQyMzAsIlBhcnRuZXIiOjE0MTU2MDQ4fQ._Jr5UKlKnltmC5jhYXDZtYV8-XfYuYUeuRytO8e0iam_Yw4gDKHQ9_YpdUJlEtqWG0Ep7AVBfqgxnOdCRzfPOg";
     @GetMapping("/listProvinceById")
     public String listProvinceById() {
         String apiUrl = "https://partner.viettelpost.vn/v2/categories/listProvinceById?provinceId=0";
@@ -50,6 +50,21 @@ public class APICostShipController {
     @PostMapping("/getPriceNlp")
     public String getPriceWithTextAddress(@RequestBody Map<String, Object> priceRequest){
         String apiUrl = "https://partner.viettelpost.vn/v2/order/getPriceNlp";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        headers.set("Token", apiToken); // Thêm token vào header
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(priceRequest, headers);
+
+        ResponseEntity<String> response = restTemplate.exchange(apiUrl, HttpMethod.POST, request, String.class);
+
+        return response.getBody();
+    }
+
+    @PostMapping("/getPriceAllNlp")
+    public String getAllServiceWithTextAddress(@RequestBody Map<String, Object> priceRequest){
+        String apiUrl = "https://partner.viettelpost.vn/v2/order/getPriceAllNlp";
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type", "application/json");
