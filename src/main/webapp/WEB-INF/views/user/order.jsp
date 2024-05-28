@@ -225,6 +225,14 @@
             background: #ff6a28;
             color: #ffffff;
         }
+        .products:hover{
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+
+        .product:hover span{
+            color: #ff6a28!important;
+        }
     </style>
 </head>
 <body>
