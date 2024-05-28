@@ -618,6 +618,31 @@
         .tab-label input {
             user-select: none;
         }
+        .ship-item {
+            background-color: rgba(0, 255, 255, 0.2);
+            flex-direction: row;
+            display: flex;
+            margin-bottom: 5px;
+            border-radius: 20px;
+            font-size: 10px;
+        }
+        .ship-button {
+            align-content: center;
+            padding: 10px;
+            margin-left: 20px;
+        }
+        .ship-detail {
+            margin-left: 20px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+        .shipping-content {
+            margin-top: 10px;
+        }
+        .p-shipping {
+            margin-bottom: 0px !important;
+            font-size: 15px !important;
+        }
     </style>
 
 
@@ -787,6 +812,8 @@
                                             <ul id="ul-address">
                                             </ul>
                                         </div>
+                                    </div>
+                                    <div class="shipping-content">
                                     </div>
                                 </div>
                             </div>
@@ -1288,42 +1315,46 @@
         return "Thời gian nhận hàng dự kiến: " + hours + ":" + minutes + " giờ," + " ngày " + day + "/" + month + "/" + year;
     }
     
-    function getClosestStore(){
-        //gọi hàm để lấy các store còn hàng
-        var minShipFee = 0;
-        findStore().then((result) => {
-            let stores = JSON.parse(localStorage.getItem("storeValid"));
-            if (stores !== null){
-                calCostShipByTextAddress(stores[0].store.department).then((minShip) => {
-                    minShipFee = minShip;
-                    stores.forEach(item => {
-                        calCostShipByTextAddress(item.store.department).then((fee) => {
-                            //Lấy giá trị nhỏ nhất
-                            if( fee <= minShipFee ){
-                                minShipFee = fee;
-                                // Kiểm tra xem item có tồn tại trong localStorage hay không
-                                // if (localStorage.getItem("closestStore") !== null) {
-                                //     // Nếu tồn tại, xóa item đó
-                                //     localStorage.removeItem("closestStore");
-                                // }
-                                localStorage.setItem("closestStore", JSON.stringify(item))
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error retrieving total:', error);
+    function getClosestStore() {
+        return new Promise((resolve, reject) => {
+            // Gọi hàm để lấy các store còn hàng
+            var minShipFee = 0;
+            findStore().then((result) => {
+                let stores = JSON.parse(localStorage.getItem("storeValid"));
+                if (stores !== null) {
+                    calCostShipByTextAddress(stores[0].store.department).then((minShip) => {
+                        minShipFee = minShip;
+                        let promises = stores.map(item => {
+                            return calCostShipByTextAddress(item.store.department).then((fee) => {
+                                // Lấy giá trị nhỏ nhất
+                                if (fee <= minShipFee) {
+                                    minShipFee = fee;
+                                    localStorage.setItem("closestStore", JSON.stringify(item));
+                                }
+                            });
                         });
+
+                        // Đợi tất cả các Promise hoàn thành
+                        Promise.all(promises).then(() => {
+                            resolve();
+                        }).catch(error => {
+                            reject(error);
+                        });
+                    }).catch(error => {
+                        reject(error);
                     });
-                }).catch(error => {
-                    console.error('Error retrieving total:', error);
-                });
-            }
-        })
-        .catch(error => {
-            console.error('Error retrieving total:', error);
-        });        
+                } else {
+                    resolve();
+                }
+            }).catch(error => {
+                reject(error);
+            });
+        });
     }
 
+
     function calCostShipByTextAddress(send_add) {
+        let cart = JSON.parse(localStorage.getItem('cart'));
         var city = document.getElementById('city');
         var district = document.getElementById('district');
         
@@ -1332,13 +1363,18 @@
 
         var recv_add = valueDistrict + ", " + valueCity;
 
+        var total_pro = 0;
+        cart.forEach(item => {
+            total_pro += item.quantity;
+        });
+
         if (city.value == "")
             valueCity = "";
         if (district.value == "")
             valueDistrict = "";
 
         const priceData = {
-            PRODUCT_WEIGHT: 500,
+            PRODUCT_WEIGHT: total_pro*500,
             ORDER_SERVICE: "VCN",
             SENDER_ADDRESS: send_add,
             RECEIVER_ADDRESS: recv_add,
@@ -1368,7 +1404,106 @@
                     });
             }
         });
+    }
 
+    function calAllCostShipByTextAddress(send_add) {
+        let cart = JSON.parse(localStorage.getItem('cart'));
+        var city = document.getElementById('city');
+        var district = document.getElementById('district');
+        
+        var valueCity = city.options[city.selectedIndex].textContent;
+        var valueDistrict = district.options[district.selectedIndex].textContent;
+
+        var recv_add = valueDistrict + ", " + valueCity;
+
+        var total_pro_weight = 0;
+        cart.forEach(item => {
+            total_pro_weight += item.quantity;
+        });
+
+        if (city.value == "")
+            valueCity = "";
+        if (district.value == "")
+            valueDistrict = "";
+
+        const priceData = {
+            SENDER_ADDRESS : send_add,
+            RECEIVER_ADDRESS : recv_add,
+            PRODUCT_TYPE : "HH",
+            PRODUCT_WEIGHT : total_pro_weight,
+            TYPE : 1
+        };
+
+        var getFeeAPI = {
+            url: "http://localhost:8083/api/getPriceAllNlp",
+            method: "POST",
+            responseType: "application/json",
+            data: priceData
+        };
+
+        return new Promise((resolve, reject) => {
+            var store = localStorage.getItem('storeValid');
+
+            if (district.value === "" || district.value === null) {
+                return resolve(0);
+            } else {
+                const calAllFeeWithText = axios(getFeeAPI);
+                calAllFeeWithText.then(function (result) {
+                    return resolve(result.data.RESULT);
+                })
+                    .catch(error => {
+                        console.error('Error retrieving total:', error);
+                    });
+            }
+        });
+    }
+
+    function displayAllService(data) {
+        const contentDiv = document.querySelector('.shipping-content');
+        let html = '';
+        
+        data.forEach(item => {
+            html += '<div class="ship-item">' +
+                    '<div class="ship-button">' +
+                        '<input type="radio" name="shipping" value="' + item.GIA_CUOC + '" data-time="' + item.THOI_GIAN + '">' +
+                    '</div>' +
+                    '<div class="ship-detail">' +
+                        '<p class="p-shipping"><strong>Tên dịch vụ: </strong> ' + item.TEN_DICHVU + '</p>' +
+                        '<p class="p-shipping"><strong>Giá cước: </strong> ' + item.GIA_CUOC + '</p>' +
+                        '<p class="p-shipping"><strong>Thời gian giao hàng dự kiến: </strong> ' + item.THOI_GIAN + '</p>' +
+                    '</div>' +
+                '</div>';
+        });
+        
+        contentDiv.innerHTML = html;
+        handleRadioChange();
+    }
+
+    function handleRadioChange() {
+        const radioButtons = document.querySelectorAll('input[type="radio"][name="shipping"]');
+        radioButtons.forEach(button => {
+            button.addEventListener('change', function() {
+                const selectedPrice = this.value;
+                const selectedTime = this.dataset.time; // Lấy giá trị THOI_GIAN từ thuộc tính data-time
+                // Hiển thị giá cước và thời gian được chọn
+
+                document.getElementById('receive_deli').textContent = formatter.format(selectedPrice);
+
+                showOrder(parseFloat(selectedPrice));
+
+                var timeExpect = document.getElementById('time-expect');
+                timeExpect.innerHTML = '';
+                const hours = parseInt(selectedTime, 10);
+                time = getExpectDeliveryTime(hours);
+                const newParagraph = document.createElement("p");
+
+                const paragraphText = document.createTextNode(time);
+
+                newParagraph.appendChild(paragraphText);
+
+                timeExpect.appendChild(newParagraph);
+            });
+        });
     }
 
     function calCostShip() {
@@ -1570,37 +1705,22 @@
             // document.getElementById('receive_deli').textContent = "";
             // localStorage.removeItem("storeValid");
         };
-        wards.onchange = function () {
+        wards.onchange = async function () {
             document.getElementById('error-message').textContent = "";
-            calCostShip()
-                .then(cost => showOrder(cost))
-                .catch(error => console.log(error));
-            // getExpectDeliveryTime()
-            //     .then(time => {
-            //         console.log("Time: ", time);
-            //         const date = new Date(time * 1000);
-            //
-            //         const weekdays = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-            //
-            //         const months = ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'];
-            //
-            //         const dayOfWeek = weekdays[date.getDay()];
-            //
-            //         const month = months[date.getMonth()];
-            //
-            //
-            //         var timeExpect = document.getElementById('time-expect');
-            //         timeExpect.innerHTML = '';
-            //
-            //         const newParagraph = document.createElement("p");
-            //
-            //         const paragraphText = document.createTextNode("Thời gian nhận hàng dự kiến: " + dayOfWeek + ", " + date.getDate() + " " + month + " " + date.getFullYear());
-            //
-            //         newParagraph.appendChild(paragraphText);
-            //
-            //         timeExpect.appendChild(newParagraph);
-            //     })
-            //     .catch(error => console.log("Error:", error));
+
+            try {
+                await getClosestStore();
+                const closestStore = JSON.parse(localStorage.getItem("closestStore"));
+
+                calAllCostShipByTextAddress(closestStore.store.department)
+                    .then(result => {
+                        displayAllService(result);
+                        // showOrder(cost);
+                    })
+                    .catch(error => console.log(error));
+            } catch (error) {
+                console.error('Error retrieving closest store:', error);
+            }
         }
 
         modal_citis.onchange = function () {
