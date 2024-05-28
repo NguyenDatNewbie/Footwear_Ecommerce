@@ -618,30 +618,85 @@
         .tab-label input {
             user-select: none;
         }
-        .ship-item {
-            background-color: rgba(0, 255, 255, 0.2);
-            flex-direction: row;
+        .ship-item{
             display: flex;
-            margin-bottom: 5px;
-            border-radius: 20px;
-            font-size: 10px;
-        }
-        .ship-button {
-            align-content: center;
+            justify-content: space-between;
             padding: 10px;
-            margin-left: 20px;
+            border: 1px solid #ced4da;
+            margin-bottom: 10px;
         }
-        .ship-detail {
-            margin-left: 20px;
-            margin-top: 5px;
-            margin-bottom: 5px;
+        .ship-item input{
+            display: none;
         }
-        .shipping-content {
-            margin-top: 10px;
+        /*.ship-item {*/
+        /*    background-color: rgba(0, 255, 255, 0.2);*/
+        /*    flex-direction: row;*/
+        /*    display: flex;*/
+        /*    margin-bottom: 5px;*/
+        /*    border-radius: 20px;*/
+        /*    font-size: 10px;*/
+        /*}*/
+
+        /*.ship-button {*/
+        /*    align-content: center;*/
+        /*    padding: 10px;*/
+        /*    margin-left: 20px;*/
+        /*}*/
+
+        /*.ship-detail {*/
+        /*    margin-left: 20px;*/
+        /*    margin-top: 5px;*/
+        /*    margin-bottom: 5px;*/
+        /*}*/
+
+        /*.shipping-content {*/
+        /*    margin-top: 10px;*/
+        /*}*/
+
+        /*.p-shipping {*/
+        /*    margin-bottom: 0px !important;*/
+        /*    font-size: 15px !important;*/
+        /*}*/
+
+        .toggle {
+            display: flex;
         }
-        .p-shipping {
-            margin-bottom: 0px !important;
-            font-size: 15px !important;
+        .toggle span{
+            margin-left: 5px;
+            font-size: 16px;
+        }
+        .arrow {
+            margin-right: 10px;
+            transition: transform 0.3s;
+        }
+
+        #delivery_type{
+            display: none;
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+            color: #242424;
+            font-weight: 500;
+            overflow: hidden;
+            transition: display 0.3s ease;
+        }
+        #delivery_type span strong{
+            font-weight: 600;
+        }
+        .ship-item:hover{
+            color: #ff6a28;
+            border: 1px solid #ff6a28;
+        }
+        .ship-item.active{
+            color: #ff6a28;
+            border: 1px solid #ff6a28;
+        }
+        .show .arrow {
+            transform: rotate(180deg);
+        }
+
+        .show #delivery_type {
+            height: auto; /* Use JavaScript to dynamically set height */
         }
     </style>
 
@@ -924,14 +979,15 @@
                                         <p>Tổng tiền</p>
                                     </div>
                                     <div class="cart_subtotal" id="price_deli">
-                                        <p>Phí giao hàng</p>
-
+                                        <div class="toggle" onclick="toggleContent()">
+                                            <p>Phí giao hàng</p>
+                                            <span class="arrow"><i class="fas fa-sort-down"></i> </span>
+                                        </div>
                                         <div>
                                             <p class="cart_amount_deli hidden" id="receive_deli"
                                                style="margin-bottom: 0px!important;"></p>
                                             <p class="cart_amount_store hidden" id="free_ship_promotion"
                                                style="margin-bottom: 0px!important;">Miễn phí</p>
-
                                             <p class="promotion_ship hidden" id="promotion_ship"
                                                style="color: #a7bcb9;
                                                font-weight: 300;
@@ -940,6 +996,8 @@
                                                font-size: 14px"></p>
                                         </div>
                                         <p class="cart_amount_store active" id="receive_store">Miễn phí</p>
+                                    </div>
+                                    <div id="delivery_type">
                                     </div>
                                     <div class="cart_subtotal" id="promotion">
                                         <p>Giảm giá</p>
@@ -1208,7 +1266,7 @@
         }
     }
 </script>
-<script >
+<script>
     function loadEmpty() {
         document.getElementById('content').innerHTML = '<div class="shopping_cart_area" >' +
             '<div class="container">\n' +
@@ -1314,7 +1372,7 @@
         const minutes = "00";
         return "Thời gian nhận hàng dự kiến: " + hours + ":" + minutes + " giờ," + " ngày " + day + "/" + month + "/" + year;
     }
-    
+
     function getClosestStore() {
         return new Promise((resolve, reject) => {
             // Gọi hàm để lấy các store còn hàng
@@ -1357,7 +1415,7 @@
         let cart = JSON.parse(localStorage.getItem('cart'));
         var city = document.getElementById('city');
         var district = document.getElementById('district');
-        
+
         var valueCity = city.options[city.selectedIndex].textContent;
         var valueDistrict = district.options[district.selectedIndex].textContent;
 
@@ -1374,7 +1432,7 @@
             valueDistrict = "";
 
         const priceData = {
-            PRODUCT_WEIGHT: total_pro*500,
+            PRODUCT_WEIGHT: total_pro * 500,
             ORDER_SERVICE: "VCN",
             SENDER_ADDRESS: send_add,
             RECEIVER_ADDRESS: recv_add,
@@ -1410,7 +1468,7 @@
         let cart = JSON.parse(localStorage.getItem('cart'));
         var city = document.getElementById('city');
         var district = document.getElementById('district');
-        
+
         var valueCity = city.options[city.selectedIndex].textContent;
         var valueDistrict = district.options[district.selectedIndex].textContent;
 
@@ -1427,11 +1485,11 @@
             valueDistrict = "";
 
         const priceData = {
-            SENDER_ADDRESS : send_add,
-            RECEIVER_ADDRESS : recv_add,
-            PRODUCT_TYPE : "HH",
-            PRODUCT_WEIGHT : total_pro_weight,
-            TYPE : 1
+            SENDER_ADDRESS: send_add,
+            RECEIVER_ADDRESS: recv_add,
+            PRODUCT_TYPE: "HH",
+            PRODUCT_WEIGHT: total_pro_weight,
+            TYPE: 1
         };
 
         var getFeeAPI = {
@@ -1458,33 +1516,41 @@
         });
     }
 
+    function toggleContent() {
+        const content = document.getElementById('delivery_type');
+
+        if (content.style.display === "none" || !content.style.display) {
+            content.style.display = "block";
+        } else {
+            content.style.display = "none";
+        }
+    }
+
     function displayAllService(data) {
-        const contentDiv = document.querySelector('.shipping-content');
+        console.log(data);
+        const contentDiv = document.querySelector('#delivery_type');
         let html = '';
-        
+
         data.forEach(item => {
             html += '<div class="ship-item">' +
-                    '<div class="ship-button">' +
-                        '<input type="radio" name="shipping" value="' + item.GIA_CUOC + '" data-time="' + item.THOI_GIAN + '">' +
-                    '</div>' +
-                    '<div class="ship-detail">' +
-                        '<p class="p-shipping"><strong>Tên dịch vụ: </strong> ' + item.TEN_DICHVU + '</p>' +
-                        '<p class="p-shipping"><strong>Giá cước: </strong> ' + item.GIA_CUOC + '</p>' +
-                        '<p class="p-shipping"><strong>Thời gian giao hàng dự kiến: </strong> ' + item.THOI_GIAN + '</p>' +
-                    '</div>' +
+                '<span>'+'<strong>' + item.TEN_DICHVU+'</strong>' + ' - ' + item.THOI_GIAN +'</span> <span>'+ item.GIA_CUOC + '</span>'+
+                '<input value="' +item.GIA_CUOC+ '">'+
+                '<input value="' +item.THOI_GIAN+ '">'+
                 '</div>';
         });
-        
+
         contentDiv.innerHTML = html;
         handleRadioChange();
+        toggleContent();
     }
 
     function handleRadioChange() {
-        const radioButtons = document.querySelectorAll('input[type="radio"][name="shipping"]');
+        const radioButtons = document.querySelectorAll('.ship-item');
         radioButtons.forEach(button => {
-            button.addEventListener('change', function() {
-                const selectedPrice = this.value;
-                const selectedTime = this.dataset.time; // Lấy giá trị THOI_GIAN từ thuộc tính data-time
+            button.addEventListener('click', function () {
+                const inputValue = this.querySelectorAll('input');
+                let selectedPrice = inputValue[0].value;
+                let selectedTime = inputValue[1].value; // Lấy giá trị THOI_GIAN từ thuộc tính data-time
                 // Hiển thị giá cước và thời gian được chọn
 
                 document.getElementById('receive_deli').textContent = formatter.format(selectedPrice);
@@ -1614,7 +1680,7 @@
             var promiseDistrict = axios(GetDistrict);
             promiseDistrict.then(function (dataDistricts) {
                 dataDistricts.data.data.forEach(function (district) {
-                    districts.options[districts.options.length] = new Option(district.DISTRICT_NAME, district.DISTRICT_ID);
+                    districts.options[districts.options.length] = new Option(capitalizeWords(district.DISTRICT_NAME), district.DISTRICT_ID);
 
                     if (district.DISTRICT_ID == parseInt(districtValue)) {
                         districts.selectedIndex = districts.options.length - 1;
@@ -1629,7 +1695,7 @@
             var promiseWard = axios(GetWards);
             promiseWard.then(function (dataWard) {
                 dataWard.data.data.forEach(function (ward) {
-                    wards.options[wards.options.length] = new Option(ward.WARDS_NAME, ward.WARDS_ID);
+                    wards.options[wards.options.length] = new Option(capitalizeWords(ward.WARDS_NAME), ward.WARDS_ID);
                     if (ward.WARDS_ID == parseInt(wardValue)) {
                         wards.selectedIndex = wards.options.length - 1;
                     }
@@ -1656,7 +1722,7 @@
             var promiseDistrict = axios(GetDistrict);
             promiseDistrict.then(function (dataDistricts) {
                 dataDistricts.data.data.forEach(function (district) {
-                    districts1.options[districts1.options.length] = new Option(district.DISTRICT_NAME, district.DISTRICT_ID);
+                    districts1.options[districts1.options.length] = new Option(capitalizeWords(district.DISTRICT_NAME), district.DISTRICT_ID);
                 });
             });
             showStore();
@@ -1681,7 +1747,7 @@
                     console.log(dataDistricts.data.data);
 
                     dataDistricts.data.data.forEach(function (district) {
-                        districts.options[districts.options.length] = new Option(district.DISTRICT_NAME, district.DISTRICT_ID);
+                        districts.options[districts.options.length] = new Option(capitalizeWords(district.DISTRICT_NAME), district.DISTRICT_ID);
                     });
                 });
             }
@@ -1698,7 +1764,7 @@
 
                 promiseWard.then(function (dataWard) {
                     dataWard.data.data.forEach(function (ward) {
-                        wards.options[wards.options.length] = new Option(ward.WARDS_NAME, ward.WARDS_ID);
+                        wards.options[wards.options.length] = new Option(capitalizeWords(ward.WARDS_NAME), ward.WARDS_ID);
                     });
                 });
             }
@@ -2680,6 +2746,13 @@
 
 <%--Xử lý khi web thực hiện xong--%>
 <script>
+    function capitalizeFirstLetter(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    }
+
+    function capitalizeWords(str) {
+        return str.split(' ').map(capitalizeFirstLetter).join(' ');
+    }
 
     document.addEventListener("DOMContentLoaded", function () {
         if (localStorage.getItem('cart') !== null) {
@@ -2689,10 +2762,10 @@
                 console.log(result);
                 var objectData = result.data.data;
                 var dataCity = [];
-                objectData.reverse().forEach(function (data) {
+                objectData.forEach(function (data) {
                     dataCity.push({
                         Id: data.PROVINCE_ID,
-                        Name: data.PROVINCE_NAME.toUpperCase()
+                        Name: capitalizeWords(data.PROVINCE_NAME)
                     })
                 })
                 renderCity(dataCity);
