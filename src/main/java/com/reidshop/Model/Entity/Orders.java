@@ -37,8 +37,9 @@ public class Orders {
     @Column
     double totalPrice;
 
-    @Column
-    double costShip;
+    @OneToOne
+    @JoinColumn(name = "info_delivery_id")
+    Delivery delivery;
 
     @Column
     @Enumerated(EnumType.STRING)

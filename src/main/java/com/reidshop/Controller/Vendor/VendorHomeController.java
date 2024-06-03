@@ -227,7 +227,7 @@ public class VendorHomeController {
             for (String orderId : orderIdArray) {
                 Optional<Orders> order =ordersRepository.findById(Long.valueOf(orderId));
                 double totalOriginalOfOrder = orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
-                revenue += (order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfOrder));
+                revenue += (order.get().getTotalPrice() - ((order.get().getDelivery()==null ? 0 :order.get().getDelivery().getCost()) + totalOriginalOfOrder));
             }
             System.out.println("Revenue: " + revenue);
 

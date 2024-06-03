@@ -4,6 +4,7 @@ import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.Account;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
+import com.reidshop.Model.Mapper.StoreValidResponseMapper;
 import com.reidshop.Model.Request.CartRequest;
 import com.reidshop.Model.Request.OrderCombineRequest;
 import com.reidshop.Model.Request.StoreValidRequest;
@@ -52,6 +53,8 @@ public class CartController {
     AccountRepository accountRepository;
     @Autowired
     IVoucherService voucherService;
+    @Autowired
+    StoreValidResponseMapper storeValidResponseMapper;
 
     Locale locale = new Locale("vi","VN");
 
@@ -82,7 +85,8 @@ public class CartController {
     @ResponseBody
     List<StoreValidResponse> getStore (@RequestBody OrderCombineRequest orderCombineRequest,@PathVariable ReceiveType receiveType){
         List<StoreValidResponse> stores =  storeService.findAllStoreIsStock(orderCombineRequest.getCarts(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard(), receiveType);
-        System.out.println(stores.size());
+        if(stores.size()==0)
+            return storeValidResponseMapper.toListResponseOutOfStock(storeRepository.findAll());
         return stores;
     }
 
@@ -93,15 +97,6 @@ public class CartController {
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(null);
-        if (receiveType == ReceiveType.DELIVERY) {
-            List<StoreValidRequest> storeValidRequests = orderCombineRequest.getStoreValid();
-            if (storeValidRequests.size() > 0)
-                storeValidRequests.add(distanceService.getStoreDistanceMin(storeValidRequests, orderCombineRequest.getOrders().getAddress(), 1));
-            else
-                storeValidRequests.add(distanceService.getStoreDistanceMin(storeService.findAll(), orderCombineRequest.getOrders().getAddress(), 1));
-
-            orderCombineRequest.setStoreValid(storeValidRequests);
-        }
 
         if(payment==PaymentType.RECEIVE) {
             if (account == null)
@@ -113,7 +108,7 @@ public class CartController {
         else if(payment==PaymentType.VNPAY){
             // Luu do thong tin order vao session
             session.setAttribute("orderCombine",orderCombineRequest);
-//            session.setMaxInactiveInterval(20); // 20 phut
+//            session.setMaxInactiveInterval(20);
             OrderCombineRequest orderCombineRequest1 = (OrderCombineRequest) session.getAttribute("orderCombine");
             responseData.put("url", "/payment/vnpay?receive="+receiveType+"&price=1200000");
             responseData.put("status", "wait");

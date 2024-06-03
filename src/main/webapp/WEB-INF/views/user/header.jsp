@@ -6,7 +6,7 @@
 
 <df-messenger
         intent="WELCOME"
-        chat-title="Chat bot reid store"
+        chat-title="ChatBot"
         agent-id="d3acc877-6758-47ca-bac6-10f42e0ebe5c"
         language-code="vi-vn"
 ></df-messenger>
@@ -78,6 +78,7 @@
         right: 15px !important;
         bottom: 90px !important;
     }
+
 </style>
 <!--header area start-->
 <header class="header_area header_three">
@@ -444,27 +445,16 @@
         {
             dfMessenger.addEventListener( 'df-messenger-loaded', function( event )
             {
-
+                var sheet = new CSSStyleSheet;
                 // CUSTOMIZE THE DIALOGUE WINDOW
                 $(this.shadowRoot.querySelector( '.df-messenger-wrapper' ).style.bottom = "80px");
-                if(!this.shadowRoot.querySelector('.df-messenger-wrapper').querySelector('df-messenger-chat').shadowRoot.querySelector('df-message-list').shadowRoot)
-                {
-                    console.log(this.shadowRoot.querySelector('.df-messenger-wrapper').querySelector('df-messenger-chat').shadowRoot.querySelector('.chat-min'));
-                }
-                const observer = new MutationObserver(function(mutationsList, observer) {
-                    const messageList = this.shadowRoot.querySelector('.df-messenger-wrapper').querySelector('df-messenger-chat');
-                    if (messageList.shadowRoot) {
-                        // Nếu shadowRoot đã tồn tại, ngừng quan sát và thực hiện thao tác mong muốn
-                        observer.disconnect();
-                        // Thực hiện các thao tác mong muốn khi shadowRoot mở
-                        console.log(messageList.shadowRoot.querySelector('.chat-min'));
-                    }
-                });
-
-                observer.observe(dfMessenger, {
-                    childList: true,
-                    subtree: true
-                });
+                $r1 = document.querySelector("df-messenger");
+                sheet.replaceSync( `button#widgetIcon { bottom: 15px; right: 5px; width:60px; height:60px;} button#widgetIcon .df-chat-icon{left: 12px;top: 12px;} button#widgetIcon div #closeSvg{left:18px; top:18px;}`);
+                $r1.shadowRoot.adoptedStyleSheets = [ sheet ];
+                $r2 = $r1.shadowRoot.querySelector("df-messenger-chat");
+                sheet = new CSSStyleSheet;
+                sheet.replaceSync( `div.chat-wrapper { bottom: 160px;} div.chat-min{bottom: 100px !important;} div.chat-wrapper[opened="true"]{height: 480px;}`);
+                $r2.shadowRoot.adoptedStyleSheets = [ sheet ];
 
                 // event.preventDefault();
             });

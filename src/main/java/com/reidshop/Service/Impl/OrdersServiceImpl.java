@@ -47,6 +47,8 @@ public class OrdersServiceImpl implements IOrdersService {
     EvaluateRepository evaluateRepository;
     @Autowired
     VoucherRepository voucherRepository;
+    @Autowired
+    DeliveryRepository deliveryRepository;
 
 
     public OrdersServiceImpl(OrdersRepository ordersRepository) {
@@ -158,11 +160,11 @@ public class OrdersServiceImpl implements IOrdersService {
             orders.setStatus(OrderStatus.WAIT);
             orders.setReceiveType(receiveType);
             orders.setPaymentType(paymentType);
-            orders.setCostShip(0);
-            if(orderCombineRequest.getStoreValid().get(0).getStatus()==0){
-                double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
-                orders.setCostShip(cost);
-            }
+            orders.setDelivery(null);
+//            if(orderCombineRequest.getStoreValid().get(0).getStatus()==0){
+//                double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
+//                orders.setCostShip(cost);
+//            }
             orders.setCreatedAt();
             // Hết hàng status = 0 add 7 ngày còn hàng = 1
             orders.setLimitReceiveAt(Date.valueOf(LocalDate.now().plusDays(orderCombineRequest.getStoreValid().get(0).getStatus()==1 ? 1 : 7)));
@@ -171,14 +173,18 @@ public class OrdersServiceImpl implements IOrdersService {
             complete.setTotalPrice(totalPrice);
         }
         else{
+
+//            double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
+//            double cost = 0;
+//            orders.setCostShip(cost);
+
+            Delivery delivery = deliveryRepository.save(orderCombineRequest.getOrders().getDelivery());
+            orders.setDelivery(delivery);
             orders.setStore(store);
             orders.setTotalPrice(0);
             orders.setStatus(OrderStatus.PREPARE);
             orders.setReceiveType(ReceiveType.DELIVERY);
             orders.setCreatedAt(Date.valueOf(LocalDate.now()));
-//            double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
-            double cost = 0;
-            orders.setCostShip(cost);
             complete = ordersRepository.save(orders);
             totalPrice = orderItemService.save(orderCombineRequest,orders);
             complete.setTotalPrice(totalPrice);
