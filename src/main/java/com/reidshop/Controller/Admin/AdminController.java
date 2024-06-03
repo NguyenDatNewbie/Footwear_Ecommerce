@@ -330,7 +330,8 @@ public class AdminController {
                 System.out.println(orderId);
                 double totalOriginalOfOrder = orderItemService.totalPriceOriginalOrders(Integer.parseInt(orderId));
                 System.out.println(totalOriginalOfOrder);
-                revenue += (order.get().getTotalPrice() - (order.get().getCostShip() + totalOriginalOfOrder));
+
+                revenue += (order.get().getTotalPrice() - ((order.get().getDelivery()==null ? 0 :order.get().getDelivery().getCost()) + totalOriginalOfOrder));
             }
             listRevenueThisWeek.add(revenue);
         }

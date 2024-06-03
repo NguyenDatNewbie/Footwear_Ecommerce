@@ -102,7 +102,7 @@ public class ManagerOrderController {
                     case PREPARE -> ordersService.UpdateOrderStatus(orderId, OrderStatus.DELIVERY);
                     case DELIVERY -> {
                         ordersService.UpdateOrderStatus(orderId, OrderStatus.COMPLETE);
-                        double totalPrice = order.getCostShip() + priceOfOrder;
+                        double totalPrice = (order.getDelivery()==null ? 0 :order.getDelivery().getCost()) + priceOfOrder;
                         order.setTotalPrice(totalPrice);
                         ordersRepository.save(order);
                     }
