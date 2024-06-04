@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -161,50 +162,41 @@ public class OrdersServiceImpl implements IOrdersService {
             orders.setReceiveType(receiveType);
             orders.setPaymentType(paymentType);
             orders.setDelivery(null);
-//            if(orderCombineRequest.getStoreValid().get(0).getStatus()==0){
-//                double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
-//                orders.setCostShip(cost);
-//            }
+            if(receiveType != ReceiveType.STORE) {
+                Delivery delivery = deliveryRepository.save(orderCombineRequest.getOrders().getDelivery());
+                orders.setDelivery(delivery);
+            }
             orders.setCreatedAt();
             // Hết hàng status = 0 add 7 ngày còn hàng = 1
-            orders.setLimitReceiveAt(Date.valueOf(LocalDate.now().plusDays(orderCombineRequest.getStoreValid().get(0).getStatus()==1 ? 1 : 7)));
+            orders.setLimitReceiveAt(java.sql.Timestamp.valueOf(LocalDateTime.now().plusDays(orderCombineRequest.getStoreValid().get(0).getStatus()==1 ? 1 : 7)));
             complete = ordersRepository.save(orders);
             totalPrice = productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
             complete.setTotalPrice(totalPrice);
         }
         else{
-
-//            double cost = distanceService.calCostShip(orderCombineRequest.getStoreValid(),orderCombineRequest.getCity(),orderCombineRequest.getDistrict(),orderCombineRequest.getWard());
-//            double cost = 0;
-//            orders.setCostShip(cost);
-
             Delivery delivery = deliveryRepository.save(orderCombineRequest.getOrders().getDelivery());
             orders.setDelivery(delivery);
             orders.setStore(store);
             orders.setTotalPrice(0);
             orders.setStatus(OrderStatus.PREPARE);
             orders.setReceiveType(ReceiveType.DELIVERY);
-            orders.setCreatedAt(Date.valueOf(LocalDate.now()));
+            orders.setCreatedAt();
             complete = ordersRepository.save(orders);
             totalPrice = orderItemService.save(orderCombineRequest,orders);
             complete.setTotalPrice(totalPrice);
-            if(voucher==null)
-                orders.setVoucherValue(0.0);
-            else
-            {
-                if(receiveType==ReceiveType.STORE && voucher.getVoucherType().equals(VoucherType.FREE_SHIPPING))
-                    orders.setVoucherValue(0.0);
-                else orders.setVoucherValue(calVoucherValue(totalPrice,voucher));
-            }
         }
 
         if(voucher==null)
-            orders.setVoucherValue(0.0);
+            complete.setVoucherValue(0.0);
         else
         {
             if(receiveType==ReceiveType.STORE && voucher.getVoucherType().equals(VoucherType.FREE_SHIPPING))
-                orders.setVoucherValue(0.0);
-            else orders.setVoucherValue(calVoucherValue(totalPrice,voucher));
+                complete.setVoucherValue(0.0);
+            else {
+                complete.setVoucherValue(calVoucherValue(totalPrice,voucher));
+                voucher.setQuantity(voucher.getQuantity()-1);
+                voucherRepository.save(voucher);
+            }
         }
         ordersRepository.save(complete);
     }
