@@ -619,16 +619,19 @@
         .tab-label input {
             user-select: none;
         }
-        .ship-item{
+
+        .ship-item {
             display: flex;
             justify-content: space-between;
             padding: 10px;
             border: 1px solid #ced4da;
             margin-bottom: 10px;
         }
-        .ship-item input{
+
+        .ship-item input {
             display: none;
         }
+
         /*.ship-item {*/
         /*    background-color: rgba(0, 255, 255, 0.2);*/
         /*    flex-direction: row;*/
@@ -662,16 +665,18 @@
         .toggle {
             display: flex;
         }
-        .toggle span{
+
+        .toggle span {
             margin-left: 5px;
             font-size: 16px;
         }
+
         .arrow {
             margin-right: 10px;
             transition: transform 0.3s;
         }
 
-        #delivery_type{
+        #delivery_type {
             display: none;
             font-family: inherit;
             font-size: inherit;
@@ -681,17 +686,21 @@
             overflow: hidden;
             transition: display 0.3s ease;
         }
-        #delivery_type span strong{
+
+        #delivery_type span strong {
             font-weight: 600;
         }
-        .ship-item:hover{
+
+        .ship-item:hover {
             color: #ff6a28;
             border: 1px solid #ff6a28;
         }
-        .ship-item.active{
+
+        .ship-item.active {
             color: #ff6a28;
             border: 1px solid #ff6a28;
         }
+
         .show .arrow {
             transform: rotate(180deg);
         }
@@ -699,7 +708,8 @@
         .show #delivery_type {
             height: auto; /* Use JavaScript to dynamically set height */
         }
-        #ul-address div{
+
+        #ul-address div {
             display: flex;
             align-items: baseline;
         }
@@ -818,7 +828,7 @@
                                     <div id="error-message" class="error-message"></div>
                                     <h4>CHỌN CÁCH THỨC NHẬN HÀNG</h4>
 
-                                    <div class="flex-2 radio" >
+                                    <div class="flex-2 radio">
                                         <div class="tab-label" onclick="openTab('tab1')">
                                             <input type="radio" id="tab1-radio" name="tab-radio" class="radio-input">
                                             <label>Giao tận nơi</label>
@@ -871,7 +881,13 @@
                                         </div>
                                         <div class="store scroll-container">
                                             <ul id="ul-address">
-                                                <li><div style="display: flex"><input type="radio" name="option" value="1"><label style="margin-left: 7px; margin-right: 4px;">Số 1 Võ Văn Ngân, Phường Linh Chiểu, Quận Thủ Đức, Thành phố Hồ Chí Minh<span>Còn hàng</span></label></div></li>
+                                                <li>
+                                                    <div style="display: flex"><input type="radio" name="option"
+                                                                                      value="1"><label
+                                                            style="margin-left: 7px; margin-right: 4px;">Số 1 Võ Văn
+                                                        Ngân, Phường Linh Chiểu, Quận Thủ Đức, Thành phố Hồ Chí
+                                                        Minh<span>Còn hàng</span></label></div>
+                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -986,9 +1002,10 @@
                                         <p>Tổng tiền</p>
                                     </div>
                                     <div class="cart_subtotal" id="price_deli">
-                                        <div class="toggle" onclick="toggleContent()">
+                                        <div class="toggle">
                                             <p>Phí giao hàng</p>
-                                            <span class="arrow"><i class="fas fa-sort-down"></i> </span>
+                                            <span id="toggle" class="arrow" onclick="toggleContent()"><i
+                                                    class="fas fa-sort-down"></i> </span>
                                         </div>
                                         <div>
                                             <p class="cart_amount_deli hidden" id="receive_deli"
@@ -1203,18 +1220,20 @@
 
     if (localStorage.getItem('cart') !== null) {
         document.getElementById("form-cart").addEventListener("submit", function (event) {
+
             // Ngăn chặn hành động mặc định của sự kiện gửi
             event.preventDefault();
 
             const type = document.querySelector('.tab-content.active').id;
             let validate = validateSelect();
-            if (type === "tab1" && validate !== "")
-                document.getElementById('error-message').textContent = validate;
-            else if (type === "tab2" && validateRadio() === false) {
-            } else {
-                if (type === "tab1") {
-                    findStore().then((result) => {
-                        if (localStorage.getItem('storeValid') === null) {
+            if (type === "tab1") {
+                if (validate !== "")
+                    document.getElementById('error-message').textContent = validate;
+                else {
+                    if (localStorage.getItem('closestStore')!==null) {
+                        const store = JSON.parse(localStorage.getItem('closestStore'));
+                        console.log(store);
+                        if (store.status == 0)
                             ConfirmationPopup.display({
                                 title: '<h4 style="color: blue;font-weight: 500; font-size: 1.4rem">Thông báo</h4>',
                                 content: '<span style="color: black;">Sản phẩm của cửa hàng chưa thể đáp ứng đủ số lượng yêu cầu.<br>Nếu quý khách đồng ý đợi chúng tôi một thời gian chúng tôi sẽ nhập đủ số lượng sản phẩm quý khách yêu cầu.<br> Nhân viên chúng tôi sẽ gọi điện tư vấn với quý khách.</span>',
@@ -1234,37 +1253,18 @@
                                         }
                                     ]
                                 }
-
                             });
-                        } else {
+                        else {
                             form.submit();
                         }
-                    })
-                        .catch((error) => {
-                            ConfirmationPopup.display({
-                                title: '<h4 style="color: blue;font-weight: 500; font-size: 1.4rem">Thông báo</h4>',
-                                content: '<span style="color: black;">Sản phẩm của cửa hàng chưa thể đáp ứng đủ số lượng yêu cầu.<br>Nếu quý khách đồng ý đợi chúng tôi một thời gian chúng tôi sẽ nhập đủ số lượng sản phẩm quý khách yêu cầu.<br> Nhân viên chúng tôi sẽ gọi điện tư vấn với quý khách.</span>',
-                                buttons: {
-                                    elements: [
-                                        {
-                                            text: 'Đồng ý',
-                                            type: 'confirm',
-                                            handler: function () {
-                                                handleConfirmClick();
-                                            }
-                                        },
-                                        {
-                                            text: 'Hủy',
-                                            type: 'error',
-                                            handler: () => ConfirmationPopup.close()
-                                        }
-                                    ]
-                                }
+                    }
 
-                            });
-                        })
                 }
+            } else {
+                if (validateRadio())
+                    form.submit();
             }
+
         });
 
         function handleConfirmClick() {
@@ -1291,7 +1291,7 @@
     }
 
     function showCart() {
-        return new Promise((resolve)=>{
+        return new Promise((resolve) => {
             let cart = localStorage.getItem('cart');
             if (cart !== null) {
                 $.ajax({
@@ -1544,10 +1544,10 @@
 
         data.forEach(item => {
             html += '<div class="ship-item">' +
-                '<span>'+'<strong>' + item.TEN_DICHVU+'</strong>' + ' - ' + item.THOI_GIAN +'</span> <span>'+ item.GIA_CUOC + '</span>'+
-                '<input value="' +item.GIA_CUOC+ '">'+
-                '<input value="' +item.THOI_GIAN+ '">'+
-                '<input style="display:none;"  value="' +item.MA_DV_CHINH+ '">'+
+                '<span>' + '<strong>' + item.TEN_DICHVU + '</strong>' + ' - ' + item.THOI_GIAN + '</span> <span>' + item.GIA_CUOC + '</span>' +
+                '<input value="' + item.GIA_CUOC + '">' +
+                '<input value="' + item.THOI_GIAN + '">' +
+                '<input style="display:none;"  value="' + item.MA_DV_CHINH + '">' +
                 '</div>';
         });
 
@@ -1714,7 +1714,7 @@
                 });
             });
             resolve();
-        })
+        });
     }
 
     function renderCity(data) {
@@ -1934,6 +1934,7 @@
         var receiveStore = document.getElementById('receive_store');
 
         if (tabId === "tab2") {
+            document.getElementById("toggle").style.display = "none";
             showOrder(0);
             document.getElementById('delivery_type').style.display = "none";
             receiveStore.classList.add("active");
@@ -1943,10 +1944,27 @@
             document.getElementById('addressDetail').removeAttribute('required');
         }
         if (tabId === "tab1") {
+            document.getElementById("toggle").style.display = "block";
             document.getElementById('delivery_type').style.display = "block";
-            calCostShip()
-                .then(cost => showOrder(cost))
-                .catch(error => console.log(error));
+            if (document.querySelector("#delivery_type .ship-item"))
+                if (document.querySelector("#delivery_type .ship-item.active"))
+                    showOrder(parseFloat(document.querySelectorAll("#delivery_type .ship-item.active input")[0].value.toLocaleString('vi-VN')));
+                else showOrder(null);
+            else
+            {
+                if(validateSelect()===""){
+                    const closestStore = JSON.parse(localStorage.getItem("closestStore"));
+                    calAllCostShipByTextAddress(closestStore.store.department)
+                        .then(result => {
+                            displayAllService(result);
+                            showOrder(null);
+                        })
+                        .catch(error => console.log(error));
+                }
+                if(document.querySelector("#total_cart .cart_amount")==null)
+                    showOrder(null);
+            }
+
             receiveDeli.classList.add("active");
             receiveDeli.classList.remove("hidden");
             receiveStore.classList.remove("active");
@@ -2136,7 +2154,7 @@
         localStorage.setItem('cart', JSON.stringify(cart));
 
         showCart().then((result) => {
-            if(document.querySelector('#receive_deli').textContent==null || document.querySelector('#receive_deli').textContent=="")
+            if (document.querySelector('#receive_deli').textContent == null || document.querySelector('#receive_deli').textContent == "")
                 showOrder(0);
             else {
                 console.log(1);
@@ -2215,6 +2233,7 @@
             costHtml.textContent = formatter.format(cost);
         total_last.appendChild(valTotalLast);
     }
+
     function sortWithSpecificIdFirst(array, specificId) {
         return array.sort((a, b) => {
             if (a.store.id === specificId) return -1;
@@ -2222,6 +2241,7 @@
             return a.store.id - b.store.id;
         });
     }
+
     function pay() {
         const type = document.querySelector('.tab-content.active').id;
         let cart = localStorage.getItem('cart');
@@ -2296,7 +2316,7 @@
             if (city != "")
                 address += valueCity;
             const currentTime = new Date();
-            currentTime.setHours(currentTime.getHours()+parseInt(inputsDelivery[1].value));
+            currentTime.setHours(currentTime.getHours() + parseInt(inputsDelivery[1].value));
             var orders = {
                 name: document.getElementById('name').value,
                 phone: document.getElementById('phone').value,
@@ -2309,10 +2329,10 @@
                 }
             }
             var storeValid = null;
-            var closestStore =  JSON.parse(localStorage.getItem('closestStore'));
-            if (closestStore !== null){
-                storeValid =  JSON.parse(localStorage.getItem('storeValid'));
-                sortWithSpecificIdFirst(storeValid,closestStore.store.id);
+            var closestStore = JSON.parse(localStorage.getItem('closestStore'));
+            if (closestStore !== null) {
+                storeValid = JSON.parse(localStorage.getItem('storeValid'));
+                sortWithSpecificIdFirst(storeValid, closestStore.store.id);
             }
             orderCombine = {
                 orders: orders,
@@ -2409,17 +2429,18 @@
         });
     }
 
-    function addEventClickForDeliveryOption(){
+    function addEventClickForDeliveryOption() {
         var items = document.querySelectorAll("#delivery_type .ship-item")
-        items.forEach(function (item){
-            item.addEventListener("click",function (){
-                item.parentNode.querySelectorAll(".active").forEach(function (active){
+        items.forEach(function (item) {
+            item.addEventListener("click", function () {
+                item.parentNode.querySelectorAll(".active").forEach(function (active) {
                     active.classList.remove("active");
                 });
                 item.classList.add("active");
             })
         })
     }
+
     function addEventClick() {
         var infoItems = document.querySelectorAll(".area-address .info-item");
         // Lặp qua mỗi info-item và thêm sự kiện click
@@ -2805,12 +2826,10 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-
         if (localStorage.getItem('cart') !== null) {
             localStorage.removeItem("storeValid");
             addEventClick();
             promise1.then(function (result) {
-                console.log(result);
                 var objectData = result.data.data;
                 var dataCity = [];
                 objectData.forEach(function (data) {
@@ -2829,17 +2848,17 @@
                         document.getElementById('phone').value = content.phone;
                         document.getElementById('addressDetail').value = content.detail;
 
-                        renderAddress(content.city.value, content.district.value, content.ward.value).then(async () => {
+                        renderAddress(content.city.value, content.district.value, content.ward.value).then(() => {
                             openTab("tab1");
-                            await getClosestStore();
-                            const closestStore = JSON.parse(localStorage.getItem("closestStore"));
+                            getClosestStore().then(a => {
+                                const closestStore = JSON.parse(localStorage.getItem("closestStore"));
 
-                            calAllCostShipByTextAddress(closestStore.store.department)
-                                .then(result => {
-                                    displayAllService(result);
-                                    // showOrder(cost);
-                                })
-                                .catch(error => console.log(error));
+                                calAllCostShipByTextAddress(closestStore.store.department)
+                                    .then(result => {
+                                        displayAllService(result);
+                                    })
+                                    .catch(error => console.log(error));
+                            });
                         });
                         return;
                     }
