@@ -5,6 +5,7 @@ import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Reponsitory.*;
+import com.reidshop.Service.IEmailService;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.Impl.OrdersServiceImpl;
 import com.reidshop.security.JwtService;
@@ -45,6 +46,10 @@ public class ManagerOrderVendor {
     StoreRepository storeRepository;
     @Autowired
     InventoryRepository inventoryRepository;
+    @Autowired
+    ProductOutOfStockRepository productOutOfStockRepository;
+    @Autowired
+    IEmailService emailService;
 
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
@@ -142,7 +147,111 @@ public class ManagerOrderVendor {
                 }
             } else {
                 switch (status) {
-                    case WAIT -> ordersService.UpdateOrderStatus(orderId, OrderStatus.ALREADY);
+                    case WAIT -> {
+                        //Cập nhật order
+                        ordersService.UpdateOrderStatus(orderId, OrderStatus.ALREADY);
+                        //Gửi mail cho người dùng đến nhận
+                        try {
+                            //Email nhận
+                            String recvEmail = order.getAccount().getEmail();
+                            //Chủ đề
+                            String subject = "Đơn hàng của quý khách đã hoàn tất và sẵn sàng để giao";
+
+                            List<OrderItem> items = orderItemRepository.findAllItemByOrderId(order.getId());
+
+                            //Lấy thông tin đơn hàng
+                            StringBuilder itemsHtml = new StringBuilder();
+                            int i = 1;
+                            for (OrderItem item : items) {
+                                double sumPrice = item.getPrice() * item.getQuantity();
+                                itemsHtml.append("<tr>")
+                                        .append("<td style='margin-top: 5px; margin-bottom: 5px'>").append("<img src=\"")
+                                        .append(item.getInventory().getSize().getProduct().getImages().get(0).getImg())
+                                        .append("\" alt=\"Hình ảnh sản phẩm\" style=\"width: 100px; height: 100px;\"></td>")
+                                        .append("</tr>")
+                                        .append("<tr>")
+                                        .append("<td>").append(i + ". ").append(item.getInventory().getSize().getProduct().getName()).append("</td>")
+                                        .append("</tr>")
+                                        .append("<tr>")
+                                        .append("<td>Mẫu mã:</td>")
+                                        .append("<td>Size ").append(item.getInventory().getSize().getSize()).append("</td>")
+                                        .append("</tr>")
+                                        .append("<tr>")
+                                        .append("<td>Số lượng:</td>")
+                                        .append("<td>").append(item.getQuantity()).append("</td>")
+                                        .append("</tr>")
+                                        .append("<tr>")
+                                        .append("<td>Giá:</td>")
+                                        .append("<td>").append(formatVND.format(item.getPrice())).append("</td>")
+                                        .append("</tr>")
+                                        .append("<tr>")
+                                        .append("<td>Thành tiền:</td>")
+                                        .append("<td>").append(formatVND.format(sumPrice)).append("</td>")
+                                        .append("</tr>")
+                                        .append("<tr style='background-color: gray;'>")
+                                        .append("<td height=\"1\" style=\"font-size:1px;line-height:1px\"></td>")
+                                        .append("</tr>");
+                                i++;
+                            }
+                            //Nội dung của email
+                            String body = "<html>\r\n"
+                                            + "<body>\r\n" +
+//                                                    "<div style=\"display:flex;justify-content: center;\">\r\n" +
+//                                                        "<div style=\"display:flex;flex-direction: column;\">\r\n"
+                                                    "<div style=\"justify-content: center; display:flex;\">\r\n" +
+                                                        "<div>\r\n"
+                                                +        "<img src='https://res.cloudinary.com/dhmeeqkgr/image/upload/v1717684779/logo_a6zddc.png' alt='Logo' width='100px' height='40px' style='display: block; margin: auto'>\r\n"
+                                                +        "<p>Xin chào " + order.getName() + ", </p>\n"
+                                                +        "<p>Đơn hàng " + "<span> #" + order.getId() + "</span>" + " của bạn đã được chuẩn bị xong.</p>\n"
+                                                +        "<p>Vui lòng đến của hàng của REID Shop tại " + order.getStore().getDepartment() +  " để thanh toán và nhận hàng.</p>\n"
+                                                +        "<h4>THÔNG TIN ĐƠN HÀNG - DÀNH CHO NGƯỜI MUA</h4>"
+                                                +       "<table width='500' cellspacing='0' cellpadding='0' border='0'>"
+                                                +        "<tbody>"
+                                                +           "<tr>"
+                                                +               "<td>Mã đơn hàng: </td>"
+                                                +               "<td>#" + order.getId() + "</td>"
+                                                +           "</tr>"
+                                                +           "<tr>"
+                                                +               "<td>Ngày đặt hàng: </td>"
+                                                +               "<td>" + order.getCreatedAt() + "</td>"
+                                                +           "</tr>"
+                                                +        "</tbody>"
+                                                +       "</table>"
+                                                +        "<p></p>\n"
+                                                +       "<table width='500' cellspacing='0' cellpadding='0' border='0' style='  border-collapse: separate; border-spacing: 0 5px;'>"
+                                                +        "<tbody>"
+                                                +            itemsHtml.toString()
+                                                +        "</tbody>"
+                                                +       "</table>"
+                                                +        "<p></p>\n"
+                                                +       "<table width='500' cellspacing='0' cellpadding='0' border='0'>"
+                                                +        "<tbody>"
+                                                +           "<tr>"
+                                                +               "<td>Tổng tiền: </td>"
+                                                +               "<td>" + formatVND.format(order.getTotalPrice()) + "</td>"
+                                                +           "</tr>"
+                                                +           "<tr>"
+                                                +               "<td>Ngày đặt hàng: </td>"
+                                                +               "<td>" + order.getCreatedAt() + "</td>"
+                                                +           "</tr>"
+                                                +        "</tbody>"
+                                                +       "</table>"
+                                                +        "<p>Nếu bạn có điều gì không hài lòng, xin hãy liên hệ với chúng tôi!</p>\n"
+                                                +        "<p>Chúc bạn luôn có những trải nghiệm tuyệt vời khi mua sắm tại REID Shop.</p>\n"
+                                                +        "<p>Trân trọng,</p>\n"
+                                                +        "<p>Đội ngủ REID Shop</p>\n"
+                                                    + "</div>"
+                                                + "</div>"
+                                            + "</body>\r\n"
+                                        + "</html>";
+
+                            //Gửi email để thông báo đến người nhận
+                            emailService.sendAnnouncementEmail(recvEmail, subject, body);
+
+                        }catch (Exception exception) {
+                            return new ModelAndView("vendor/order");
+                        }
+                    }
                     case ALREADY -> ordersService.UpdateOrderStatus(orderId, OrderStatus.COMPLETE);
                 }
             }
@@ -158,6 +267,7 @@ public class ManagerOrderVendor {
         Optional<Account> optAccount = accountRepository.findById(accountId);
         Optional<Orders> optOrder = ordersRepository.findById(orderedID);
         List<OrderItem> items = orderItemRepository.findAllItemByOrderId(orderedID);
+        List<ProductOutOfStock> productOutOfStocks = productOutOfStockRepository.findByOrderId(orderedID);
 
         if(opt.isPresent()){
             AccountDetail accountDetail = opt.get();
@@ -168,6 +278,7 @@ public class ManagerOrderVendor {
             model.addAttribute("order", order);
             model.addAttribute("formatVND",formatVND);
             model.addAttribute("orderItem",items);
+            model.addAttribute("productOutOfStocks", productOutOfStocks);
             return new ModelAndView("vendor/orderDetail", model);
         }
         return new ModelAndView("redirect:/vendor/order", model);

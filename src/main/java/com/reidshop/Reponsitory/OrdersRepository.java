@@ -4,6 +4,7 @@ import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Entity.Size;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
+import com.reidshop.Model.Enum.ReceiveType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -116,6 +117,10 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     //Order by Store_id
     @Query("select o from Orders o where o.store.id = :storeId")
     List<Orders> findAllByStoreID(@Param("storeId") Long storeId);
+
+    //List Order by Store_ID with Recv_type and Status
+    @Query("SELECT o FROM Orders o WHERE o.status = :status AND o.receiveType = :recv_type AND o.store.id = :storeId")
+    List<Orders> findAllOrdersByRecvAndStoreId(@Param("status") OrderStatus status, @Param("recv_type") ReceiveType recv_type, @Param("storeId") Long storeId);
 
     //List order by store_id for status
     @Query("SELECT o FROM Orders o WHERE o.status = :status AND o.store.id = :storeId")
