@@ -17,7 +17,7 @@ public class EmailServiceImpl implements IEmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    private String SENDER = "nguyenhuudat2710@gmail.com";
+    private String SENDER = "dang01635441895@gmail.com";
     public EmailServiceImpl(JavaMailSender mailSender) {
         this.mailSender = mailSender;
     }
@@ -80,6 +80,21 @@ public class EmailServiceImpl implements IEmailService {
         helper.setText(htmlContent, true);
         mailSender.send(message);
     }
+
+    @Override
+    public void sendAnnouncementEmail(String recvEmail, String subject, String body) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+//        helper.setFrom(contactRequest.getEmail());
+        helper.setTo(recvEmail);
+        helper.setSubject("[REID] " + subject);
+        String htmlContent = body;
+
+        // Đặt nội dung email dưới dạng HTML
+        helper.setText(htmlContent, true);
+        mailSender.send(message);
+    }
+
 
     @Override
     public String randomCode(){

@@ -40,7 +40,56 @@
 <!-- ======= Header ======= -->
 <jsp:include page="header.jsp" />
 <!-- ======= Sidebar ======= -->
-<jsp:include page="sidebar.jsp" />
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/vendor/home"/>">
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-basket"></i><span>Order</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="<c:url value="/vendor/orderRcvStore"/>">
+            <i class="bi bi-circle"></i><span>Orders To Process</span>
+          </a>
+        </li>
+        <li>
+          <a href="<c:url value="/vendor/order"/>" class="active">
+            <i class="bi bi-circle"></i><span>Order Management</span>
+          </a>
+        </li>
+      </ul>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-text"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
+      </a>
+      <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+        <li>
+          <a href="<c:url value="/vendor/listStock"/>">
+            <i class="bi bi-circle"></i><span>Stock</span>
+          </a>
+        </li>
+        <li>
+          <a href="<c:url value="/vendor/stock"/>">
+            <i class="bi bi-circle"></i><span>Import Product</span>
+          </a>
+        </li>
+      </ul>
+    </li><!-- End Forms Nav -->
+
+  </ul>
+
+</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
 
@@ -133,16 +182,16 @@
 
         <div class="card">
           <div class="card-body pt-3">
+            <h5 class="card-title" style="padding: 0!important;">Order Detail <span style="color: #51f000; font-style: italic; font-weight: 500;"> | Available for shipping</span></h5>
             <!-- Bordered Tabs -->
-            <ul class="nav nav-tabs nav-tabs-bordered">
+<%--            <ul class="nav nav-tabs nav-tabs-bordered">--%>
 
-              <li class="nav-item">
-                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Order Detail</button>
-              </li>
-            </ul>
-            <div class="tab-content pt-2">
-
-              <div class="tab-pane show active profile-edit pt-3" id="profile-edit">
+<%--              <li class="nav-item">--%>
+<%--                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Order Detail</button>--%>
+<%--              </li>--%>
+<%--            </ul>--%>
+<%--            <div class="tab-content pt-2">--%>
+              <div class="tab-pane show active profile-edit pt-3">
                 <!-- Table detail order -->
                 <table class="table table-bordered">
                   <thead>
@@ -170,14 +219,59 @@
                   </c:forEach>
                   </tbody>
                 </table>
-
               </div>
-
-            </div><!-- End Bordered Tabs -->
-
+<%--            </div><!-- End Bordered Tabs -->--%>
           </div>
         </div>
 
+        <div class="card">
+          <div class="card-body pt-3">
+            <h5 class="card-title" style="padding: 0!important;">Product out of stock <span style="color: red; font-style: italic; font-weight: 500;">| Immediate import required</span></h5>
+
+            <!-- Bordered Tabs -->
+<%--            <ul class="nav nav-tabs nav-tabs-bordered">--%>
+
+<%--              <li class="nav-item">--%>
+<%--                <button class="nav-link" data-bs-toggle="tab">Product out of stock</button>--%>
+<%--              </li>--%>
+<%--            </ul>--%>
+<%--            <div class="tab-content pt-2">--%>
+              <div class="tab-pane show active profile-edit pt-3">
+                <!-- Table detail order -->
+                <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Product Image</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Total Price</th>
+<%--                    <th scope="col">Action</th>--%>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <c:forEach items="${productOutOfStocks}" var="outStock">
+                    <tr>
+                      <th scope="row">${outStock.id}</th>
+                      <td>${outStock.size.product.name}</td>
+                      <th scope="row"><img src="${outStock.size.product.images.get(0).img}" alt=""></th>
+                      <td>${outStock.size.size}</td>
+                      <td>${outStock.quantity}</td>
+                      <td>${formatVND.format(outStock.price)}</td>
+                      <td>${formatVND.format(outStock.price*outStock.quantity)}</td>
+                    <%--                      <td>--%>
+<%--                        <button type="button" onclick="window.location.href='/vendor/order/${outStock.orders.account.id}/${outStock.orders.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>--%>
+<%--                      </td>--%>
+                    </tr>
+                  </c:forEach>
+                  </tbody>
+                </table>
+              </div>
+<%--            </div><!-- End Bordered Tabs -->--%>
+          </div>
+        </div>
       </div>
     </div>
   </section>

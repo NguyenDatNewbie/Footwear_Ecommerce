@@ -8,5 +8,7 @@ public interface IEmailService {
 
     void sendMessage(ContactRequest contactRequest) throws MessagingException;
 
+    void sendAnnouncementEmail(String toEmail, String subject, String body) throws MessagingException;
+
     String randomCode();
 }
