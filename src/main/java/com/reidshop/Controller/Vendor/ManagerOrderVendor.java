@@ -196,8 +196,6 @@ public class ManagerOrderVendor {
                             //Nội dung của email
                             String body = "<html>\r\n"
                                             + "<body>\r\n" +
-//                                                    "<div style=\"display:flex;justify-content: center;\">\r\n" +
-//                                                        "<div style=\"display:flex;flex-direction: column;\">\r\n"
                                                     "<div style=\"justify-content: center; display:flex;\">\r\n" +
                                                         "<div>\r\n"
                                                 +        "<img src='https://res.cloudinary.com/dhmeeqkgr/image/upload/v1717684779/logo_a6zddc.png' alt='Logo' width='100px' height='40px' style='display: block; margin: auto'>\r\n"

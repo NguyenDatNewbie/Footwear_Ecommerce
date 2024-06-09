@@ -5,6 +5,7 @@ import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Request.StockRequest;
 import com.reidshop.Model.Response.StockProductResponse;
 import com.reidshop.Reponsitory.*;
+import com.reidshop.Service.IProductOutOfStockService;
 import com.reidshop.Service.Impl.StockServiceImpl;
 import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,11 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 @RequestMapping("/vendor/stock")
@@ -41,16 +40,30 @@ public class StockController {
     InventoryRepository inventoryRepository;
     @Autowired
     AccountDetailRepository accountDetailRepository;
+    @Autowired
+    ProductOutOfStockRepository productOutOfStockRepository;
+    @Autowired
+    IProductOutOfStockService ofStockService;
 
     @GetMapping("")
     String index(ModelMap modelMap, HttpServletRequest request){
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(null);
+        Store store = storeRepository.searchAllByAccountId(account.getId());
+        Long storeID = store.getId();
 
         AccountDetail accountDetail = accountDetailRepository.findAccountDetailByAccountId(account.getId());
+//        List<ProductOutOfStock> outOfStocks = productOutOfStockRepository.findAllByStoreId(storeID);
+        List<ProductOutOfStock> importProduct = ofStockService.listProductBySize(storeID);
+
+
         modelMap.addAttribute("accountDetail", accountDetail);
-        modelMap.addAttribute("supplierRepository",supplierRepository);
+        modelMap.addAttribute("supplierRepository", supplierRepository);
+        modelMap.addAttribute("inventoryRepository", inventoryRepository);
+        modelMap.addAttribute("importProduct", importProduct);
+        modelMap.addAttribute("storeID", storeID);
+
         return "vendor/stock";
     }
 

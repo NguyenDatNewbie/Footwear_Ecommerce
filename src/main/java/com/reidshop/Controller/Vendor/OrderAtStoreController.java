@@ -6,6 +6,7 @@ import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IOrderItemService;
+import com.reidshop.Service.IProductOutOfStockService;
 import com.reidshop.Service.Impl.OrdersServiceImpl;
 import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,6 +46,8 @@ public class OrderAtStoreController {
     StoreRepository storeRepository;
     @Autowired
     InventoryRepository inventoryRepository;
+    @Autowired
+    IProductOutOfStockService productOutOfStockService;
 
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
@@ -68,7 +71,9 @@ public class OrderAtStoreController {
         //List Orders of Store and have Receive Type at Store
         List<Orders> ordersRecvAtStore = ordersRepository.findAllOrdersByRecvAndStoreId(OrderStatus.WAIT, ReceiveType.STORE, storeID);
 
+//        modelMap.addAttribute("ordersRecvAtStore", ordersRecvAtStore);
         modelMap.addAttribute("ordersRecvAtStore", ordersRecvAtStore);
+        modelMap.addAttribute("productOutOfStockService", productOutOfStockService);
 
         return "vendor/orderStore";
     }

@@ -173,51 +173,89 @@
                 Nhập hàng thành công
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <form class="row g-3">
-                            <div class="col-12">
-                                <h5 class="card-title">Nhà cung cấp</h5>
-                                <select class="form-select">
-                                    <c:forEach var="supplier" items="${supplierRepository.findAll()}">
-                                        <c:choose>
-                                            <c:when test="${loop.index eq 0}">
-                                                <option value="${supplier.id}" selected>${supplier.name}</option>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <option value="${supplier.id}">${supplier.name}</option>
-                                            </c:otherwise>
-                                        </c:choose>
+            <div class="col-lg-8">
+                <div class="row">
+                    <!-- Recent Sales -->
+                    <div class="col-12">
+                        <div class="card recent-sales overflow-auto">
+
+                            <div class="card-body">
+                                <h5 class="card-title">Product <span>| The list of products to be restocked</span></h5>
+                                <table class="table datatable">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">Product Name</th>
+                                        <th scope="col">Color</th>
+                                        <th scope="col">Size</th>
+                                        <th scope="col">Quantity</th>
+                                        <th scope="col">Inventory</th>
+                                        <th scope="col">Restock</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <c:forEach items="${importProduct}" var="outStock">
+                                        <tr>
+                                            <td>${outStock.size.product.name}</td>
+                                            <td>${outStock.color.color_name}</td>
+                                            <td>${outStock.size.size}</td>
+                                            <td>${outStock.quantity}</td>
+<%--                                            <td>${inventoryRepository.getQuantityOfProduct(storeID, outStock.size.id, outStock.color.id)}</td>--%>
+                                            <c:set var="inventory" value="${inventoryRepository.getQuantityOfProduct(storeID, outStock.size.id, outStock.color.id)}"/>
+                                            <td>${inventory}</td>
+                                            <td>${outStock.quantity - inventory}</td>
+                                        </tr>
                                     </c:forEach>
-                                </select>
+                                    </tbody>
+                                </table>
                             </div>
-                        </form>
+                        </div>
+                    </div>
+                </div><!-- End Recent Sales -->
+            </div><!-- End Right side columns -->
+            <div class="col-lg-4">
+
+                    <div class="card">
+                        <div class="card-body">
+                            <form class="row g-3">
+                                <div class="col-12">
+                                    <h5 class="card-title">Supplier</h5>
+                                    <select class="form-select">
+                                        <c:forEach var="supplier" items="${supplierRepository.findAll()}">
+                                            <c:choose>
+                                                <c:when test="${loop.index eq 0}">
+                                                    <option value="${supplier.id}" selected>${supplier.name}</option>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <option value="${supplier.id}">${supplier.name}</option>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </form>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-6">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row">
-                        <div class="col-lg-4">
-                        <div class="content statistics">
-                            <div>
-                                <h5>Tổng tiền</h5>
-                                <span></span>
-                            </div>
-                            <div>
-                                <h5>Số lượng</h5>
-                                <span></span>
-                            </div>
-                        </div>
-                        </div>
-                        <div class="col-lg-8">
-                                <div class="content check">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="content statistics">
+                                        <div>
+                                            <h6>Total Price</h6>
+                                            <span></span>
+                                        </div>
+                                        <div>
+                                            <h6>Quantity</h6>
+                                            <span></span>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="col-lg-8">
+                                    <div class="content check">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -226,7 +264,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div style="display: flex">
-                            <h5 class="card-title" style="flex: 1; padding-bottom: 0">Nhập kho</h5>
+                            <h5 class="card-title" style="flex: 1; padding-bottom: 0">Import Stock</h5>
                             <button class="btn btn-outline-success" onclick="add()" style="margin: 20px 0 0 0;width: 75px;font-weight: 550;font-size: 17px;">Lưu</button>
                         </div>
                         <div class="datatable-container">

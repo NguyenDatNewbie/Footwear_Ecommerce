@@ -125,6 +125,7 @@
                                                 <th scope="col">Total Price</th>
                                                 <th scope="col">Store</th>
                                                 <th scope="col">Creation Time</th>
+                                                <th scope="col">Product Status</th>
 <%--                                                <th scope="col">Receive Type</th>--%>
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Action</th>
@@ -150,6 +151,16 @@
 <%--                                                            </c:when>--%>
 <%--                                                        </c:choose>--%>
 <%--                                                    </td>--%>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${productOutOfStockService.checkOrder(order.id)}">
+                                                                <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i> In stock</span>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <span class="badge bg-danger"><i class="bi bi-exclamation-octagon me-1"></i> Out of stock</span>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${order.status == 'WAIT'}">

@@ -1,9 +1,6 @@
 package com.reidshop.Service.Impl;
 
-import com.reidshop.Model.Entity.Inventory;
-import com.reidshop.Model.Entity.Orders;
-import com.reidshop.Model.Entity.Product;
-import com.reidshop.Model.Entity.ProductOutOfStock;
+import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Request.CartRequest;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IOrderItemService;
@@ -11,7 +8,9 @@ import com.reidshop.Service.IProductOutOfStockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProductOutOfStockServiceImpl implements IProductOutOfStockService {
@@ -51,5 +50,40 @@ public class ProductOutOfStockServiceImpl implements IProductOutOfStockService {
                 orderItemService.save(inventory,cart.getQuantity(),price,orders);
         }
         return totalPrice;
+    }
+
+    @Override
+    public boolean checkOrder(Long orderId) {
+        List<ProductOutOfStock> listItem = productOutOfStockRepository.findByOrderId(orderId);
+        if (listItem.isEmpty())
+            return true;
+        return false;
+    }
+
+    @Override
+    public List<ProductOutOfStock> listProductBySize(Long storeId) {
+        List<Object[]> result = productOutOfStockRepository.listProductImport(storeId);
+        List<ProductOutOfStock> products = new ArrayList<>();
+
+        Long id = 1L;
+        for (Object[] item : result){
+            Long productId = id;
+            Long size_id = (Long) item[0];
+            Long color_id = (Long) item[1];
+            Long  quantity = (Long) item[2];
+
+            Size size = sizeRepository.findById(size_id).orElse(null);
+            Color color = colorRepository.findById(color_id).orElse(null);
+
+            ProductOutOfStock product = new ProductOutOfStock();
+            product.setId(productId);
+            product.setSize(size);
+            product.setColor(color);
+            product.setPrice(0.0);
+            product.setQuantity(quantity.intValue());
+            products.add(product);
+            id++;
+        }
+        return products;
     }
 }
