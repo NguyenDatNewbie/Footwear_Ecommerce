@@ -2321,7 +2321,7 @@
                 name: document.getElementById('name').value,
                 phone: document.getElementById('phone').value,
                 address: address,
-                delivery: {
+                delivery:  {
                     cost: inputsDelivery[0].value,
                     intentTime: currentTime,
                     code: inputsDelivery[2].value,
