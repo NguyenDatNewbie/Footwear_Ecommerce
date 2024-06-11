@@ -1,7 +1,5 @@
 package com.reidshop.Controller.User;
 
-import com.mservice.allinone.processor.allinone.CaptureMoMo;
-import com.mservice.shared.sharedmodels.Environment;
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Request.RegisterRequest;
 import com.reidshop.Service.IAccountService;
