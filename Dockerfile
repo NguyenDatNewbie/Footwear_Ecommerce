@@ -17,7 +17,7 @@ FROM openjdk:17-slim
 WORKDIR /app
 
 # Copy the WAR file from the build container to the run container
-COPY --from=build /app/target/ReidShop-3.0.1.war /app/demo.war
+COPY --from=build /app/target/reidshop-0.0.1-SNAPSHOT.war /app/demo.war
 
 # Expose the port the application will run on
 EXPOSE 8080

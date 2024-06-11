@@ -9,7 +9,8 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.reidshop</groupId>
-	<artifactId>ReidShop</artifactId>
+	<artifactId>reidshop</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>ReidShop</name>
 	<description>ReidShop</description>
 	<packaging>war</packaging>
