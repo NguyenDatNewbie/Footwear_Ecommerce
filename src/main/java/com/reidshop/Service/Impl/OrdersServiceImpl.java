@@ -161,7 +161,6 @@ public class OrdersServiceImpl implements IOrdersService {
             orders.setStatus(OrderStatus.WAIT);
             orders.setReceiveType(receiveType);
             orders.setPaymentType(paymentType);
-            orders.setDelivery(null);
             if(receiveType != ReceiveType.STORE) {
                 Delivery delivery = deliveryRepository.save(orderCombineRequest.getOrders().getDelivery());
                 orders.setDelivery(delivery);
