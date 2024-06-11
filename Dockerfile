@@ -20,7 +20,7 @@ WORKDIR /app
 COPY --from=build /app/target/ReidShop-3.0.1.war /app/demo.war
 
 # Expose the port the application will run on
-EXPOSE 8083
+EXPOSE 8080
 
 # Command to run the application
 ENTRYPOINT ["java", "-jar", "/app/demo.war"]
