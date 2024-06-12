@@ -17,10 +17,10 @@ FROM openjdk:17-slim
 WORKDIR /app
 
 # Copy the WAR file from the build container to the run container
-COPY --from=build /app/target/reidshop-0.0.1-SNAPSHOT.war /app/demo.war
+COPY --from=build /app/target/reidshop-0.0.1-SNAPSHOT.war /app/demo.jar
 
 # Expose the port the application will run on
 EXPOSE 8080
 
 # Command to run the application
-ENTRYPOINT ["java", "-jar", "/app/demo.war"]
+ENTRYPOINT ["java", "-jar", "/app/demo.jar"]
