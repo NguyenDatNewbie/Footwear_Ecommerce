@@ -89,4 +89,9 @@ public class OrderItemImpl implements IOrderItemService {
         }
     }
 
+    @Override
+    public double totalPriceOriginalOrdersNew(Long orderId) {
+        return orderItemRepository.totalPriceOriginalOrdersNew(orderId);
+    }
+
 }
