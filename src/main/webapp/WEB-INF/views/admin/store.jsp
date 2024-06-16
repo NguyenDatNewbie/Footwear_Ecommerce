@@ -58,33 +58,35 @@
             <div class="card recent-sales overflow-auto">
 
               <div class="card-body">
-                <h5 class="card-title">All Store</h5>
-                    <table class="table datatable">
-                      <thead>
-                      <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Phone</th>
-                        <th scope="col">Action</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <c:forEach items="${accountRepository.findAllStore()}" var="account">
-                        <tr>
-                          <th scope="row">${account.id}</th>
-                          <td>${account.accountDetail.name}</td>
-                          <td>${account.email}</td>
-                          <td>${account.accountDetail.address}</td>
-                          <td>${account.accountDetail.phone}</td>
-                          <td>
-                            <button type="button" onclick="window.location.href='/admin/stores/${account.id}'" class="btn btn-info" style="font-size: 15px">Show Inventory</button>
-                          </td>
-                        </tr>
-                      </c:forEach>
-                      </tbody>
-                    </table>
+                <h5 class="card-title">All Store <span>| The list of Reid Shop branches</span></h5>
+                <p>Currently, the system is operating with <strong style="color: #4D869C; font-size: 15px">${storeRepository.count()}</strong> branches</p>
+
+                <table class="table datatable">
+                  <thead>
+                  <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <c:forEach items="${storeRepository.findAll()}" var="store">
+                    <tr>
+                      <th scope="row">${store.id}</th>
+                      <td>${store.account.accountDetail.name}</td>
+                      <td>${store.account.email}</td>
+                      <td>${store.department}</td>
+                      <td>${store.account.accountDetail.phone}</td>
+                      <td>
+                        <button type="button" onclick="window.location.href='/admin/stores/${store.account.id}'" class="btn btn-info" style="font-size: 15px">Show Inventory</button>
+                      </td>
+                    </tr>
+                  </c:forEach>
+                  </tbody>
+                </table>
 
               </div>
             </div>

@@ -4,6 +4,8 @@ import com.reidshop.Model.Entity.Account;
 import com.reidshop.Model.Entity.Inventory;
 import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Reponsitory.InventoryRepository;
+import com.reidshop.Reponsitory.StockRepository;
+import com.reidshop.Reponsitory.StoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,9 +25,14 @@ public class ManagerStoreController {
     @Autowired
     AccountRepository accountRepository;
 
+    @Autowired
+    StoreRepository storeRepository;
+
     @RequestMapping("")
     public String index(ModelMap modelMap){
         modelMap.addAttribute("accountRepository", accountRepository);
+        modelMap.addAttribute("storeRepository", storeRepository);
+        System.out.println(storeRepository.count());
         return "admin/store";
     }
 

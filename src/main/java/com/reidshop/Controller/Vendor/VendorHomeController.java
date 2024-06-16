@@ -9,14 +9,15 @@ import com.reidshop.Service.IProductService;
 import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 @Controller
@@ -68,6 +69,8 @@ public class VendorHomeController {
 
         List<Double> listRevenue = listRevenueOfThisWeekByStore(storeID);
 
+        List<Orders> orders = ordersRepository.findAllOrderOfStoreByDate(storeID, LocalDate.parse("2024-06-09"));
+
         modelMap.addAttribute("orderToday", ordersRepository.countTodayOrdersForStore(storeID)); //Count Order Today
         modelMap.addAttribute("saleToday", ordersRepository.totalSalesOfTodayStore(storeID));
         modelMap.addAttribute("listTotalPriceOfThisWeekStore", ordersRepository.listTotalPriceOfThisWeekStore(storeID));
@@ -93,6 +96,22 @@ public class VendorHomeController {
         //Store ID
         Long storeID = store.getId();
         return storeID;
+    }
+
+    @PostMapping(value = "/calculateRevenue")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> caculateRevenue(@RequestBody List<LocalDate> dates, HttpServletRequest request) {
+        Long storeId = getStoreIDByRequest(request);
+        List<Map<String, Object>> revenues = new ArrayList<>();
+
+        for (LocalDate date : dates) {
+            double revenueDate = ordersService.caculatorRevenueOfStoreByDate(storeId, date);
+            Map<String, Object> revenueData = new HashMap<>();
+            revenueData.put("x", date);
+            revenueData.put("y", revenueDate);
+            revenues.add(revenueData);
+        }
+        return ResponseEntity.ok(revenues);
     }
 
     @RequestMapping("/getTotalOrderStore")

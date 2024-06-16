@@ -10,6 +10,7 @@ import com.reidshop.Model.Request.OrderCombineRequest;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 public interface IOrdersService {
@@ -41,4 +42,12 @@ public interface IOrdersService {
     List<Orders> findOrdersByAccountAndStatus(Long id, String status);
 
     List<Orders> findOrderByAccountQuery(Long accountId, String keyword);
+
+    double caculatorRevenueOfStoreByDate(Long storeId, LocalDate date);
+
+    double totalSateOfStoreByDate(Long storeId, LocalDate date);
+
+    double caculatorRevenueByDate(LocalDate date);
+
+    double totalSateByDate(LocalDate date);
 }

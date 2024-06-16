@@ -12,13 +12,12 @@ import com.reidshop.Reponsitory.ProductRepository;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
 import com.reidshop.Service.IProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.Console;
 import java.sql.Date;
@@ -80,6 +79,21 @@ public class AdminController {
         modelMap.addAttribute("ordersRepository", ordersRepository);
 
         return "admin/admin";
+    }
+
+    @PostMapping(value = "/calculateRevenue")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> caculateRevenue(@RequestBody List<LocalDate> dates, HttpServletRequest request) {
+        List<Map<String, Object>> revenues = new ArrayList<>();
+
+        for (LocalDate date : dates) {
+            double revenueDate = ordersService.caculatorRevenueByDate(date);
+            Map<String, Object> revenueData = new HashMap<>();
+            revenueData.put("x", date);
+            revenueData.put("y", revenueDate);
+            revenues.add(revenueData);
+        }
+        return ResponseEntity.ok(revenues);
     }
 
     //Orders

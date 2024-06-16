@@ -15,6 +15,9 @@ public interface OrderItemRepository extends JpaRepository<OrderItem,Long> {
     @Query("SELECT SUM(oi.quantity * i.importPrice) FROM OrderItem oi, Inventory i WHERE oi.inventory.id = i.id AND oi.order.id = ?1")
     double totalPriceOriginalOrders(int orderId);
 
+    @Query("SELECT SUM(oi.quantity * i.importPrice) FROM OrderItem oi, Inventory i WHERE oi.inventory.id = i.id AND oi.order.id = ?1")
+    double totalPriceOriginalOrdersNew(Long orderId);
+
     @Query("SELECT o FROM OrderItem o WHERE o.order.id = :orderId")
     List<OrderItem> findAllItemByOrderId(@Param("orderId") Long orderId);
 
