@@ -11,7 +11,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 
@@ -187,4 +189,10 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
             "WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) and o.status = 'COMPLETE' and o.store.id = :storeId " +
             "GROUP BY DATE(o.createdAt)")
     List<Object[]> findOrderIdsByWeekOfStore(@Param("storeId") Long storeId);
+
+    @Query("SELECT o FROM Orders o WHERE DATE(o.createdAt) = :date AND o.status = 'COMPLETE' AND o.store.id = :storeId")
+    List<Orders> findAllOrderOfStoreByDate(@Param("storeId") Long storeId, @Param("date") LocalDate date);
+
+    @Query("SELECT o FROM Orders o WHERE DATE(o.createdAt) = :date AND o.status = 'COMPLETE'")
+    List<Orders> findAllOrderByDate(@Param("date") LocalDate date);
 }

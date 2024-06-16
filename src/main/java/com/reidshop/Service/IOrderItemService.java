@@ -15,4 +15,6 @@ public interface IOrderItemService {
     double totalPriceOfOrderId(Long orderId);   //Tính total price của 1 order
 
     void reInventory(Long orderId);
+
+    double totalPriceOriginalOrdersNew(Long orderId);
 }

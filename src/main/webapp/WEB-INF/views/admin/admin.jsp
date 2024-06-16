@@ -32,6 +32,7 @@
     <link href="/admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
 
     <!-- Template Main CSS File -->
@@ -174,49 +175,18 @@
                     <!-- Chart Revenue month -->
                     <div class="col-12">
                         <div class="card">
+                            <div class="filter" style="top: 20px; right: 20px;">
+                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%; border-radius: 10px;">
+                                    <i class="bi bi-calendar2-event-fill"></i>
+                                    <span></span> <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                            </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Chart of revenue for the past 5 months</h5>
+                                <h5 class="card-title">Reports <span>| Daily Statistics</span></h5>
 
                                 <!-- Bar Chart -->
-                                <canvas id="barChart" style="max-height: 400px;"></canvas>
-                                <script>
-                                    document.addEventListener("DOMContentLoaded", () => {
-                                        new Chart(document.querySelector('#barChart'), {
-                                            type: 'bar',
-                                            data: {
-                                                labels: ${labels},
-                                                datasets: [{
-                                                    label: 'Revenue Chart',
-                                                    data: ${listRevenue},
-                                                    backgroundColor: [
-                                                        'rgba(255, 99, 132, 1)',
-                                                        'rgba(75, 192, 192, 1)',
-                                                        'rgba(54, 162, 235, 1)',
-                                                        'rgba(153, 102, 255, 1)',
-                                                        'rgba(201, 203, 207, 1)'
-                                                    ],
-                                                    borderColor: [
-                                                        'rgb(255, 99, 132)',
-                                                        'rgb(75, 192, 192)',
-                                                        'rgb(54, 162, 235)',
-                                                        'rgb(153, 102, 255)',
-                                                        'rgb(201, 203, 207)'
-                                                    ],
-                                                    borderWidth: 1
-                                                }]
-                                            },
-                                            options: {
-                                                scales: {
-                                                    y: {
-                                                        beginAtZero: true
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    });
-                                </script>
-                                <!-- End Bar CHart -->
+                                <div id="reportsChart"></div>
                             </div>
                         </div>
                     </div><!-- End Chart Revenue month -->
@@ -527,11 +497,138 @@
 <script src="/admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/admin/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/admin/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
 <!-- Template Main JS File -->
 <script src="/admin/assets/js/main.js"></script>
 <script src="/admin/assets/js/admin.js"></script>
+<script>
+    var options = {
+        series: [],
+        chart: {
+            height: 350,
+            type: 'bar',
+            toolbar: {
+                show: false
+            },
+        },
+        plotOptions: {
+            bar: {
+                horizontal: false,
+                columnWidth: '55%',
+                endingShape: 'rounded'
+            },
+        },
+        fill: {
+            type: "gradient",
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.3,
+                opacityTo: 0.4,
+                stops: [0, 90, 100]
+            }
+        },
+        noData: {
+            text: 'Loading...'
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 2,
+            colors: ['transparent']
+        },
+        fill: {
+            opacity: 1
+        },
+        xaxis: {
+            type: 'datetime',
+        },
+        tooltip: {
+            x: {
+                format: 'dd/MM/yyyy HH:mm'
+            },
+        }
+    }
+    //Tạo chart
+    var chart = new ApexCharts(document.querySelector("#reportsChart"), options);
 
+    //Thực hiện tính toán
+    $(function() {
+
+        var start = moment().subtract(10, 'days');
+        var end = moment();
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
+            // Get list of dates
+            let dates = [];
+            let currentDate = start.clone();
+            while (currentDate.isSameOrBefore(end)) {
+                dates.push(currentDate.format('YYYY-MM-DD'));
+                currentDate.add(1, 'days');
+            }
+            console.log("Dates: ", dates);
+            $.ajax({
+                url: '/admin/home/calculateRevenue', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dates),
+                success: function(response) {
+                    console.log('Success:', response);
+                    chart.updateSeries([{
+                        name: 'Revenue',
+                        data: response
+                    }])
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+            //
+            // $.ajax({
+            //     url: '/admin/home/calculateRevenue', // Địa chỉ máy chủ để gửi yêu cầu
+            //     method: 'POST',
+            //     contentType: 'application/json',
+            //     data: JSON.stringify(dates),
+            //     success: function(response) {
+            //         console.log('Success:', response);
+            //
+            //         chart.appendSeries({
+            //             name: 'Account',
+            //             data: response
+            //         })
+            //     },
+            //     error: function(xhr, status, error) {
+            //         console.error('Error:', error);
+            //     }
+            // });
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+    //Hiển thị
+    chart.render();
+</script>
 
 </body>
 

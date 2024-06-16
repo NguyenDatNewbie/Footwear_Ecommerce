@@ -282,4 +282,78 @@ public class OrdersServiceImpl implements IOrdersService {
         }
         return result;
     }
+
+    @Override
+    public double caculatorRevenueOfStoreByDate(Long storeId, LocalDate date) {
+        List<Orders> ordersOfDate = ordersRepository.findAllOrderOfStoreByDate(storeId, date);
+
+        if (ordersOfDate == null || ordersOfDate.isEmpty())
+            return 0;
+
+        //Lấy totalPrice của ngày
+        double totalPriceOfDate = totalSateOfStoreByDate(storeId, date);
+
+        //Lấy giá nhập của sản phẩm
+        double originalPrice = 0;
+        for (Orders order : ordersOfDate){
+            Long orderId = order.getId();
+            originalPrice += orderItemService.totalPriceOriginalOrdersNew(orderId);
+        }
+
+        //Tính revenue
+        double revenueDate = totalPriceOfDate - originalPrice;
+        return revenueDate;
+    }
+
+    @Override
+    public double totalSateOfStoreByDate(Long storeId, LocalDate date) {
+        List<Orders> ordersOfDate = ordersRepository.findAllOrderOfStoreByDate(storeId, date);
+
+        if (ordersOfDate == null || ordersOfDate.isEmpty())
+            return 0;
+
+        double totalPrice = 0;
+        for (Orders order : ordersOfDate) {
+            totalPrice += order.getTotalPrice();
+        }
+        return totalPrice;
+    }
+
+    @Override
+    public double caculatorRevenueByDate(LocalDate date) {
+        List<Orders> ordersOfDate = ordersRepository.findAllOrderByDate(date);
+
+        if (ordersOfDate == null || ordersOfDate.isEmpty())
+            return 0;
+
+        //Lấy totalPrice của ngày
+        double totalPriceOfDate = totalSateByDate(date);
+
+        //Lấy giá nhập của sản phẩm
+        double originalPrice = 0;
+        for (Orders order : ordersOfDate){
+            Long orderId = order.getId();
+            originalPrice += orderItemService.totalPriceOriginalOrdersNew(orderId);
+        }
+
+        //Tính revenue
+        double revenueDate = totalPriceOfDate - originalPrice;
+        return revenueDate;
+    }
+
+    @Override
+    public double totalSateByDate(LocalDate date) {
+        List<Orders> ordersOfDate = ordersRepository.findAllOrderByDate(date);
+
+        if (ordersOfDate == null || ordersOfDate.isEmpty())
+            return 0;
+
+        double totalPrice = 0;
+        for (Orders order : ordersOfDate) {
+            totalPrice += order.getTotalPrice();
+        }
+        return totalPrice;
+    }
+
+
 }

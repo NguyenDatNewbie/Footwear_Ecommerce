@@ -31,6 +31,7 @@
     <link href="/admin/assets/vendor/remixicon/remixicon.css" rel="stylesheet">
     <link href="/admin/assets/vendor/simple-datatables/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
     <!-- Template Main CSS File -->
@@ -221,62 +222,17 @@
                     <!-- Reports -->
                     <div class="col-12">
                         <div class="card">
+                            <div class="filter" style="top: 20px; right: 20px;">
+                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%; border-radius: 10px;">
+                                    <i class="bi bi-calendar2-event-fill"></i>
+                                    <span></span> <i class="bi bi-caret-down-fill"></i>
+                                </div>
+                            </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Reports <span>/This Week</span></h5>
-
+                                <h5 class="card-title">Reports <span>| Daily Revenue Statistics</span></h5>
                                 <!-- Line Chart -->
                                 <div id="reportsChart"></div>
-
-                                <script>
-                                    document.addEventListener("DOMContentLoaded", () => {
-                                        new ApexCharts(document.querySelector("#reportsChart"), {
-                                            series: [{
-                                                name: 'Sales',
-                                                data: ${listTotalPriceOfThisWeekStore},
-                                            }, {
-                                                name: 'Revenue',
-                                                data: ${listRevenue},
-                                            }],
-                                            chart: {
-                                                height: 350,
-                                                type: 'area',
-                                                toolbar: {
-                                                    show: false
-                                                },
-                                            },
-                                            markers: {
-                                                size: 4
-                                            },
-                                            colors: ['#4154f1', '#2eca6a'],
-                                            fill: {
-                                                type: "gradient",
-                                                gradient: {
-                                                    shadeIntensity: 1,
-                                                    opacityFrom: 0.3,
-                                                    opacityTo: 0.4,
-                                                    stops: [0, 90, 100]
-                                                }
-                                            },
-                                            dataLabels: {
-                                                enabled: false
-                                            },
-                                            stroke: {
-                                                curve: 'smooth',
-                                                width: 2
-                                            },
-                                            xaxis: {
-                                                type: 'category',
-                                                categories: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-                                            },
-                                            tooltip: {
-                                                x: {
-                                                    format: 'dd/MM/yy HH:mm'
-                                                },
-                                            }
-                                        }).render();
-                                    });
-                                </script>
                                 <!-- End Line Chart -->
 
                             </div>
@@ -399,6 +355,10 @@
 <script src="/admin/assets/vendor/simple-datatables/simple-datatables.js"></script>
 <script src="/admin/assets/vendor/tinymce/tinymce.min.js"></script>
 <script src="/admin/assets/vendor/php-email-form/validate.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 
 <!-- Template Main JS File -->
 <script src="/admin/assets/js/main.js"></script>
@@ -522,6 +482,106 @@
             });
         });
     });
+</script>
+<script>
+    var options = {
+        series: [],
+        chart: {
+            height: 350,
+            type: 'area',
+            toolbar: {
+                show: false
+            },
+        },
+        markers: {
+            size: 4
+        },
+        colors: [ '#2eca6a','#4154f1'],
+        fill: {
+            type: "gradient",
+            gradient: {
+                shadeIntensity: 1,
+                opacityFrom: 0.3,
+                opacityTo: 0.4,
+                stops: [0, 90, 100]
+            }
+        },
+        noData: {
+            text: 'Loading...'
+        },
+        dataLabels: {
+            enabled: false
+        },
+        stroke: {
+            curve: 'smooth',
+            width: 2
+        },
+        xaxis: {
+            type: 'datetime',
+        },
+        tooltip: {
+            x: {
+                format: 'dd/MM/yyyy HH:mm'
+            },
+        }
+    }
+    //Tạo chart
+    var chart = new ApexCharts(document.querySelector("#reportsChart"), options);
+
+    //Thực hiện tính toán
+    $(function() {
+
+        var start = moment().subtract(10, 'days');
+        var end = moment();
+        // var chart = new ApexCharts(document.querySelector("#reportsChart"), options);
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
+            // Get list of dates
+            let dates = [];
+            let currentDate = start.clone();
+            while (currentDate.isSameOrBefore(end)) {
+                dates.push(currentDate.format('YYYY-MM-DD'));
+                currentDate.add(1, 'days');
+            }
+            // console.log("Dates: ", dates);
+            $.ajax({
+                url: '/vendor/home/calculateRevenue', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dates),
+                success: function(response) {
+                    // console.log('Success:', response);
+                    chart.updateSeries([{
+                        name: 'Revenue',
+                        data: response
+                    }])
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+    });
+    //Hiển thị
+    chart.render();
 </script>
 
 </body>
