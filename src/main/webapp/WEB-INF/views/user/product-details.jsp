@@ -44,10 +44,12 @@
             transition: background-color 0.3s;
             cursor: pointer;
         }
-        .product_d_right h1{
+
+        .product_d_right h1 {
             font-weight: 500;
             color: #242424;
         }
+
         .size_product .active {
             background: #ff6a28;
             color: #ffffff;
@@ -134,6 +136,7 @@
         .fa-star {
             color: #faca50;
         }
+
         .fa-star-half-alt {
             color: #faca50;
         }
@@ -254,35 +257,42 @@
         .color-more {
             margin-top: 1%;
         }
-
+        .product-color:hover{
+            cursor: pointer;
+        }
         .thumb-color {
             width: 50px;
             margin-right: 2%;
         }
 
-        .thumb-color a img:hover {
+        .thumb-color div img:hover {
             background: #ff6a28;
             padding: 2px;
             border-radius: 50%;
         }
-        .thumb-color a{
+
+        .thumb-color div {
             border: none;
             padding: 0;
             background: transparent;
         }
-        .thumb-color a img{
+
+        .thumb-color div img {
             border-radius: 50%;
         }
-        .activeColor{
-            background: #ff6a28!important;
-            padding: 2px!important;
+
+        .activeColor {
+            background: #ff6a28 !important;
+            padding: 2px !important;
             border-radius: 50%;
         }
-        .thumb-color p{
+
+        .thumb-color p {
             text-align: center;
             color: #0b0b0b;
             font-weight: 500;
         }
+
         @keyframes slideIn {
             from {
                 top: -50px;
@@ -332,9 +342,11 @@
         #modal-box-measurement {
             /*top: -60px;*/
         }
+
         .instruction {
             padding-bottom: 20px;
         }
+
         #modal-box-measurement .modal-dialog.modal-dialog-centered {
             min-width: 640px;
         }
@@ -397,24 +409,29 @@
         #instruction-measurement {
             width: 300px;
         }
-        #modal-box-measurement .modal_body{
+
+        #modal-box-measurement .modal_body {
             padding: 0;
         }
+
         #modal-box-measurement .product-size {
             padding: 20px;
             font-size: 12px;
             border-top: 1px solid rgba(0, 0, 0, .2);
         }
-        .title{
+
+        .title {
             text-align: center;
         }
-        #modal-box-measurement .title h4{
+
+        #modal-box-measurement .title h4 {
             font-size: 24px;
             font-weight: bold;
             color: #242424;
             font-family: Emoji;
             margin-bottom: 20px;
         }
+
         /* CSS để hiển thị spinner */
         .loader-container {
             position: fixed;
@@ -434,20 +451,24 @@
             aspect-ratio: 2;
             border: 10px solid #000;
             box-sizing: border-box;
-            background:
-                    radial-gradient(farthest-side,#fff 98%,#0000) left/20px 20px,
-                    radial-gradient(farthest-side,#fff 98%,#0000) left/20px 20px,
-                    radial-gradient(farthest-side,#fff 98%,#0000) center/20px 20px,
-                    radial-gradient(farthest-side,#fff 98%,#0000) right/20px 20px,
-                    rgba(0, 0, 0, 0.5);
+            background: radial-gradient(farthest-side, #fff 98%, #0000) left/20px 20px,
+            radial-gradient(farthest-side, #fff 98%, #0000) left/20px 20px,
+            radial-gradient(farthest-side, #fff 98%, #0000) center/20px 20px,
+            radial-gradient(farthest-side, #fff 98%, #0000) right/20px 20px,
+            rgba(0, 0, 0, 0.5);
             background-repeat: no-repeat;
             filter: blur(4px) contrast(10);
             animation: l14 1s infinite;
             justify-content: space-between;
 
         }
+        #messageBox{
+            z-index: 99999999;
+        }
         @keyframes l14 {
-            100%  {background-position:right,left,center,right}
+            100% {
+                background-position: right, left, center, right
+            }
         }
 
     </style>
@@ -478,33 +499,42 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-5 col-md-5">
-                <div class="product-details-tab" id="single-zoom">
-                    <div id="img-1" class="zoomWrapper single-zoom">
-                        <img id="zoom1" src="${images.get(0).img}"
+                <div class="product-details-tab" id="single-zoom-${productCurrent.id}">
+                    <div id="img-${productCurrent.id}" class="zoomWrapper single-zoom">
+                        <img id="zoom${productCurrent.id}" src="${images.get(0).img}"
                              data-zoom-image="${images.get(0).img}"
                              alt="big-1">
                     </div>
 
                     <div class="single-zoom-thumb">
                         <ul class="s-tab-zoom owl-carousel single-product-active"
-                            id="gallery_01">
+                            id="gallery_${productCurrent.id}">
                             <c:forEach items="${images}" var="img">
-                                <c:set var="isVideo" value="${img.img.indexOf('/video') != -1 ? 0 : -1}" />
+                                <c:set var="isVideo" value="${img.img.indexOf('/video') != -1 ? 0 : -1}"/>
                                 <li><a href="#" class="elevatezoom-gallery active"
-                                   data-update="" data-image="${img.img}"
-                                   data-zoom-image="${img.img}">
+                                       data-update="" data-image="${img.img}"
+                                       data-zoom-image="${img.img}">
                                     <c:choose>
-                                        <c:when test="${isVideo == 0}">
-                                            <video controls src="${img.img}" height="100px" width="100px">
+                                    <c:when test="${isVideo == 0}">
+                                    <video controls src="${img.img}" height="100px" width="100px">
                                         </c:when>
                                         <c:otherwise>
-                                            <img src="${img.img}" alt="zo-th-1"/>
+                                        <img src="${img.img}" alt="zo-th-1"/>
                                         </c:otherwise>
-                                    </c:choose>
+                                        </c:choose>
                                 </a></li>
                             </c:forEach>
                         </ul>
                     </div>
+                    <script>
+                        $("#zoom${productCurrent.id}").elevateZoom({
+                            gallery:'gallery_${productCurrent.id}',
+                            responsive : true,
+                            cursor: 'crosshair',
+                            zoomType : 'inner'
+                        });
+                    </script>
+
                 </div>
             </div>
             <div class="col-lg-7 col-md-7">
@@ -563,12 +593,11 @@
                                 <c:forEach var="product_color"
                                            items="${imageService.imageFirstOfColor(productCurrent.id)}">
                                     <div class="thumb-color">
-                                        <a class="product-color"
-                                           href="/product?id=${productCurrent.id}&color=${product_color.color.id}">
+                                        <div class="product-color">
                                             <img src="${product_color.img}" alt="">
-                                            <input value="${product_color.color.id}"
-                                                   id="color-${product_color.color.id}" hidden="hidden">
-                                        </a>
+                                            <input value="${product_color.color.id}" hidden="hidden">
+                                            <input value="${productCurrent.id}" hidden="hidden">
+                                        </div>
                                         <p style="text-align: center">${product_color.color.color_name}</p>
                                     </div>
                                 </c:forEach>
@@ -723,7 +752,7 @@
                                                                 <c:when test="${star==0}">
                                                                     <li><i class="far fa-star"></i></li>
                                                                 </c:when>
-                                                                 <c:otherwise>
+                                                                <c:otherwise>
                                                                     <li><i class="fas fa-star-half-alt"></i></li>
                                                                 </c:otherwise>
                                                             </c:choose>
@@ -782,7 +811,7 @@
                             <div class="single_product">
                                 <div class="product_thumb">
                                     <c:if test="${product.images.size()>0}">
-                                        <a class="primary_img" href="/product/${product.id}"><img
+                                        <a class="primary_img" href="/product?=${product.id}"><img
                                                 src="${product.images.get(0).img}" alt=""></a>
                                     </c:if>
                                     <c:if test="${product.images.size()>1}">
@@ -842,7 +871,7 @@
                             <div class="single_product">
                                 <div class="product_thumb">
                                     <c:if test="${product.images.size()>0}">
-                                        <a class="primary_img" href="/product/${product.id}"><img
+                                        <a class="primary_img" href="/product?=${product.id}"><img
                                                 src="${product.images.get(0).img}" alt=""></a>
                                     </c:if>
                                     <c:if test="${product.images.size()>1}">
@@ -954,7 +983,7 @@
 </div>
 <!-- modal area start-->
 <c:forEach var="product"
-           items="${productService.addAll(productService.findAllByProductCategorySoldTop(productCurrent.id),productService.findNewProduct(10)) }">
+           items="${productService.addAll(productService.findAllSimilarityProductByCategory(productCurrent.category),productService.findNewProduct(10)) }">
     <!-- modal area start-->
     <div class="modal fade" id="modal_box-${product.id}" tabindex="-1"
          role="dialog" aria-hidden="true">
@@ -969,43 +998,53 @@
                         <div class="container">
                             <div class="row">
                                 <div class="col-lg-5 col-md-5">
-                                    <div class="product-details-tab">
-                                        <div id="img-2" class="zoomWrapper single-zoom">
-                                            <img id="zoom2"
-                                                 src="${product.images.get(0).img}"
-                                                 data-zoom-image="${product.images.get(0).img}"
+                                    <div class="product-details-tab" id="single-zoom-${product.id}">
+                                        <c:set var="imagesColorOtherProduct" value="${imageRepository.findAllByProductAndColor(imageRepository.findColorOther(product.id).get(0),product.id)}"/>
+                                        <div id="img-${product.id}"  class="zoomWrapper single-zoom">
+                                            <img src="${imagesColorOtherProduct.get(0).img}"
+                                                 data-zoom-image="${imagesColorOtherProduct.get(0).img}"
                                                  alt="big-1">
                                         </div>
 
                                         <div class="single-zoom-thumb">
-                                            <ul class="s-tab-zoom owl-carousel single-product-active"
-                                                id="gallery_02">
-                                                <c:forEach items="${product.images}"
-                                                           var="img">
-                                                    <li><p href="#" class="elevatezoom-gallery active"
+                                            <ul id="gallery_${product.id}" class="s-tab-zoom owl-carousel single-product-active">
+                                                <c:forEach items="${imagesColorOtherProduct}" var="img">
+                                                    <c:set var="isVideo" value="${img.img.indexOf('/video') != -1 ? 0 : -1}"/>
+                                                    <li><a href="#" class="elevatezoom-gallery active"
                                                            data-update="" data-image="${img.img}"
-                                                           data-zoom-image="${img.img}"><img src="${img.img}"
-                                                                                             alt="zo-th-1"/>
-                                                    </p></li>
+                                                           data-zoom-image="${img.img}">
+                                                        <c:choose>
+                                                        <c:when test="${isVideo == 0}">
+                                                        <video controls src="${img.img}" height="100px" width="100px">
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                            <img src="${img.img}" alt="zo-th-1"/>
+                                                            </c:otherwise>
+                                                            </c:choose>
+                                                    </a></li>
                                                 </c:forEach>
-
                                             </ul>
                                         </div>
+                                        <script>
+                                            $("#zoom${product.id}").elevateZoom({
+                                                gallery:'gallery_${product.id}',
+                                                responsive : true,
+                                                cursor: 'crosshair',
+                                                zoomType : 'inner'
+                                            });
+                                        </script>
                                     </div>
                                 </div>
                                 <div class="col-lg-7 col-md-7">
                                     <div class="product_d_right">
-                                        <form action="javascript:addToCart(${productCurrent.id})">
-                                            <h1 style="margin-bottom: 0px; color: #242424;font-weight: 500;">${product.name}
-                                            </h1>
-                                            <c:set var="evaluates"
-                                                   value="${evaluateRepository.findAllByProductId(product.id)}"/>
+                                        <form action="javascript:addToCart(${product.id})">
+                                            <c:set var="evaluates" value="${evaluateRepository.findAllByProductId(product.id)}"/>
+                                            <h1 style="margin-bottom: 0px">${product.name}</h1>
                                             <c:if test="${evaluates.size()>0}">
                                                 <div class=" product_ratting" style="margin-bottom: 0px">
                                                     <ul>
-                                                        <c:forEach
-                                                                items="${evaluateService.rateStar(evaluateService.rateAvg(evaluates))}"
-                                                                var="star">
+                                                        <c:forEach items="${evaluates.rateStar(evaluateService.avg(evaluates))}"
+                                                                   var="star">
                                                             <c:choose>
                                                                 <c:when test="${star==1}">
                                                                     <li><i class="fa fa-star"></i></li>
@@ -1018,22 +1057,23 @@
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </c:forEach>
-                                                        <li class="review">(${evaluates.size()} đánh giá)</li>
+                                                        <li class="review">(${evaluates.size()} đánh giá - ${product.sold} đã
+                                                            bán)
+                                                        </li>
 
                                                     </ul>
                                                 </div>
                                             </c:if>
-
                                             <div class="product_price">
                                                 <c:choose>
                                                     <c:when test="${product.promotion>0}">
-                                                        <span style="color:red;"
-                                                              class="current_price">${formatVND.format(product.price*(1-product.promotion/100))}</span>
+                                    <span style="color:red;"
+                                          class="current_price">${formatVND.format(product.price*(1-product.promotion/100))}</span>
                                                         <span class="old_price">${formatVND.format(product.price)}</span>
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <span style="color:red;"
-                                                              class="current_price">${formatVND.format(product.price)}</span>
+                                    <span style="color:red;"
+                                          class="current_price">${formatVND.format(product.price)}</span>
                                                     </c:otherwise>
                                                 </c:choose>
                                             </div>
@@ -1041,27 +1081,40 @@
                                             <div class="product_desc">
                                                 <p>${product.description}</p>
                                             </div>
-                                            <div class="product_variant size"
-                                                 style="display: block; margin-bottom: 10px">
+                                            <div class="product_variant size" style="display: block; margin-bottom: 10px">
                                                 <div style="display: flex">
-                                                    <h3 style="margin-right: 0px;">Kích thước:</h3>
+                                                    <h3 style="margin-right: 0px;">Màu sắc</h3>
                                                 </div>
 
+                                                <div class="color-more" style="display: flex">
+                                                    <c:forEach var="product_color"
+                                                               items="${imageService.imageFirstOfColor(product.id)}">
+                                                        <div class="thumb-color">
+                                                            <div class="product-color">
+                                                                <img src="${product_color.img}" alt="">
+                                                                <input value="${product_color.color.id}" hidden="hidden">
+                                                                <input value="${product.id}" hidden="hidden">
+                                                            </div>
+                                                            <p style="text-align: center">${product_color.color.color_name}</p>
+                                                        </div>
+                                                    </c:forEach>
+                                                </div>
+                                            </div>
+
+                                            <div class="product_variant size" style="display: block; margin-bottom: 10px">
                                                 <div class="size_product" style="width: 40%">
-                                                    <c:forEach var="size"
-                                                               items="${sizeRepository.findAllByProductId(product.id)}">
-                                                        <div class="box_size"
-                                                             onclick="changeSize(this)">${size.size}</div>
+                                                    <c:forEach var="size" items="${sizeRepository.findAllByProductId(productCurrent.id)}">
+                                                        <div class="box_size" onclick="changeSize(this)">${size.size}</div>
                                                     </c:forEach>
                                                 </div>
                                             </div>
                                             <div class="product_variant quantity">
                                                 <div class="number">
                                                     <span class="minus">-</span>
-                                                    <input id="number_text2" type="text" value="1"/>
+                                                    <input id="number_text2" type="text" value="1" readonly/>
                                                     <span class="plus">+</span>
                                                 </div>
-                                                <button class="button" type="submit">add to cart</button>
+                                                <button class="button" type="submit">Thêm vào giỏ hàng</button>
                                             </div>
                                         </form>
                                         <div class="priduct_social">
@@ -1152,21 +1205,6 @@
         }
     }
 
-
-    function addActive() {
-        // Lấy URL hiện tại
-        var urlParams = new URLSearchParams(window.location.search);
-        // Lấy giá trị của tham số "color"
-        var colorValue = urlParams.get('color');
-        if (colorValue != null) {
-            var imgActive = document.getElementById("color-" + colorValue);
-            imgActive.parentElement.querySelector('img').classList.add("activeColor");
-        }
-
-    }
-
-    addActive();
-
     function selectColor(product_id, color_id, current) {
         let query = "productId=" + product_id + "&" + "colorId=" + color_id;
         $.ajax({
@@ -1191,10 +1229,12 @@
     function addToCart(id) {
         let cart = [];
         let storage = localStorage.getItem('cart');
-        // Lấy URL hiện tại
-        var urlParams = new URLSearchParams(window.location.search);
-        // Lấy giá trị của tham số "color"
-        var colorValue = urlParams.get('color');
+
+        var activeColor = document.querySelector(".activeColor");
+        var colorValue = null;
+        if(activeColor!=null)
+            colorValue = activeColor.parentElement.querySelector("input").value;
+
         if (storage)
             cart = JSON.parse(storage);
         let quantity = parseInt(document.getElementById("number_text").value);
@@ -1284,19 +1324,121 @@
         return link.indexOf('/video') !== -1 ? 0 : -1;
     }
 </script>
+<%--change img from color--%>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll(".product-color").forEach(function (item){
+            item.addEventListener("click",function (event){
+                document.querySelectorAll(".activeColor").forEach(function (active){
+                    active.classList.remove("activeColor");
+                });
+                event.target.parentNode.querySelector("img").classList.add("activeColor");
+                getImages(event.target.parentNode);
+            });
+        });
+    });
+    function showImages(images){
+        if(images.length>0){
+            document.getElementById("img-"+images[0].product).innerHTML = '<img id="zoom' +images[0].product +'"' + 'src="'+
+                images[0].img+
+                '"\n' +
+                '                             data-zoom-image="'+
+                images[0].img+
+                '"\n' +
+                '                             alt="big-1">';
+            var gallery = document.getElementById("gallery_"+images[0].product);
+            gallery.innerHTML='';
+            for(var i=1;i<images.length;i++){
+                gallery.innerHTML += '<li><a href="#" class="elevatezoom-gallery active"\n' +
+                    '                                       data-update="" data-image="'+
+                    images[i].img+'"\n' +
+                    '                                       data-zoom-image="'+
+                    images[i].img+'">' +
+                    '<img src="'+
+                    images[i].img+'" alt="zo-th-1"/>' +
+                    '</a></li>';
+            }
+            reinitializeCarousel(images[0].product);
+        }
 
+
+    }
+    function initializeOwlCarousel(productId) {
+        /* single product activation */
+        $('.single-product-active').owlCarousel({
+            loop: true,
+            nav: true,
+            autoplay: false,
+            autoplayTimeout: 8000,
+            items: 4,
+            margin: 15,
+            dots: false,
+            navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
+                },
+                320: {
+                    items: 2,
+                },
+                992: {
+                    items: 3,
+                },
+                1200: {
+                    items: 4,
+                },
+            }
+        });
+
+        var zoomId = '#zoom' + productId;
+        var galleryId = 'gallery_' + productId;
+        $(zoomId).elevateZoom({
+            gallery:galleryId,
+            responsive : true,
+            cursor: 'crosshair',
+            zoomType : 'inner'
+        });
+    }
+    function reinitializeCarousel(productId) {
+        var selector = '#single-zoom-' + productId + ' .owl-carousel';
+
+        // Destroy carousel trước khi khởi tạo lại
+        $(selector).trigger('destroy.owl.carousel');
+        // Xóa các class và style do OwlCarousel thêm vào
+        $(selector).removeClass('owl-loaded owl-hidden').removeAttr('style');
+        $(selector).find('.owl-stage-outer').children().unwrap();
+        // Khởi tạo lại OwlCarousel
+        initializeOwlCarousel(productId);
+    }
+    function getImages(event){
+        var inputs = event.querySelectorAll("input");
+        $.ajax({
+            url: '/product/images?product='+inputs[1].value+'&color='+inputs[0].value,
+            type: 'GET',
+            contentType: "application/json; charset=utf-8",
+            success: function (response) {
+                console.log(response);
+                showImages(response);
+            },
+            error: function (error) {
+
+            }
+        });
+    }
+</script>
 <%--Phóng to viddeo--%>
 <script>
     document.querySelectorAll('.elevatezoom-gallery video').forEach(video => {
-        video.addEventListener('click', function() {
-            const videoDisplayHTML = '<video controls src="'+this.src+'" height="448px" width="448px"></video>';
+        video.addEventListener('click', function () {
+            const videoDisplayHTML = '<video controls src="' + this.src + '" height="448px" width="448px"></video>';
 
             const videoDisplay = document.getElementById('img-1');
             videoDisplay.innerHTML = videoDisplayHTML;
         });
     });
     document.querySelectorAll('.elevatezoom-gallery img').forEach(img => {
-        img.addEventListener('click', function() {
+        img.addEventListener('click', function () {
             const imageDisplayHTML = '<img id="zoom1" src="' + this.src + '" data-zoom-image="' + this.src + '"alt="big-1""></img> ';
 
             const imageDisplay = document.getElementById('img-1');
@@ -1309,10 +1451,11 @@
         });
     });
 </script>
+
 <%--Xử lý đo kích thước--%>
 <script>
-    function callApi(formData){
-        return new Promise(function (resolve, reject){
+    function callApi(formData) {
+        return new Promise(function (resolve, reject) {
             $.ajax({
                 url: '/product/measurement',
                 type: 'POST',
@@ -1345,6 +1488,7 @@
             });
         });
     }
+
     var fileInput = document.getElementById('file-foot');
     fileInput.addEventListener('change', function () {
         if (fileInput.files.length > 0) {
@@ -1352,7 +1496,7 @@
             var formData = new FormData();
             formData.append('file', file);
             document.getElementById("loader-container").style.display = "flex";
-            callApi(formData).then(function (){
+            callApi(formData).then(function () {
                 document.getElementById("loader-container").style.display = "none";
             });
         }
@@ -1383,212 +1527,56 @@
             }
         });
     }
-    function showProduct(products){
+
+    function showProduct(products) {
         var result = '<div class="product_carousel product_three_column3 owl-carousel"> ';
 
-        for(let i = 0; i<products.length;i++){
+        for (let i = 0; i < products.length; i++) {
 
-            result+= '<div class="col-lg-3">\n' +
-            '                            <div class="single_product">\n' +
-            '                                <div class="product_thumb">\n'
-            if(products[i].images.length>0)
-                result += '<a class="primary_img" href="/product?id=' +
-                    products.id +
-                    '"><img src=' +
-                    products[i].images[0].img +
-                    ' alt=""></a>';
-            if(products[i].images.length>1)
-                result += '<a class="secondary_img" href="/product?id=' +
-                    products[i].id +
-                    '"><img src='
-                    + products[i].images[1].img
-                    + ' alt=""></a>';
-            result+= '                                    <div class="product_sale">\n';
-            if(products[i].promotion>0)
-                result+='<span>-'+products[i].promotion+'%</span>';
-            result+=
-                    '                                    </div>\n' +
-                    '                                </div>\n' +
-                    '                                <div class="product_content">\n' +
-                    '                                    <h3><a href="product-details.jsp">'
-                    +products[i].name +
-                '</a></h3>\n' +
-            '                                            <span class="current_price">';
-            var old_price = products[i].price;
-            old_price = old_price.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
-            if(products[i].promotion>0)
-            {
-                var price = products[i].price*(1-products[i].promotion/100);
-                price = price.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
-                result+=price+'</span>'
-                    +'<span class="old_price">'
-                    +old_price
-                    +'</span>';
-
-            }
-            else {
-                result+=old_price+'</span>';
-            }
-            result+= '                                </div>\n' +
-            '                            </div>\n'+
-            '                        </div>\n'
-        }
-        result+=  '                        </div>';
-        document.querySelector('#modal-box-measurement .product-size').style.display = 'block';
-        document.querySelector('#modal-box-measurement .product-size .product-content').innerHTML = result;
-        /* product_three_column4activation */
-        $('.product_three_column3').owlCarousel({
-            loop: true,
-            nav: true,
-            autoplay: false,
-            autoplayTimeout: 8000,
-            items: 3,
-            dots:false,
-            margin: 15,
-            navText: ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'],
-            responsiveClass:true,
-            responsive:{
-                0:{
-                    items:1,
-                },
-                320:{
-                    items:2,
-                },
-                992:{
-                    items:3,
-                }
-            }
-        });
-
-    }
-
-</script>
-
-<%--Xử lý đo kích thước--%>
-<script>
-    function callApi(formData){
-        return new Promise(function (resolve, reject){
-            $.ajax({
-                url: '/product/measurement',
-                type: 'POST',
-                data: formData,
-                contentType: false, // Không đặt contentType để jQuery tự xử lý
-                processData: false, // Không xử lý dữ liệu formData
-                success: function (response) {
-                    var size = 1.5 * (parseFloat(response) + 1.5);
-                    var div = document.querySelector('#measurement .coupon_inner');
-                    div.innerHTML = '';
-                    var p = document.createElement('p');
-                    p.textContent = 'Kích thước chân của bạn là ' + response + " cm";
-                    p.style.fontWeight = 'bold';
-                    div.appendChild(p);
-                    p = document.createElement('p');
-                    p.style.fontWeight = 'bold';
-                    p.textContent = 'Chúng tôi đề xuất bạn mua giày với kích thước ' + Math.round(size);
-                    div.appendChild(p);
-                    p = document.createElement('p');
-                    p.style.fontWeight = 'bold';
-                    p.textContent = 'Bạn có tham khảo thêm về bảng quy đổi kích thước để tìm được đôi giày vừa vặn với bản thân';
-                    div.appendChild(p);
-                    resolve();
-                    findProductBySize(Math.round(size));
-                },
-                error: function (error) {
-                    reject();
-                    console.error('Error uploading file:', error);
-                }
-            });
-        });
-    }
-    var fileInput = document.getElementById('file-foot');
-    fileInput.addEventListener('change', function () {
-        if (fileInput.files.length > 0) {
-            var file = fileInput.files[0];
-            var formData = new FormData();
-            formData.append('file', file);
-            document.getElementById("loader-container").style.display = "flex";
-            callApi(formData).then(function (){
-                document.getElementById("loader-container").style.display = "none";
-            });
-        }
-    });
-    var instructionBtn = document.getElementById('instruction-measurement');
-    var contentInstruction = document.querySelector('.instruction');
-    var measurement = document.getElementById('measurement');
-    var understand = document.getElementById('understand');
-    instructionBtn.addEventListener('click', function () {
-        contentInstruction.style.display = 'block'
-        measurement.style.display = 'none';
-    });
-    understand.addEventListener('click', function () {
-        contentInstruction.style.display = 'none'
-        measurement.style.display = 'flex';
-    });
-
-    function findProductBySize(size) {
-        $.ajax({
-            url: '/product/query?size=' + size,
-            type: 'GET',
-            contentType: "application/json; charset=utf-8",
-            success: function (response) {
-                showProduct(response);
-            },
-            error: function (error) {
-
-            }
-        });
-    }
-    function showProduct(products){
-        var result = '<div class="product_carousel product_three_column3 owl-carousel"> ';
-
-        for(let i = 0; i<products.length;i++){
-
-            result+= '<div class="col-lg-3">\n' +
+            result += '<div class="col-lg-3">\n' +
                 '                            <div class="single_product">\n' +
                 '                                <div class="product_thumb">\n'
-            if(products[i].images.length>0)
+            if (products[i].images.length > 0)
                 result += '<a class="primary_img" href="/product?id=' +
                     products.id +
                     '"><img src=' +
                     products[i].images[0].img +
                     ' alt=""></a>';
-            if(products[i].images.length>1)
+            if (products[i].images.length > 1)
                 result += '<a class="secondary_img" href="/product?id=' +
                     products[i].id +
                     '"><img src='
                     + products[i].images[1].img
                     + ' alt=""></a>';
-            result+= '                                    <div class="product_sale">\n';
-            if(products[i].promotion>0)
-                result+='<span>-'+products[i].promotion+'%</span>';
-            result+=
+            result += '                                    <div class="product_sale">\n';
+            if (products[i].promotion > 0)
+                result += '<span>-' + products[i].promotion + '%</span>';
+            result +=
                 '                                    </div>\n' +
                 '                                </div>\n' +
                 '                                <div class="product_content">\n' +
                 '                                    <h3><a href="product-details.jsp">'
-                +products[i].name +
+                + products[i].name +
                 '</a></h3>\n' +
                 '                                            <span class="current_price">';
             var old_price = products[i].price;
-            old_price = old_price.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
-            if(products[i].promotion>0)
-            {
-                var price = products[i].price*(1-products[i].promotion/100);
-                price = price.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
-                result+=price+'</span>'
-                    +'<span class="old_price">'
-                    +old_price
-                    +'</span>';
+            old_price = old_price.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+            if (products[i].promotion > 0) {
+                var price = products[i].price * (1 - products[i].promotion / 100);
+                price = price.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+                result += price + '</span>'
+                    + '<span class="old_price">'
+                    + old_price
+                    + '</span>';
 
+            } else {
+                result += old_price + '</span>';
             }
-            else {
-                result+=old_price+'</span>';
-            }
-            result+= '                                </div>\n' +
-                '                            </div>\n'+
+            result += '                                </div>\n' +
+                '                            </div>\n' +
                 '                        </div>\n'
         }
-        result+=  '                        </div>';
+        result += '                        </div>';
         document.querySelector('#modal-box-measurement .product-size').style.display = 'block';
         document.querySelector('#modal-box-measurement .product-size .product-content').innerHTML = result;
         /* product_three_column4activation */
@@ -1598,25 +1586,24 @@
             autoplay: false,
             autoplayTimeout: 8000,
             items: 3,
-            dots:false,
+            dots: false,
             margin: 15,
-            navText: ['<i class="fa fa-angle-left"></i>','<i class="fa fa-angle-right"></i>'],
-            responsiveClass:true,
-            responsive:{
-                0:{
-                    items:1,
+            navText: ['<i class="fa fa-angle-left"></i>', '<i class="fa fa-angle-right"></i>'],
+            responsiveClass: true,
+            responsive: {
+                0: {
+                    items: 1,
                 },
-                320:{
-                    items:2,
+                320: {
+                    items: 2,
                 },
-                992:{
-                    items:3,
+                992: {
+                    items: 3,
                 }
             }
         });
 
     }
-
 </script>
 </body>
 
