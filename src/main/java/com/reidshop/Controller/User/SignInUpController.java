@@ -121,7 +121,7 @@ public class SignInUpController {
     public ModelAndView loginWithGG(@RequestParam("code") String authorizationCode, HttpServletResponse response){
         // Lấy Access Token từ Mã Xác Thực
         String accessTokenUri = "https://oauth2.googleapis.com/token";
-        String redirectUri = "/sign-in-up/login/google/success";
+        String redirectUri = "http://localhost:8083/sign-in-up/login/google/success";
         String clientId = "47551941690-h1bot25tietr34kbcmp0sh13n0lid1mu.apps.googleusercontent.com";
         String clientSecret = "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";
 

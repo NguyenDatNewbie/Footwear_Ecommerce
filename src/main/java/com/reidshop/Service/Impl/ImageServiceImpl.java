@@ -20,7 +20,7 @@ public class ImageServiceImpl implements IImageService {
         for (Long id: colorIds) {
             List<Image> imagesSearch = imageRepository.findAllByProductAndColor(id,productId);
             if(imagesSearch.size()>0)
-                images.add(imageRepository.findAllByProductAndColor(id,productId).get(0));
+                images.add(imagesSearch.get(0));
         }
         return images;
     }

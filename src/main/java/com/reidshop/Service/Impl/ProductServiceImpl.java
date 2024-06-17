@@ -1,5 +1,6 @@
 package com.reidshop.Service.Impl;
 
+import com.reidshop.Model.Entity.Category;
 import com.reidshop.Model.Entity.Product;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.ProductRepository;
@@ -48,8 +49,7 @@ public class ProductServiceImpl implements IProductService {
 		for (Product p: products) {
 			List<Long> colorIds = imageRepository.findColorOther(p.getId());
 			for(Long id: colorIds){
-				if(colors.contains(String.valueOf(id)))
-				{
+				if(colors.contains(String.valueOf(id))) {
 					result.add(p);
 					break;
 				}
@@ -70,6 +70,12 @@ public class ProductServiceImpl implements IProductService {
 		return result;
 	}
 
+	@Override
+	public List<Product> findAllSimilarityProductByCategory(Category category){
+		if(category.getParent()!=null)
+			return productRepository.findAllByCategoryAndIsParent(category.getParent());
+		return productRepository.findAllByCategory(category.getId());
+	}
 
 	@Override
 	public List<Product> sortByPriceDESC(List<Product> products){

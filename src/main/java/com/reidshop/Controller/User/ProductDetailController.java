@@ -2,7 +2,6 @@ package com.reidshop.Controller.User;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.Evaluate;
 import com.reidshop.Model.Entity.Image;
 import com.reidshop.Model.Entity.Product;
@@ -27,7 +26,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/product")
@@ -60,8 +62,7 @@ public class ProductDetailController {
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
 
     @GetMapping("")
-    String productDetail(ModelMap modelMap, @RequestParam("id") Long productId,
-                         @RequestParam(value = "color",required = false) Long colorId, HttpServletRequest request){
+    String productDetail(ModelMap modelMap, @RequestParam("id") Long productId, HttpServletRequest request){
         Product product = productRepository.findByProductId(productId);
         List<Evaluate> evaluateList = evaluateRepository.findAllByProductId(productId);
         double rateAvg = evaluateService.rateAvg(evaluateList);
@@ -80,20 +81,24 @@ public class ProductDetailController {
         modelMap.addAttribute("imageService",imageService);
         modelMap.addAttribute("colorRepository",colorRepository);
 
-        List<Product> products = collaborativeFiltering.collaborativeFilter(null,false,product);
-        if(products.size()<3)
-            modelMap.addAttribute("productCategory",productService.findAllByProductCategorySoldTop(product.getCategory().getId()));
-        else
-            modelMap.addAttribute("productCategory",products);
+//        List<Product> products = collaborativeFiltering.collaborativeFilter(null,false,product);
+//        if(products.size()<4)
+//            modelMap.addAttribute("productCategory",productService.findAllSimilarityProductByCategory(product.getCategory()));
+//        else
+//            modelMap.addAttribute("productCategory",products);
+        List<Product> productsCategory = productService.findAllSimilarityProductByCategory(product.getCategory());
+        productsCategory.removeIf(item -> item.getId().equals(productId));
 
-        List<Image> images = new ArrayList<>();
-        if (colorId!=null)
-            images = imageRepository.findAllByProductAndColor(colorId,productId);
-        else
-            images = imageService.imageFirstOfColor(productId);
+        modelMap.addAttribute("productCategory",productsCategory);
+        Long colorFirst = imageRepository.findColorOther(productId).get(0);
+        List<Image> images = imageRepository.findAllByProductAndColor(colorFirst,productId);
         modelMap.addAttribute("images",images);
-
         return "user/product-details";
+    }
+    @GetMapping("/images")
+    @ResponseBody
+    List<Image> findImagesByProductAndColor(@RequestParam("product") Long productId, @RequestParam("color") Long colorId){
+        return imageRepository.findAllByProductAndColor(colorId,productId);
     }
     @PostMapping("/measurement")
     @ResponseBody

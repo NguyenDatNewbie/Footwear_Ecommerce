@@ -2,6 +2,7 @@ package com.reidshop.Service;
 
 import java.util.List;
 
+import com.reidshop.Model.Entity.Category;
 import com.reidshop.Model.Entity.Product;
 
 public interface IProductService {
@@ -16,6 +17,8 @@ public interface IProductService {
 
 	List<Product> findAllByProductCategorySoldTop(Long category);
 
+
+	List<Product> findAllSimilarityProductByCategory(Category category);
 
 	List<Product> sortByPriceDESC(List<Product> products);
 
