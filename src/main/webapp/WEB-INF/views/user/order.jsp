@@ -372,7 +372,7 @@
                                 </div>
                                 <div class="info-detail">
                                     <div class="price">
-                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.costShip)}</span>
+                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.delivery.cost)}</span>
                                         </h4>
                                     </div>
                                     <c:choose>
@@ -472,7 +472,7 @@
                                 </div>
                                 <div class="info-detail">
                                     <div class="price">
-                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.costShip)}</span>
+                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.delivery.cost)}</span>
                                         </h4>
                                     </div>
                                     <c:choose>
@@ -572,7 +572,7 @@
                                 </div>
                                 <div class="info-detail">
                                     <div class="price">
-                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.costShip)}</span>
+                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.delivery.cost)}</span>
                                         </h4>
                                     </div>
                                     <c:choose>
@@ -670,7 +670,7 @@
                                 </div>
                                 <div class="info-detail">
                                     <div class="price">
-                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.costShip)}</span>
+                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.delivery.cost)}</span>
                                         </h4>
                                     </div>
                                     <c:choose>
@@ -768,7 +768,7 @@
                                 </div>
                                 <div class="info-detail">
                                     <div class="price">
-                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.costShip)}</span>
+                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.delivery.cost)}</span>
                                         </h4>
                                     </div>
                                     <c:choose>
@@ -866,7 +866,7 @@
                                 </div>
                                 <div class="info-detail">
                                     <div class="price">
-                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.costShip)}</span>
+                                        <h4>Thành tiền:<span>${formatVND.format(order.totalPrice+order.delivery.cost)}</span>
                                         </h4>
                                     </div>
                                     <c:choose>

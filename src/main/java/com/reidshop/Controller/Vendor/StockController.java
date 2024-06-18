@@ -44,6 +44,8 @@ public class StockController {
     ProductOutOfStockRepository productOutOfStockRepository;
     @Autowired
     IProductOutOfStockService ofStockService;
+    @Autowired
+    ColorRepository colorRepository;
 
     @GetMapping("")
     String index(ModelMap modelMap, HttpServletRequest request){
@@ -63,7 +65,7 @@ public class StockController {
         modelMap.addAttribute("inventoryRepository", inventoryRepository);
         modelMap.addAttribute("importProduct", importProduct);
         modelMap.addAttribute("storeID", storeID);
-
+        modelMap.addAttribute("colors",colorRepository.findAll());
         return "vendor/stock";
     }
 
@@ -97,15 +99,17 @@ public class StockController {
 
     @GetMapping("/check/inventory")
     @ResponseBody
-    Map<String,String> check(@RequestParam("id") long sizeId, HttpServletRequest request){
+    Map<String,String> check(@RequestParam("size") long sizeId,@RequestParam("color") long colorId, HttpServletRequest request){
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(new Account());
-        int totalQuantity = inventoryRepository.totalInventory(sizeId,account.getId());
+        int totalQuantity = inventoryRepository.totalInventory(sizeId,colorId,account.getId());
         Size size = sizeRepository.findById(sizeId).orElse(null);
+        Color color = colorRepository.findById(colorId).orElse(null);
         Map<String,String> result = new HashMap<>();
         result.put("quantity",String.valueOf(totalQuantity));
         result.put("size",size.getSize());
+        result.put("color",color.getColor_name());
         result.put("product",size.getProduct().getName());
         return result;
     }

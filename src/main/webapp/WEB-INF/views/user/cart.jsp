@@ -2207,8 +2207,9 @@
         });
 
         if (document.querySelector('.product-price.product_total')) {
+            var productPrice = document.querySelectorAll('.product-price.product_total');
             // Xóa đơn vị tiền tệ và xóa , và số sau ,
-            price = parseFloat(document.querySelector('.product-price.product_total').textContent.replace(/[.₫]/g, ''));
+            price = parseFloat(productPrice[productPrice.length-1].textContent.replace(/[.₫]/g, ''));
         }
 
         // Xóa

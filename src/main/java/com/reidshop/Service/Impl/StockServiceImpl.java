@@ -37,9 +37,10 @@ public class StockServiceImpl {
                 inventory.setQuantity(stockRequest.getQuantity());
                 inventory.setImportPrice(stockRequest.getPrice());
                 inventory.setStore(store);
-                Inventory completeInventory =  inventoryRepository.save(inventory);
-                checkAndUpdateInProductOutOfStock(completeInventory,store);
+                inventory.setColor(stockRequest.getColor());
+                inventoryRepository.save(inventory);
             }
+            checkAndUpdateInProductOutOfStock(stock,store);
             return "success";
         }
         catch (Exception exception){
@@ -47,30 +48,35 @@ public class StockServiceImpl {
         }
     }
 
-    // Lỗi orderItem nếu quantity cần nhiều inventory để đáp ứng được quantity thì không biết lưu cho inventory nào
-    void checkAndUpdateInProductOutOfStock(Inventory inventory,Store store){
+    void checkAndUpdateInProductOutOfStock(Stock stock,Store store){
         List<ProductOutOfStock> productOutOfStocks = productOutOfStockRepository.findAllByStoreId(store.getId());
-        System.out.println("1");
         for(ProductOutOfStock p: productOutOfStocks){
-            if(p.getSize().getId() == inventory.getSize().getId())
-            {
-                if(inventory.getQuantity()>=p.getQuantity()) {
-                    System.out.println("0");
-                    inventory.setQuantity(inventory.getQuantity()-p.getQuantity());
+            List<Inventory> checkExits = inventoryRepository.checkExistInStock(stock,p.getSize().getId(),p.getColor().getId());
+            if(checkExits.size()>0){
+                List<Inventory> inventories = inventoryRepository.findAllOutStock(stock,p.getSize().getId(),p.getColor().getId());
+                inventories.addAll(checkExits);
+                for(Inventory i: inventories){
                     Orders orders = p.getOrders();
                     OrderItem orderItem = new OrderItem();
                     orderItem.setOrder(orders);
                     orderItem.setPrice(p.getPrice());
-                    orderItem.setInventory(inventory);
-                    orderItem.setQuantity(p.getQuantity());
-                    productOutOfStockRepository.delete(p);
-                    orderItemRepository.save(orderItem);
-                    orders.setStatus(OrderStatus.PREPARE);
-                    ordersRepository.save(orders);
-                    inventoryRepository.save(inventory);
+                    orderItem.setInventory(i);
+                    if(i.getQuantity()>=p.getQuantity()){
+                        i.setQuantity(i.getQuantity()-p.getQuantity());
+                        inventoryRepository.save(i);
+                        orderItem.setQuantity(p.getQuantity());
+                        orderItemRepository.save(orderItem);
+                        productOutOfStockRepository.delete(p);
+                        break;
+                    }
+                    else{
+                        orderItem.setQuantity(i.getQuantity());
+                        i.setQuantity(0);
+                        inventoryRepository.save(i);
+                        orderItemRepository.save(orderItem);
+                    }
                 }
-                // Nếu như nhập có size đúng thì phải trừ trong productOutOfStock
-//                else
+
             }
         }
     }

@@ -55,37 +55,16 @@ public class StoreServiceImpl implements IStoreService {
         }
         List<Store> stores = storeRepository.searchAllByDepartment(search);
         List<StoreValidResponse> storeValid = new ArrayList<>();
-        List<StoreValidResponse> indexValid;
-        for (int index = 0; index < requestList.size(); index++) {
-            CartRequest cart = requestList.get(index);
-            indexValid = new ArrayList<>();
-            int storeSize = stores.size();
-
-            for (int i = 0; i < storeSize; i++) {
-                Store store = stores.get(i);
-                if (index > 0) {
-                    if (storeValid.size() == i)
-                        break;
-                    store = storeRepository.findById(storeValid.get(i).getStore().getId()).orElse(new Store());
-                }
-
-                List<Inventory> inventories = inventoryRepository.findAllInventoryByStoreID(store.getId());
-
-                if (index > 0 || inventories.size() > 0) { // inventories.size() > 0 Nếu như store đầu tiên chưa có tạo kho còn bắt lỗi được
-                    for (int j = 0; j < inventories.size(); j++) {
-                        if (inventories.get(j).getSize() == sizeRepository.findAllByProductIdAndSize(cart.getId(), cart.getSize())
-                                && inventories.get(j).getQuantity() >= cart.getQuantity() && inventories.get(j).getColor().getId()== cart.getColor()) {
-                            StoreValidResponse storeResponse = new StoreValidResponse();
-                            storeResponse.setStatus(1);
-                            storeResponse.setStore(storeMapper.toResponse(store));
-                            indexValid.add(storeResponse);
-                        }
-                    }
-                }
+        // Tìm xem có store nào đủ hàng không
+        for(Store store :stores){
+            if(checkStoreValid(store,requestList)){
+                StoreValidResponse storeResponse = new StoreValidResponse();
+                storeResponse.setStatus(1);
+                storeResponse.setStore(storeMapper.toResponse(store));
+                storeValid.add(storeResponse);
             }
-            storeValid = indexValid;
-
         }
+
         if(receiveType==ReceiveType.STORE)
             return showAllStore(storeValid, stores);
         else
@@ -103,6 +82,14 @@ public class StoreServiceImpl implements IStoreService {
             }
             return storeValid; // Không tìm thấy store theo dia chi nào còn hàng
         }
+    }
+    Boolean checkStoreValid(Store store,List<CartRequest> cartRequests){
+        for(CartRequest cartRequest: cartRequests){
+            int totalQuantity = inventoryRepository.totalQuantity(cartRequest.getId(), cartRequest.getSize(), cartRequest.getColor(), store.getId());
+            if(totalQuantity<cartRequest.getQuantity())
+                return false;
+        }
+        return true;
     }
 
     List<StoreValidResponse> showAllStore(List<StoreValidResponse> storeValid, List<Store> allStore) {
