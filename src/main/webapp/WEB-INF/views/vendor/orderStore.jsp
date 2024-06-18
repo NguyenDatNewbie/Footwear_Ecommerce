@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Dashboard - Vendor</title>
+    <title>Order - Vendor</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -96,7 +96,7 @@
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/vendor/home">Home</a></li>
-                <li class="breadcrumb-item active">Orders</li>
+                <li class="breadcrumb-item active">Orders In Progress</li>
             </ol>
         </nav>
     </div><!-- End Page Title -->
