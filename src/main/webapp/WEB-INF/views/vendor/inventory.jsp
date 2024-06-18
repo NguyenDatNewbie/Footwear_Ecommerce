@@ -9,7 +9,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-    <title>Dashboard - Vendor</title>
+    <title>Stock - Vendor</title>
     <meta content="" name="description">
     <meta content="" name="keywords">
 
@@ -92,6 +92,16 @@
 
 <main id="main" class="main">
 
+    <div class="pagetitle">
+        <h1>Stock Management</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/vendor/home">Home</a></li>
+                <li class="breadcrumb-item active">Order Detail</li>
+            </ol>
+        </nav>
+    </div><!-- End Page Title -->
+
     <section class="section dashboard">
         <div class="row">
 
@@ -103,7 +113,7 @@
                         <div class="card recent-sales overflow-auto">
 
                             <div class="card-body">
-                                <h5 class="card-title">Inventory Store</h5>
+                                <h5 class="card-title">The Store's Stock <span>| The list of the goods kept in the storehouse</span></h5>
                                 <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
                                     <li class="nav-item flex-fill" role="presentation">
                                         <button class="nav-link w-100 active" id="in-stock-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-in-stock" type="button" role="tab" aria-controls="home" aria-selected="true">In Stock</button>

@@ -224,7 +224,7 @@
                         <div class="card">
                             <div class="filter" style="top: 20px; right: 20px;">
                                 <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%; border-radius: 10px;">
-                                    <i class="bi bi-calendar2-event-fill"></i>
+                                    <i style="margin-right: 5px" class="bi bi-calendar2-event-fill"></i>
                                     <span></span> <i class="bi bi-caret-down-fill"></i>
                                 </div>
                             </div>
@@ -251,16 +251,16 @@
                                         <h6>Filter</h6>
                                     </li>
 
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                                    <li><a class="dropdown-item" id="todayOrders">Today</a></li>
+                                    <li><a class="dropdown-item" id="weekOrders">This Week</a></li>
+                                    <li><a class="dropdown-item" id="monthOrders">This Month</a></li>
                                 </ul>
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+                                <h5 class="card-title">Recent Orders <span id="orderTitle">| All</span></h5>
 
-                                <table class="table table-borderless datatable">
+                                <table class="table table-borderless datatable" id="recent-order-table">
                                     <thead>
                                     <tr>
                                         <th scope="col">ID</th>
@@ -268,6 +268,8 @@
                                         <th scope="col">Phone</th>
                                         <th scope="col">Address</th>
                                         <th scope="col">Total Price</th>
+                                        <th scope="col">Receive Type</th>
+                                        <th scope="col">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -278,9 +280,23 @@
                                                 <td>${order.phone}</td>
                                                 <td>${order.address}</td>
                                                 <td>${formatVND.format(order.totalPrice)}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${order.receiveType == 'DELIVERY'}">
+                                                            <span class="badge bg-info">${order.receiveType}</span>
+                                                        </c:when>
+                                                        <c:when test="${order.receiveType == 'STORE'}">
+                                                            <span class="badge bg-light text-dark">${order.receiveType}</span>
+                                                        </c:when>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <a href="/vendor/order/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
+
                                 </table>
 
                             </div>
@@ -288,52 +304,6 @@
                         </div>
                     </div><!-- End Recent Sales -->
 
-                    <!-- Top Selling -->
-                    <div class="col-12">
-                        <div class="card top-selling overflow-auto">
-
-                            <div class="filter">
-                                <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                                    <li class="dropdown-header text-start">
-                                        <h6>Filter</h6>
-                                    </li>
-
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
-                                </ul>
-                            </div>
-<%--                            <div class="card-body pb-0">--%>
-<%--                                <h5 class="card-title">Top Selling <span>| Today</span></h5>--%>
-
-<%--                                <table class="table table-borderless">--%>
-<%--                                    <thead>--%>
-<%--                                    <tr>--%>
-<%--                                        <th scope="col">Preview</th>--%>
-<%--                                        <th scope="col">Product</th>--%>
-<%--                                        <th scope="col">Price</th>--%>
-<%--                                        <th scope="col">Sold</th>--%>
-<%--                                        <th scope="col">Promotion</th>--%>
-<%--                                    </tr>--%>
-<%--                                    </thead>--%>
-<%--                                    <tbody>--%>
-<%--                                        <c:forEach items="${productRepository.findAllByProductSold()}" var="product">--%>
-<%--                                        <tr>--%>
-<%--                                            <th scope="row"><a href="#"><img src="${product.images.get(0).img}" alt=""></a></th>--%>
-<%--                                            <td><a href="#" class="text-primary fw-bold">${product.name}</a></td>--%>
-<%--                                            <td>${formatVND.format(product.price)}</td>--%>
-<%--                                            <td class="fw-bold">${product.sold}</td>--%>
-<%--                                            <td>${product.promotion}</td>--%>
-<%--                                        </tr>--%>
-<%--                                        </c:forEach>--%>
-<%--                                    </tbody>--%>
-<%--                                </table>--%>
-
-<%--                            </div>--%>
-
-                        </div>
-                    </div><!-- End Top Selling -->
                 </div>
             </div><!-- End Left side columns -->
 
@@ -482,6 +452,116 @@
             });
         });
     });
+    $(document).ready(function() {
+        $('#todayOrders').click(function() {
+            $.ajax({
+                url: '/vendor/home/getOrdersToday', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function(response) {
+                    $('#recent-order-table tbody').empty();
+                    if (response && Array.isArray(response) && response.length > 0) {
+                        console.log("response: ", response);
+                        response.forEach(function (order) {
+                            var receiveTypeClass = order.receiveType === 'DELIVERY' ? 'badge bg-info' : 'badge bg-light text-dark';
+                            var $row = $('<tr></tr>');
+                            $row.append('<th scope="row">' + order.id + '</th>');
+                            $row.append('<td>' + order.name + '</td>');
+                            $row.append('<td>' + order.phone + '</td>');
+                            $row.append('<td>' + (order.address ? order.address : order.store.department) + '</td>');
+                            $row.append('<td>' + order.totalPrice + '</td>');
+                            $row.append('<td><span class="' + receiveTypeClass + '">' + order.receiveType + '</span></td>');
+                            $row.append('<td><a href="/vendor/order/' + order.account.id + '/' + order.id + '" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a></td>');
+
+
+                            // Append the row to the table body
+                            $('#recent-order-table tbody').append($row);
+                        });
+                    } else {
+                        $('#recent-order-table tbody').append('<tr><td class="datatable-empty" colspan="6">No orders today</td></tr>');
+                    }
+                    $('#orderTitle').text("| Today");
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#weekOrders').click(function() {
+            $.ajax({
+                url: '/vendor/home/getOrdersWeek', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function(response) {
+                    $('#recent-order-table tbody').empty();
+                    if (response && Array.isArray(response) && response.length > 0) {
+                        console.log("response: ", response);
+                        response.forEach(function (order) {
+                            var receiveTypeClass = order.receiveType === 'DELIVERY' ? 'badge bg-info' : 'badge bg-light text-dark';
+                            var $row = $('<tr></tr>');
+                            $row.append('<th scope="row">' + order.id + '</th>');
+                            $row.append('<td>' + order.name + '</td>');
+                            $row.append('<td>' + order.phone + '</td>');
+                            $row.append('<td>' + (order.address ? order.address : order.store.department) + '</td>');
+                            $row.append('<td>' + order.totalPrice + '</td>');
+                            $row.append('<td><span class="' + receiveTypeClass + '">' + order.receiveType + '</span></td>');
+                            $row.append('<td><a href="/vendor/order/' + order.account.id + '/' + order.id + '" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a></td>');
+
+
+                            // Append the row to the table body
+                            $('#recent-order-table tbody').append($row);
+                        });
+                    } else {
+                        $('#recent-order-table tbody').append('<tr><td class="datatable-empty" colspan="6">No orders placed this week</td></tr>');
+                    }
+                    $('#orderTitle').text("| This Week");
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#monthOrders').click(function() {
+            $.ajax({
+                url: '/vendor/home/getOrdersMonth', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function(response) {
+                    $('#recent-order-table tbody').empty();
+                    if (response && Array.isArray(response) && response.length > 0) {
+                        console.log("response: ", response);
+                        response.forEach(function (order) {
+                            var receiveTypeClass = order.receiveType === 'DELIVERY' ? 'badge bg-info' : 'badge bg-light text-dark';
+                            var $row = $('<tr></tr>');
+                            $row.append('<th scope="row">' + order.id + '</th>');
+                            $row.append('<td>' + order.name + '</td>');
+                            $row.append('<td>' + order.phone + '</td>');
+                            $row.append('<td>' + (order.address ? order.address : order.store.department) + '</td>');
+                            $row.append('<td>' + order.totalPrice + '</td>');
+                            $row.append('<td><span class="' + receiveTypeClass + '">' + order.receiveType + '</span></td>');
+                            $row.append('<td><a href="/vendor/order/' + order.account.id + '/' + order.id + '" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a></td>');
+
+
+                            // Append the row to the table body
+                            $('#recent-order-table tbody').append($row);
+                        });
+                    } else {
+                        $('#recent-order-table tbody').append('<tr><td class="datatable-empty" colspan="6">No orders placed this month</td></tr>');
+                    }
+                    $('#orderTitle').text("| This Month");
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
 </script>
 <script>
     var options = {
@@ -518,6 +598,11 @@
         },
         xaxis: {
             type: 'datetime',
+        },
+        yaxis: {
+            title: {
+                text: 'đ (VND)'
+            }
         },
         tooltip: {
             x: {

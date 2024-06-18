@@ -117,7 +117,7 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
 
 
     //Order by Store_id
-    @Query("select o from Orders o where o.store.id = :storeId")
+    @Query("select o from Orders o where o.store.id = :storeId ORDER BY o.createdAt DESC")
     List<Orders> findAllByStoreID(@Param("storeId") Long storeId);
 
     //List Order by Store_ID with Recv_type and Status
@@ -181,7 +181,17 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
             "and o.store.department LIKE CONCAT('%', ?1, '%')")
     List<Orders> findBySearchQuery(String query,Long accountId);
 
+    //Lấy danh sách order trong ngày
+    @Query("SELECT o FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE AND o.store.id = :storeId ORDER BY o.createdAt DESC")
+    List<Orders> findAllOrderTodayOfStore(@Param("storeId") Long storeId);
 
+    //Lấy danh sách order trong tuần
+    @Query("SELECT o FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) AND o.store.id = :storeId ORDER BY o.createdAt DESC")
+    List<Orders> findAllOrderWeekOfStore(@Param("storeId") Long storeId);
+
+    //Lấy danh sách order trong tháng
+    @Query("SELECT o FROM Orders o WHERE FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m') AND o.store.id = :storeId ORDER BY o.createdAt DESC")
+    List<Orders> findAllOrderMonthOfStore(@Param("storeId") Long storeId);
 
     //find order id this week of storeID
     @Query("SELECT DATE(o.createdAt) AS orderDate, GROUP_CONCAT(o.id) AS orderIds " +
