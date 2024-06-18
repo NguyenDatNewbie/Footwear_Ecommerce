@@ -299,6 +299,7 @@
                                     <th scope="row" width="30px" style="text-align: center">STT</th>
                                     <th scope="col">Sản phẩm</th>
                                     <th scope="col" width="120px">Kích thước</th>
+                                    <th scope="col" width="120px">Màu</th>
                                     <th scope="col" width="100px">Số lượng</th>
                                     <th scope="col">Đơn giá (VNĐ)</th>
                                 </tr>
@@ -315,6 +316,13 @@
                                     </td>
                                     <td>
                                         <select id="size" style="width: 100%; padding: 2px">
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select id="color" style="width: 100%; padding: 2px">
+                                            <c:forEach var="color" items="${colors}">
+                                                <option value="${color.id}">${color.color_name}</option>
+                                            </c:forEach>
                                         </select>
                                     </td>
                                     <td><input type="number" id="quantity" oninput="validateInput(this)"></td>
@@ -430,6 +438,7 @@
         var size = document.getElementById("size");
         size.innerHTML = '';
         size.disabled= false;
+        document.getElementById("color").disabled = false;
         document.getElementById("quantity").value = '';
         document.getElementById("price").value = '';
         document.querySelector(".check").innerHTML='';
@@ -452,6 +461,7 @@
         var stocks = JSON.parse(localStorage.getItem("stocks")) || [];
         let price = 0;
         let quantity = 0;
+        console.log(stocks);
         stocks.forEach(function (stock){
             price += parseFloat(stock.price);
             quantity += parseInt(stock.quantity);
@@ -459,6 +469,14 @@
         var content = document.querySelectorAll(".statistics div");
         content[0].querySelector("span").textContent=formatVND.format(price);
         content[1].querySelector("span").textContent=quantity;
+    }
+    function setSelectedOptions(selectElement,valueToSelect){
+        for (var i = 0; i < selectElement.options.length; i++) {
+            if (selectElement.options[i].value == valueToSelect) {
+                selectElement.selectedIndex = i;
+                break;
+            }
+        }
     }
     function getText(value) {
         var name = document.getElementById("autocomplete-input")
@@ -475,6 +493,17 @@
         select.appendChild(option);
         select.disabled = true;
 
+        select = document.getElementById("color");
+        setSelectedOptions(select,value.color.id);
+
+        // select.innerHTML = '';
+        // option = document.createElement("option");
+        // option.value = value.color.id;
+        // option.textContent = value.color.color_name;
+        // option.selected = true;
+        // select.appendChild(option);
+        // select.disabled = true;
+
         document.getElementById("quantity").value = value.quantity;
         document.getElementById("price").value = value.price;
     }
@@ -482,6 +511,7 @@
     function addData() {
         let name = document.getElementById("autocomplete-input").value;
         var select = document.getElementById("size");
+        var selectColor = document.getElementById("color");
         let optionValue = select.value;
         let optionSize = select.options[selectElement.selectedIndex].textContent;
 
@@ -490,51 +520,61 @@
 
         var stocks = JSON.parse(localStorage.getItem("stocks")) || [];
         if(!document.getElementById("autocomplete-input").disabled) {
-            let  check = stocks.find(c => c.name == name && c.size.id == optionValue && c.price == price);
-            var data;
-            if (check) {
-                data = check;
-                data.quantity = parseInt(data.quantity) + parseInt(quantity);
+            var check = stocks.findIndex(c =>   c.size.id == optionValue && c.price == price && c.color.id == selectColor.value);
+            if (check !== -1) {
+                stocks[check].quantity = parseInt(stocks[check].quantity) + parseInt(quantity);
+                localStorage.setItem("stocks", JSON.stringify(stocks));
             } else {
+                var data;
                 data = {
                     name: name,
                     size: {
                         id: optionValue,
                         size: optionSize
                     },
+                    color:{
+                        id: selectColor.value,
+                        color_name: selectColor.options[selectColor.selectedIndex].textContent
+                    },
                     quantity: quantity,
                     price: price
                 }
+                stocks.push(data);
+                localStorage.setItem("stocks", JSON.stringify(stocks));
             }
-            stocks.push(data);
         }
         else {
             let index = document.getElementById("itemTable").value;
             stocks[index].quantity=quantity;
             stocks[index].price=price;
+            stocks[index].color = {
+                id: selectColor.value,
+                color_name: selectColor.options[selectColor.selectedIndex].textContent
+            };
+            localStorage.setItem("stocks", JSON.stringify(stocks));
         }
-        localStorage.setItem("stocks", JSON.stringify(stocks));
         resetInput();
         showData();
     }
     function check(){
         $.ajax({
-            url: '/vendor/stock/check/inventory?id=' + document.getElementById("size").value,
+            url: '/vendor/stock/check/inventory?size=' + document.getElementById("size").value
+                +"&color="+document.getElementById("color").value,
             type: "get",
             contentType: "application/json; charset=utf-8",
             success: function (response) {
                 document.querySelector(".check").innerHTML ='<div>\n' +
                     '                    <h5 style="margin: 0">Sản phẩm</h5><span>' +
-                    response.product+
+                    response.product +' - '+ response.color +
                     '</span>\n' +
                     '                </div>\n' +
-                    '                <div style="display: flex">\n' +
-                    '                    <h5 style="width: 150px">Kích thước:</h5><span>' +
+                    '                <div style="display: flex;justify-content: space-between;">\n' +
+                    '                    <h5>Kích thước:</h5><span>' +
                     response.size+
                     '</span>\n' +
                     '                </div>\n' +
-                    '                <div style="display: flex">\n' +
-                    '                    <h5 style="width: 150px">Tồn kho:</h5> <span>' +
+                    '                <div style="display: flex;justify-content: space-between;">\n' +
+                    '                    <h5>Tồn kho:</h5> <span>' +
                     response.quantity+
                     '</span>\n' +
                     '                </div>'
@@ -544,7 +584,6 @@
     }
     // Hàm gọi lại để xử lý sự kiện click cho từng dòng
     function createRowClickHandler(index, stock) {
-        console.log(index);
         document.getElementById("itemTable").value = index;
         getText(stock);
     }
@@ -569,14 +608,15 @@
             var cell3 = row.insertCell(2);
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
-
+            var cell6 = row.insertCell(5);
             // Thiết lập nội dung cho từng ô
             cell1.innerHTML = stt;
             cell1.style.textAlign = "center";
             cell2.innerHTML = stock.name;
             cell3.innerHTML = stock.size.size;
-            cell4.innerHTML = stock.quantity;
-            cell5.innerHTML = formatVND.format(parseFloat(stock.price));
+            cell4.innerHTML = stock.color.color_name;
+            cell5.innerHTML = stock.quantity;
+            cell6.innerHTML = formatVND.format(parseFloat(stock.price));
 
             row.style.cursor = "pointer";
             row.onclick = function () {

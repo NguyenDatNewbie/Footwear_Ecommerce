@@ -47,24 +47,49 @@ public class OrderItemImpl implements IOrderItemService {
         productRepository.save(product);
     }
 
+    private void saveComponent(Inventory inventory, OrderItem orderItem){
+        Product product = inventory.getSize().getProduct();
+        orderItem.setInventory(inventory);
+        orderItem.setPrice(product.getPrice()*(1-product.getPromotion()/100.0));
+        orderItemRepository.save(orderItem);
+
+        inventoryRepository.save(inventory);
+
+        product.setSold(product.getSold()+orderItem.getQuantity());
+        productRepository.save(product);
+    }
     @Override
     public double save(OrderCombineRequest item, Orders orders){
         double totalPrice = 0.0;
         for(CartRequest cartRequest: item.getCarts()){
             OrderItem orderItem = new OrderItem();
-            Inventory inventory = inventoryRepository.findByStore(cartRequest.getId(), cartRequest.getSize(), cartRequest.getQuantity(), item.getStoreValid().get(0).getStore().getId(), cartRequest.getColor());
             orderItem.setOrder(orders);
-            orderItem.setInventory(inventory);
-            Product product = inventory.getSize().getProduct();
-            orderItem.setPrice(product.getPrice()*(1-product.getPromotion()/100.0));
-            orderItem.setQuantity(cartRequest.getQuantity());
-            orderItemRepository.save(orderItem);
-
-            inventory.setQuantity(inventory.getQuantity()-cartRequest.getQuantity());
-            inventoryRepository.save(inventory);
-            product.setSold(product.getSold()+cartRequest.getQuantity());
-            productRepository.save(product);
-
+            Inventory inventory = inventoryRepository.findByStore(cartRequest.getId(), cartRequest.getSize(), cartRequest.getQuantity(), item.getStoreValid().get(0).getStore().getId(), cartRequest.getColor());
+            if(inventory==null){
+                List<Inventory> inventories = inventoryRepository.findAllInventoryValid(cartRequest.getId(), cartRequest.getSize(), cartRequest.getColor(), orders.getStore().getId());
+                for (Inventory i: inventories) {
+                    if(cartRequest.getQuantity()==0)
+                        break;
+                    orderItem = new OrderItem();
+                    orderItem.setOrder(orders);
+                    if(cartRequest.getQuantity()>i.getQuantity()){
+                        orderItem.setQuantity(i.getQuantity());
+                        cartRequest.setQuantity(cartRequest.getQuantity()-i.getQuantity());
+                        i.setQuantity(0);
+                    }
+                    else {
+                        orderItem.setQuantity(cartRequest.getQuantity());
+                        i.setQuantity(i.getQuantity()-cartRequest.getQuantity());
+                        cartRequest.setQuantity(0);
+                    }
+                    saveComponent(i,orderItem);
+                }
+            }
+            else {
+                inventory.setQuantity(inventory.getQuantity()-cartRequest.getQuantity());
+                orderItem.setQuantity(cartRequest.getQuantity());
+                saveComponent(inventory,orderItem);
+            }
             totalPrice += orderItem.getPrice()*orderItem.getQuantity();
         }
         return totalPrice;

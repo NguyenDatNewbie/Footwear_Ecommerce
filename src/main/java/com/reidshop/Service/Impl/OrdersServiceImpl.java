@@ -145,41 +145,44 @@ public class OrdersServiceImpl implements IOrdersService {
         String email = jwtService.extractUsername(token);
         Orders orders = orderCombineRequest.getOrders();
         Vourcher voucher = voucherRepository.findByVoucherCode(orderCombineRequest.getVoucher()).orElse(null);
-        orders.setVourcher(voucher);
-
-        Account account = accountRepository.findByEmail(email).orElse(null);
-        orders.setAccount(account);
         Store store = new Store();
         store.setId(orderCombineRequest.getStoreValid().get(0).getStore().getId());
+        Account account = accountRepository.findByEmail(email).orElse(null);
+
+        orders.setAccount(account);
+        orders.setStore(store);
+        orders.setTotalPrice(0);
+        orders.setCreatedAt();
+        orders.setReceiveType(receiveType);
+        orders.setPaymentType(paymentType);
+        orders.setVourcher(voucher);
+
         double totalPrice = 0.0;
         Orders complete;
         // Nhận tại store hoặc sản phẩm hết hàng
-        if (receiveType==ReceiveType.STORE || orderCombineRequest.getStoreValid().get(0).getStatus()==0)
-        {
-            orders.setStore(store);
-            orders.setTotalPrice(0);
+        if(orderCombineRequest.getStoreValid().get(0).getStatus()==0){
+            orders.setLimitReceiveAt(java.sql.Timestamp.valueOf(LocalDateTime.now().plusDays(7)));
             orders.setStatus(OrderStatus.WAIT);
-            orders.setReceiveType(receiveType);
-            orders.setPaymentType(paymentType);
-            if(receiveType != ReceiveType.STORE) {
+            complete = ordersRepository.save(orders);
+            totalPrice = productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
+            complete.setTotalPrice(totalPrice);
+            if(receiveType == ReceiveType.DELIVERY) {
                 Delivery delivery = deliveryRepository.save(orderCombineRequest.getOrders().getDelivery());
                 orders.setDelivery(delivery);
             }
-            orders.setCreatedAt();
-            // Hết hàng status = 0 add 7 ngày còn hàng = 1
-            orders.setLimitReceiveAt(java.sql.Timestamp.valueOf(LocalDateTime.now().plusDays(orderCombineRequest.getStoreValid().get(0).getStatus()==1 ? 1 : 7)));
+        }
+        else if (receiveType==ReceiveType.STORE)
+        {
+            orders.setStatus(OrderStatus.WAIT);
+            orders.setLimitReceiveAt(java.sql.Timestamp.valueOf(LocalDateTime.now().plusDays(1)));
             complete = ordersRepository.save(orders);
-            totalPrice = productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
+            totalPrice = orderItemService.save(orderCombineRequest,orders);
             complete.setTotalPrice(totalPrice);
         }
         else{
             Delivery delivery = deliveryRepository.save(orderCombineRequest.getOrders().getDelivery());
             orders.setDelivery(delivery);
-            orders.setStore(store);
-            orders.setTotalPrice(0);
             orders.setStatus(OrderStatus.PREPARE);
-            orders.setReceiveType(ReceiveType.DELIVERY);
-            orders.setCreatedAt();
             complete = ordersRepository.save(orders);
             totalPrice = orderItemService.save(orderCombineRequest,orders);
             complete.setTotalPrice(totalPrice);

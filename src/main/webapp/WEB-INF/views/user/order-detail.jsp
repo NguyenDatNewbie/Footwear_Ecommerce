@@ -508,7 +508,7 @@
                         <div class="info-row">
                             <div class="subject"><span>Phí vận chuyện</span></div>
                             <div class="detail">
-                                <div>${formatVND.format(order.costShip)}</div>
+                                <div>${formatVND.format(order.delivery.cost)}</div>
                             </div>
                         </div>
                         <div class="info-row">
@@ -520,7 +520,7 @@
                         <div class="info-row">
                             <div class="subject"><span>Thành tiền</span></div>
                             <div class="detail">
-                                <div style="color: red; font-size: 16px">${formatVND.format(order.totalPrice+order.costShip-order.voucherValue)}</div>
+                                <div style="color: red; font-size: 16px">${formatVND.format(order.totalPrice+order.delivery.cost-order.voucherValue)}</div>
                             </div>
                         </div>
                         <div class="info-row">
