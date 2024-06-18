@@ -2,13 +2,16 @@ package com.reidshop.Controller.Vendor;
 
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.*;
+import com.reidshop.Model.Request.OrderRequest;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
 import com.reidshop.Service.IProductService;
 import com.reidshop.security.JwtService;
+import jakarta.persistence.criteria.Order;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,6 +22,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/vendor/home")
@@ -65,11 +69,9 @@ public class VendorHomeController {
 
         List<Category> categoryList = categoryRepository.findAll();
         List<Orders> ordersAll = ordersRepository.findAllByStoreID(storeID);
-        modelMap.addAttribute("ordersAll", ordersAll);
+        List<Orders> orderToday = ordersRepository.findAllOrderTodayOfStore(storeID);
 
         List<Double> listRevenue = listRevenueOfThisWeekByStore(storeID);
-
-        List<Orders> orders = ordersRepository.findAllOrderOfStoreByDate(storeID, LocalDate.parse("2024-06-09"));
 
         modelMap.addAttribute("orderToday", ordersRepository.countTodayOrdersForStore(storeID)); //Count Order Today
         modelMap.addAttribute("saleToday", ordersRepository.totalSalesOfTodayStore(storeID));
@@ -78,6 +80,8 @@ public class VendorHomeController {
         modelMap.addAttribute("listRevenue", listRevenue);
         modelMap.addAttribute("revenueToday", getRevenueTodayStore(request));
         modelMap.addAttribute("categories",categoryList);
+        modelMap.addAttribute("ordersAll", ordersAll);
+        modelMap.addAttribute("orderTodayList", orderToday);
         modelMap.addAttribute("formatVND",formatVND);
         modelMap.addAttribute("productRepository",productRepository);
         modelMap.addAttribute("imageRepository",imageRepository);
@@ -225,6 +229,78 @@ public class VendorHomeController {
         }
         double revenueMonth = salesMonth - originalPrice;
         return revenueMonth;
+    }
+
+    @GetMapping("/getOrdersToday")
+    @ResponseBody
+    public ResponseEntity<List<OrderRequest>> getOrdersToday(HttpServletRequest request) {
+        List<Orders> orders = ordersRepository.findAllOrderTodayOfStore(getStoreIDByRequest(request));
+
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("No orders found for today.");
+            return ResponseEntity.noContent().build();
+        }
+
+        List<OrderRequest> orderRequests = orders.stream()
+                .map(order -> new OrderRequest(
+                        order.getId(),
+                        order.getPhone(),
+                        order.getName(),
+                        order.getAddress(),
+                        order.getTotalPrice(),
+                        order.getReceiveType(),
+                        order.getStore(),
+                        order.getAccount()
+                )).collect(Collectors.toList());
+        return ResponseEntity.ok(orderRequests);
+    }
+
+    @GetMapping("/getOrdersWeek")
+    @ResponseBody
+    public ResponseEntity<List<OrderRequest>> getOrdersWeek(HttpServletRequest request) {
+        List<Orders> orders = ordersRepository.findAllOrderWeekOfStore(getStoreIDByRequest(request));
+
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("No orders found for today.");
+            return ResponseEntity.noContent().build();
+        }
+
+        List<OrderRequest> orderRequests = orders.stream()
+                .map(order -> new OrderRequest(
+                        order.getId(),
+                        order.getPhone(),
+                        order.getName(),
+                        order.getAddress(),
+                        order.getTotalPrice(),
+                        order.getReceiveType(),
+                        order.getStore(),
+                        order.getAccount()
+                )).collect(Collectors.toList());
+        return ResponseEntity.ok(orderRequests);
+    }
+
+    @GetMapping("/getOrdersMonth")
+    @ResponseBody
+    public ResponseEntity<List<OrderRequest>> getOrdersMonth(HttpServletRequest request) {
+        List<Orders> orders = ordersRepository.findAllOrderMonthOfStore(getStoreIDByRequest(request));
+
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("No orders found for today.");
+            return ResponseEntity.noContent().build();
+        }
+
+        List<OrderRequest> orderRequests = orders.stream()
+                .map(order -> new OrderRequest(
+                        order.getId(),
+                        order.getPhone(),
+                        order.getName(),
+                        order.getAddress(),
+                        order.getTotalPrice(),
+                        order.getReceiveType(),
+                        order.getStore(),
+                        order.getAccount()
+                )).collect(Collectors.toList());
+        return ResponseEntity.ok(orderRequests);
     }
 
     public double calculateTotalPrice(List<String> orderIds) {
