@@ -278,7 +278,17 @@
                                                 <th scope="row">${order.id}</th>
                                                 <td>${order.account.accountDetail.name}</td>
                                                 <td>${order.phone}</td>
-                                                <td>${order.address}</td>
+<%--                                                <td>${order.address ? order.address : order.store.department}</td>--%>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${not empty order.address}">
+                                                            ${order.address}
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${order.store.department}
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
                                                 <td>${formatVND.format(order.totalPrice)}</td>
                                                 <td>
                                                     <c:choose>
@@ -469,7 +479,7 @@
                             $row.append('<td>' + order.name + '</td>');
                             $row.append('<td>' + order.phone + '</td>');
                             $row.append('<td>' + (order.address ? order.address : order.store.department) + '</td>');
-                            $row.append('<td>' + order.totalPrice + '</td>');
+                            $row.append('<td>' + order.totalPrice + ' đ' + '</td>');
                             $row.append('<td><span class="' + receiveTypeClass + '">' + order.receiveType + '</span></td>');
                             $row.append('<td><a href="/vendor/order/' + order.account.id + '/' + order.id + '" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a></td>');
 
@@ -506,7 +516,7 @@
                             $row.append('<td>' + order.name + '</td>');
                             $row.append('<td>' + order.phone + '</td>');
                             $row.append('<td>' + (order.address ? order.address : order.store.department) + '</td>');
-                            $row.append('<td>' + order.totalPrice + '</td>');
+                            $row.append('<td>' + order.totalPrice + ' đ' + '</td>');
                             $row.append('<td><span class="' + receiveTypeClass + '">' + order.receiveType + '</span></td>');
                             $row.append('<td><a href="/vendor/order/' + order.account.id + '/' + order.id + '" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a></td>');
 
@@ -543,7 +553,7 @@
                             $row.append('<td>' + order.name + '</td>');
                             $row.append('<td>' + order.phone + '</td>');
                             $row.append('<td>' + (order.address ? order.address : order.store.department) + '</td>');
-                            $row.append('<td>' + order.totalPrice + '</td>');
+                            $row.append('<td>' + order.totalPrice + ' đ' + '</td>');
                             $row.append('<td><span class="' + receiveTypeClass + '">' + order.receiveType + '</span></td>');
                             $row.append('<td><a href="/vendor/order/' + order.account.id + '/' + order.id + '" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a></td>');
 

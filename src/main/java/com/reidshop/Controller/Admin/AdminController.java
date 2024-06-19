@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
+import com.reidshop.Model.Request.OrderRequest;
 import com.reidshop.Reponsitory.CategoryRepository;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.OrdersRepository;
@@ -27,6 +28,7 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin/home")
@@ -352,5 +354,75 @@ public class AdminController {
 
         return listRevenueThisWeek;
     }
+    @GetMapping("/getOrdersToday")
+    @ResponseBody
+    public ResponseEntity<List<OrderRequest>> getOrdersToday() {
+        List<Orders> orders = ordersRepository.findAllOrderTodayAtAdmin();
 
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("No orders found for today.");
+            return ResponseEntity.noContent().build();
+        }
+
+        List<OrderRequest> orderRequests = orders.stream()
+                .map(order -> new OrderRequest(
+                        order.getId(),
+                        order.getPhone(),
+                        order.getName(),
+                        order.getAddress(),
+                        order.getTotalPrice(),
+                        order.getReceiveType(),
+                        order.getStore(),
+                        order.getAccount()
+                )).collect(Collectors.toList());
+        return ResponseEntity.ok(orderRequests);
+    }
+
+    @GetMapping("/getOrdersWeek")
+    @ResponseBody
+    public ResponseEntity<List<OrderRequest>> getOrdersWeek() {
+        List<Orders> orders = ordersRepository.findAllOrderWeekAtAdmin();
+
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("No orders found for today.");
+            return ResponseEntity.noContent().build();
+        }
+
+        List<OrderRequest> orderRequests = orders.stream()
+                .map(order -> new OrderRequest(
+                        order.getId(),
+                        order.getPhone(),
+                        order.getName(),
+                        order.getAddress(),
+                        order.getTotalPrice(),
+                        order.getReceiveType(),
+                        order.getStore(),
+                        order.getAccount()
+                )).collect(Collectors.toList());
+        return ResponseEntity.ok(orderRequests);
+    }
+
+    @GetMapping("/getOrdersMonth")
+    @ResponseBody
+    public ResponseEntity<List<OrderRequest>> getOrdersMonth() {
+        List<Orders> orders = ordersRepository.findAllOrderMonthAtAdmin();
+
+        if (orders == null || orders.isEmpty()) {
+            System.out.println("No orders found for today.");
+            return ResponseEntity.noContent().build();
+        }
+
+        List<OrderRequest> orderRequests = orders.stream()
+                .map(order -> new OrderRequest(
+                        order.getId(),
+                        order.getPhone(),
+                        order.getName(),
+                        order.getAddress(),
+                        order.getTotalPrice(),
+                        order.getReceiveType(),
+                        order.getStore(),
+                        order.getAccount()
+                )).collect(Collectors.toList());
+        return ResponseEntity.ok(orderRequests);
+    }
 }

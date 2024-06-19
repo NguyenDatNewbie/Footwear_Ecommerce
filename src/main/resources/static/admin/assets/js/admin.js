@@ -14,28 +14,30 @@ $(document).ready(function() {
                 $('#orderText').text("| Today");
             }
         });
-        $.ajax({
-            url: '/admin/home/getOrderIncreaseLastDate', // Địa chỉ máy chủ để gửi yêu cầu
-            method: 'GET',
-            success: function(response) {
-                var percent = parseFloat(response);
-
-                var orderIncreaseText = $('#orderIncreaseText');
-                var increaseText = $('#increaseOrderText');
-
-                //Thực hiện logic
-                if(percent < 0){
-                    orderIncreaseText.removeClass('text-success').addClass('text-danger');
-                    percent = Math.abs(percent);
-                    increaseText.text('Decrease');
-                } else
-                {
-                    increaseText.text('Increase');
-                }
-
-                orderIncreaseText.text(percent + "%");
-            }
-        });
+        // $.ajax({
+        //     url: '/admin/home/getOrderIncreaseLastDate', // Địa chỉ máy chủ để gửi yêu cầu
+        //     method: 'GET',
+        //     success: function(response) {
+        //         var percent = parseFloat(response);
+        //
+        //         console.log(percent)
+        //
+        //         var orderIncreaseText = $('#orderIncreaseText');
+        //         var increaseText = $('#increaseOrderText');
+        //
+        //         //Thực hiện logic
+        //         if(percent < 0){
+        //             orderIncreaseText.removeClass('text-success').addClass('text-danger');
+        //             percent = Math.abs(percent);
+        //             increaseText.text('Decrease');
+        //         } else
+        //         {
+        //             increaseText.text('Increase');
+        //         }
+        //
+        //         orderIncreaseText.text(percent + "%");
+        //     }
+        // });
     });
 });
 $(document).ready(function() {
@@ -49,28 +51,28 @@ $(document).ready(function() {
                 $('#orderText').text("| This Month");
             }
         });
-        $.ajax({
-            url: '/admin/home/getOrderIncreaseLastMonth', // Địa chỉ máy chủ để gửi yêu cầu
-            method: 'GET',
-            success: function(response) {
-                var percent = parseFloat(response);
-
-                var orderIncreaseText = $('#orderIncreaseText');
-                var increaseText = $('#increaseOrderText');
-
-                //Thực hiện logic
-                if(percent < 0){
-                    orderIncreaseText.removeClass('text-success').addClass('text-danger');
-                    percent = Math.abs(percent);
-                    increaseText.text('Decrease');
-                } else
-                {
-                    increaseText.text('Increase');
-                }
-
-                orderIncreaseText.text(percent + "%");
-            }
-        });
+        // $.ajax({
+        //     url: '/admin/home/getOrderIncreaseLastMonth', // Địa chỉ máy chủ để gửi yêu cầu
+        //     method: 'GET',
+        //     success: function(response) {
+        //         var percent = parseFloat(response);
+        //
+        //         var orderIncreaseText = $('#orderIncreaseText');
+        //         var increaseText = $('#increaseOrderText');
+        //
+        //         //Thực hiện logic
+        //         if(percent < 0){
+        //             orderIncreaseText.removeClass('text-success').addClass('text-danger');
+        //             percent = Math.abs(percent);
+        //             increaseText.text('Decrease');
+        //         } else
+        //         {
+        //             increaseText.text('Increase');
+        //         }
+        //
+        //         orderIncreaseText.text(percent + "%");
+        //     }
+        // });
     });
 });
 $(document).ready(function() {
@@ -80,12 +82,12 @@ $(document).ready(function() {
             method: 'GET',
             success: function(response) {
                 var newTotalOrder = response;
-                var increaseText = $('#increaseOrderText');
+                // var increaseText = $('#increaseOrderText');
                 var orderIncreaseText = $('#orderIncreaseText');
 
                 $('#totalOrders').text(newTotalOrder);
                 $('#orderText').text("| This Year");
-                increaseText.text('');
+                // increaseText.text('');
                 orderIncreaseText.text('');
 
             }
