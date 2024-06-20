@@ -9,7 +9,7 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Dashboard - NiceAdmin Bootstrap Template</title>
+  <title>Reid - Admin</title>
   <meta content="" name="description">
   <meta content="" name="keywords">
 
@@ -102,8 +102,15 @@
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
+
   <div class="pagetitle">
-    <h1>Manager Store</h1>
+    <h1>Manage System's Stores</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<c:url value="/admin/home"/>">Home</a></li>
+        <li class="breadcrumb-item active">Stores</li>
+      </ol>
+    </nav>
   </div><!-- End Page Title -->
 
   <section class="section dashboard">

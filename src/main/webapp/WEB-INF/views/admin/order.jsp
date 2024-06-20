@@ -14,7 +14,7 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <%--  <link href="/admin/assets/img/favicon1.png" rel="icon">--%>
+  <link href="/admin/assets/img/favicon.png" rel="icon">
   <link href="/admin/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -113,6 +113,16 @@
 </aside><!-- End Sidebar-->
 
 <main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Manager Product</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<c:url value="/admin/home"/>">Home</a></li>
+        <li class="breadcrumb-item active">Order Management</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
 
   <section class="section dashboard">
     <div class="row">

@@ -31,6 +31,7 @@ public class Product {
 
     @Column
     int promotion;
+
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
     boolean enable;
 

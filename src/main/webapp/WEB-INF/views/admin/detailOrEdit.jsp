@@ -69,9 +69,80 @@
 <!-- ======= Header ======= -->
 <jsp:include page="header.jsp" />
 <!-- ======= Sidebar ======= -->
-<jsp:include page="sidebar.jsp" />
+<!-- ======= Sidebar ======= -->
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/home"/>">
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link" href="<c:url value="/admin/products"/>">
+        <i class="bi bi-shop"></i>
+        <span>Products</span>
+      </a>
+    </li><!-- End Order Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/order"/>">
+        <i class="bi bi-journal-text"></i>
+        <span>Orders</span>
+      </a>
+    </li><!-- End Order Page Nav -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/voucher"/>">
+        <i class="bi bi-gift"></i>
+        <span>Voucher</span>
+      </a>
+    </li><!-- End Category Page Nav -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/stores"/>">
+        <i class="bi bi-diagram-3"></i>
+        <span>Stores</span>
+      </a>
+    </li><!-- End Category Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/account"/>">
+        <i class="bi bi-person"></i>
+        <span>Accounts</span>
+      </a>
+    </li><!-- End Account Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/categories"/>">
+        <i class="bi bi-card-list"></i>
+        <span>Categories</span>
+      </a>
+    </li><!-- End Category Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/posts"/>">
+        <i class="bi bi-file-earmark-word"></i>
+        <span>Posts</span>
+      </a>
+    </li><!-- End Category Page Nav -->
+  </ul>
+
+</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Product Detail</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<c:url value="/admin/home"/>">Home</a></li>
+        <li class="breadcrumb-item"><a href="<c:url value="/admin/products"/>">Product</a></li>
+        <li class="breadcrumb-item active">Product Detail</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
 
   <section class="section dashboard">
     <div class="row">
@@ -79,7 +150,7 @@
         <div class="col-md-12">
       <div class="card">
         <div class="card-body">
-          <h5 class="card-title">Product Detail</h5>
+<%--          <h5 class="card-title">Product Detail</h5>--%>
 
           <!-- Vertical Form -->
           <!-- No Labels Form -->
@@ -119,6 +190,20 @@
               <input type="text" class="form-control" placeholder="Description" value="${product.description}" id="description" name="description">
             </div>
 <%--            Size--%>
+            <div class="col-md-4">
+              <span class="card-title" style="font-size: 1em; margin-left: 5px;">Status</span>
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" ${product.enable ? 'checked' : ''} name="enable">
+                  <c:choose>
+                    <c:when test="${product.enable == true}">
+                      <label class="form-check-label" for="flexSwitchCheckDefault">The product is being <label style="color: #06D001">activated</label></label>
+                    </c:when>
+                    <c:when test="${product.enable == false}">
+                      <label class="form-check-label" for="flexSwitchCheckDefault">This product has been <label style="color: red">deactivated</label></label>
+                    </c:when>
+                  </c:choose>
+                </div>
+            </div>
             <div class="col-md-6" style="margin-bottom: 10px">
               <div class="widget_list color" style="margin-left: 5px;">
                 <span class="card-title" style="font-size: 1em;">Size</span>
