@@ -59,4 +59,9 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     @Query("SELECT p FROM Product p WHERE p.name LIKE CONCAT('%', ?1, '%') and p.enable=true")
     List<Product> searchProduct(String query);
 
+    @Query("select p from Product p")
+    List<Product> AllProductOfSystem();
+
+    @Query("select p from Product p where p.id=?1")
+    Optional<Product> findByIdAtAdmin(Long id);
 }

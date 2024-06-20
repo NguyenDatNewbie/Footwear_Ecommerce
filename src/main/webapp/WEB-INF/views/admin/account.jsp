@@ -103,6 +103,16 @@
 
 <main id="main" class="main">
 
+  <div class="pagetitle">
+    <h1>System Account Management</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<c:url value="/admin/home"/>">Home</a></li>
+        <li class="breadcrumb-item active">Account</li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
   <section class="section dashboard">
     <div class="row">
 
@@ -114,7 +124,7 @@
             <div class="card recent-sales overflow-auto">
 
               <div class="card-body">
-                <h5 class="card-title">All Account</h5>
+                <h5 class="card-title">List Account Of The System</h5>
                 <c:if test="${not empty successMessage}">
                   <div class="alert alert-primary bg-primary text-light border-0 alert-dismissible fade show" role="alert">
                       ${successMessage}

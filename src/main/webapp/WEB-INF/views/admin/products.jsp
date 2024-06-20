@@ -326,34 +326,34 @@
                   </div>
                 </div><!-- End Basic Modal-->
 
-                <table class="table table-hover">
+                <table class="table table-hover datatable">
                   <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Promotion</th>
-                    <th scope="col">Sold</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Action</th>
-                  </tr>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Product Name</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Promotion</th>
+                      <th scope="col">Sold</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Action</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  <c:forEach items="${productRepository.findAll()}" var="product">
-                    <tr>
-                      <th scope="row">${product.id}</th>
-                      <td>${product.name}</td>
-                      <td style="text-align: center;">${formatVND.format(product.price)}</td>
-                      <td style="text-align: center;">${product.promotion}%</td>
-                      <td style="text-align: center;">${product.sold}</td>
-                      <td style="text-align: center;">${product.category.name}</td>
-                      <td>${product.description}</td>
-                      <td>
-                        <button type="button" onclick="window.location.href='/admin/products/edit/${product.id}'" class="btn btn-info">Detail</button>
-                      </td>
-                    </tr>
-                  </c:forEach>
+                    <c:forEach items="${productRepository.AllProductOfSystem()}" var="product">
+                      <tr>
+                        <th scope="row">${product.id}</th>
+                        <td>${product.name}</td>
+                        <td style="text-align: center;">${formatVND.format(product.price)}</td>
+                        <td style="text-align: center;">${product.promotion}%</td>
+                        <td style="text-align: center;">${product.sold}</td>
+                        <td style="text-align: center;">${product.category.name}</td>
+                        <td>${product.description}</td>
+                        <td>
+                          <button type="button" onclick="window.location.href='/admin/products/edit/${product.id}'" class="btn btn-info">Detail</button>
+                        </td>
+                      </tr>
+                    </c:forEach>
                   </tbody>
                 </table>
 
