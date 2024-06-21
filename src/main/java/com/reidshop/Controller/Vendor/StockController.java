@@ -66,6 +66,7 @@ public class StockController {
         modelMap.addAttribute("importProduct", importProduct);
         modelMap.addAttribute("storeID", storeID);
         modelMap.addAttribute("colors",colorRepository.findAll());
+        modelMap.addAttribute("productOutOfStockRepository",productOutOfStockRepository);
         return "vendor/stock";
     }
 

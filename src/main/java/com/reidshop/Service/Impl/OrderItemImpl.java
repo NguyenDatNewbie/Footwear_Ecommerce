@@ -64,7 +64,8 @@ public class OrderItemImpl implements IOrderItemService {
         for(CartRequest cartRequest: item.getCarts()){
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(orders);
-            Inventory inventory = inventoryRepository.findByStore(cartRequest.getId(), cartRequest.getSize(), cartRequest.getQuantity(), item.getStoreValid().get(0).getStore().getId(), cartRequest.getColor());
+            List<Inventory> inventoryList = inventoryRepository.findByStore(cartRequest.getId(), cartRequest.getSize(), cartRequest.getQuantity(), item.getStoreValid().get(0).getStore().getId(), cartRequest.getColor());
+            Inventory inventory = inventoryList.get(0);
             if(inventory==null){
                 List<Inventory> inventories = inventoryRepository.findAllInventoryValid(cartRequest.getId(), cartRequest.getSize(), cartRequest.getColor(), orders.getStore().getId());
                 for (Inventory i: inventories) {

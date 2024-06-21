@@ -12,8 +12,8 @@ import java.util.List;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory,Long> {
-    @Query("select i from Inventory i where i.size.product.id=?1 and i.color.id=?5 and i.size.size=?2 and i.quantity>=?3 and i.store.id=?4 order by i.stock.createdAt")
-    Inventory findByStore(Long productId, String size, int quantity,Long storeId, Long colorId);
+    @Query("select i from Inventory i where i.size.product.id=?1 and i.color.id=?5 and i.size.size=?2 and i.quantity>=?3 and i.store.id=?4 order by i.stock.createdAt ASC")
+    List<Inventory> findByStore(Long productId, String size, int quantity,Long storeId, Long colorId);
     @Query("select i from Inventory i where i.store.id=?1 and i.size.id=?2 and i.color.id=?3")
     Inventory findForStock(Long storeId, Long size,Long color);
 
@@ -29,15 +29,15 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
     @Query("select o from Inventory o where o.store.id = :storeId")
     List<Inventory> findAllInventoryByStoreID(@Param("storeId") Long storeId);
 
-    @Query("select o.quantity from Inventory o where o.store.id = :storeId and o.size.id=:sizeId and o.color.id=:colorId")
+    @Query("select coalesce(sum(o.quantity),0) from Inventory o where o.store.id = :storeId and o.size.id=:sizeId and o.color.id=:colorId")
     int getQuantityOfProduct(Long storeId, Long sizeId, Long colorId);
 
-    @Query("select i from Inventory i where i.stock=?1 and i.size.id=?2 and i.color.id=?3 order by i.importPrice ASC")
+    @Query("select i from Inventory i where i.stock=?1 and i.size.id=?2 and i.color.id=?3 and i.quantity>0 ")
     List<Inventory> checkExistInStock(Stock stock,Long size,Long color);
 
-    @Query("select i from Inventory i where i.stock!=?1 and i.size.id=?2 and i.color.id=?3 order by i.stock.createdAt DESC")
+    @Query("select i from Inventory i where i.stock!=?1 and i.size.id=?2 and i.color.id=?3 and i.quantity>0 order by i.stock.createdAt DESC")
     List<Inventory> findAllOutStock(Stock stock, Long size,Long color);
 
-    @Query("select i from Inventory i where i.size.product.id=?1 and i.size.size=?2 and i.color.id=?3 and i.store.id=?4 order by i.stock.createdAt DESC")
+    @Query("select i from Inventory i where i.size.product.id=?1 and i.size.size=?2 and i.color.id=?3 and i.store.id=?4 order by i.stock.createdAt ASC ")
     List<Inventory> findAllInventoryValid(Long product,String size,long colorId,long storeId);
 }

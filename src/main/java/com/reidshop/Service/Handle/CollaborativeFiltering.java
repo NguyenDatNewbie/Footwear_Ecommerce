@@ -1,4 +1,4 @@
-package com.reidshop.Service;
+package com.reidshop.Service.Handle;
 
 import com.reidshop.Model.Entity.Account;
 import com.reidshop.Model.Entity.Product;

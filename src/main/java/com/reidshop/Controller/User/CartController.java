@@ -97,10 +97,9 @@ public class CartController {
         String token = CookieHandle.getCookieValue(request, "token");
         String email = jwtService.extractUsername(token);
         Account account = accountRepository.findByEmail(email).orElse(null);
-
+        if (account == null)
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("failed");
         if(payment==PaymentType.RECEIVE) {
-            if (account == null)
-                return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("failed");
             ordersService.savePayment(orderCombineRequest, receiveType, payment, request);
             responseData.put("url", "/cart?message=success");
             responseData.put("status", "success");

@@ -107,6 +107,18 @@
         .table-striped>tbody>tr:nth-of-type(odd)>*{
             --bs-table-bg-type: rgb(224, 247, 250);
         }
+        .datatable-sorter::before{
+            display: none;
+        }
+        .datatable-sorter::after{
+            display: none;
+        }
+        .datatable-sorter{
+            padding: 0;
+        }
+        .button-icon:hover{
+            color: #ff6a28;
+        }
     </style>
 </head>
 
@@ -190,11 +202,20 @@
                         <div class="card recent-sales overflow-auto">
 
                             <div class="card-body">
-                                <h5 class="card-title">Product <span>| The list of products to be restocked</span></h5>
+                                <h5 class="card-title" style="display: flex;justify-content: space-between;">
+                                    <div>Product <span>| The list of products to be restocked</span></div>
+                                    <div>
+                                        <button class="button-icon" style="font-size: 17px">
+                                            <i class="bi bi-download"></i>
+                                            Export
+                                        </button>
+                                    </div>
+                                </h5>
                                 <table class="table datatable">
                                     <thead>
                                     <tr>
                                         <th scope="col">Product Name</th>
+                                        <th scope="col">Order</th>
                                         <th scope="col">Color</th>
                                         <th scope="col">Size</th>
                                         <th scope="col">Quantity</th>
@@ -205,7 +226,8 @@
                                     <tbody>
                                     <c:forEach items="${importProduct}" var="outStock">
                                         <tr>
-                                            <td>${outStock.size.product.name}</td>
+                                            <td>${outStock.size.product.id} - ${outStock.size.product.name}</td>
+                                            <td>${outStock.orders.id}</td>
                                             <td>${outStock.color.color_name}</td>
                                             <td>${outStock.size.size}</td>
                                             <td>${outStock.quantity}</td>
@@ -273,8 +295,8 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div style="display: flex">
-                            <h5 class="card-title" style="flex: 1; padding-bottom: 0">Import Stock</h5>
+                        <div style="display: flex; justify-content: space-between;">
+                            <h5 class="card-title">Import Stock<span style="margin-left:6px; font-size: 14px">|</span><button class="button-icon" style="font-size: 16px"><i class="bi bi-upload"></i> Upload File </button></h5>
                             <button class="btn btn-outline-success" onclick="add()" style="margin: 20px 0 0 0;width: 75px;font-weight: 550;font-size: 17px;">Lưu</button>
                         </div>
                         <div class="datatable-container">
@@ -297,11 +319,12 @@
                                 <thead>
                                 <tr style="background-color: #4dd0e1">
                                     <th scope="row" width="30px" style="text-align: center">STT</th>
-                                    <th scope="col">Sản phẩm</th>
-                                    <th scope="col" width="120px">Kích thước</th>
-                                    <th scope="col" width="120px">Màu</th>
-                                    <th scope="col" width="100px">Số lượng</th>
-                                    <th scope="col">Đơn giá (VNĐ)</th>
+                                    <th scope="col">Sản phẩm *</th>
+                                    <th scope="col" width="120px">Kích thước *</th>
+                                    <th scope="col" width="120px">Màu *</th>
+                                    <th scope="col" width="120px">Số lượng *</th>
+                                    <th scope="col">Đơn giá (VNĐ) *</th>
+                                    <th scope="col">Ưu tiên Order</th>
                                 </tr>
                                 </thead>
                                 <tbody id="product-content">
@@ -327,6 +350,15 @@
                                     </td>
                                     <td><input type="number" id="quantity" oninput="validateInput(this)"></td>
                                     <td><input type="number" id="price" oninput="validateInput(this)"></td>
+                                    <td>
+                                        <select id="priority" style="width: 100%; padding: 2px">
+                                            <option value="0" >None</option>
+                                            <c:forEach var="outOfStock" items="${productOutOfStockRepository.findAllByStoreId(storeID)}">
+                                                <option value="${outOfStock.orders.id}">${outOfStock.orders.id} - ${outOfStock.orders.createdAt}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </td>
+
                                 </tr>
                                 </tbody>
                             </table>
@@ -439,6 +471,7 @@
         size.innerHTML = '';
         size.disabled= false;
         document.getElementById("color").disabled = false;
+        document.getElementById("priority").value = "0";
         document.getElementById("quantity").value = '';
         document.getElementById("price").value = '';
         document.querySelector(".check").innerHTML='';
@@ -496,13 +529,8 @@
         select = document.getElementById("color");
         setSelectedOptions(select,value.color.id);
 
-        // select.innerHTML = '';
-        // option = document.createElement("option");
-        // option.value = value.color.id;
-        // option.textContent = value.color.color_name;
-        // option.selected = true;
-        // select.appendChild(option);
-        // select.disabled = true;
+        select = document.getElementById("priority");
+        setSelectedOptions(select,value.priorityOrder.id);
 
         document.getElementById("quantity").value = value.quantity;
         document.getElementById("price").value = value.price;
@@ -512,6 +540,7 @@
         let name = document.getElementById("autocomplete-input").value;
         var select = document.getElementById("size");
         var selectColor = document.getElementById("color");
+        var selectPriority = document.getElementById("priority");
         let optionValue = select.value;
         let optionSize = select.options[selectElement.selectedIndex].textContent;
 
@@ -520,7 +549,8 @@
 
         var stocks = JSON.parse(localStorage.getItem("stocks")) || [];
         if(!document.getElementById("autocomplete-input").disabled) {
-            var check = stocks.findIndex(c =>   c.size.id == optionValue && c.price == price && c.color.id == selectColor.value);
+            var check = stocks.findIndex(c =>   c.size.id == optionValue && c.price == price
+                && c.color.id == selectColor.value && c.priorityOrder.id=== selectPriority.value);
             if (check !== -1) {
                 stocks[check].quantity = parseInt(stocks[check].quantity) + parseInt(quantity);
                 localStorage.setItem("stocks", JSON.stringify(stocks));
@@ -535,6 +565,10 @@
                     color:{
                         id: selectColor.value,
                         color_name: selectColor.options[selectColor.selectedIndex].textContent
+                    },
+                    priorityOrder: {
+                        id: selectPriority.value,
+                        text: selectPriority.options[selectPriority.selectedIndex].textContent
                     },
                     quantity: quantity,
                     price: price
@@ -551,6 +585,10 @@
                 id: selectColor.value,
                 color_name: selectColor.options[selectColor.selectedIndex].textContent
             };
+            stocks[index].priorityOrder ={
+                id: selectPriority.value,
+                text: selectPriority.options[selectPriority.selectedIndex].textContent
+            }
             localStorage.setItem("stocks", JSON.stringify(stocks));
         }
         resetInput();
@@ -609,6 +647,7 @@
             var cell4 = row.insertCell(3);
             var cell5 = row.insertCell(4);
             var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
             // Thiết lập nội dung cho từng ô
             cell1.innerHTML = stt;
             cell1.style.textAlign = "center";
@@ -617,6 +656,7 @@
             cell4.innerHTML = stock.color.color_name;
             cell5.innerHTML = stock.quantity;
             cell6.innerHTML = formatVND.format(parseFloat(stock.price));
+            cell7.innerHTML = stock.priorityOrder.text;
 
             row.style.cursor = "pointer";
             row.onclick = function () {
@@ -656,6 +696,71 @@
             input.value = 1; // Hoặc bạn có thể đặt giá trị mặc định khác
         }
     }
+</script>
+<%--Export file--%>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector('.button-icon').addEventListener("click",function (){
+            exportFile();
+        })
+        var btn = document.querySelectorAll('.button-icon');
+        btn[1].addEventListener("click",function (){
+            openNewTab("/excel/import");
+        })
+    });
+
+    function exportFile(){
+        $.ajax({
+            url: '/excel/download?store=${storeID}',
+            type: "get",
+            xhrFields: {
+                responseType: 'blob' // Xác định kiểu dữ liệu phản hồi là blob (binary data)
+            },
+            success: function(response, status, xhr) {
+                // Xử lý phản hồi thành công
+                var contentType = xhr.getResponseHeader('Content-Type');
+                var contentDisposition = xhr.getResponseHeader('Content-Disposition');
+
+
+                // Tạo một đường dẫn URL tạm thời cho file Excel
+                var blob = new Blob([response], { type: contentType });
+                var url = window.URL.createObjectURL(blob);
+
+                // Tạo một thẻ <a> ẩn để tải xuống file
+                var a = document.createElement('a');
+                a.href = url;
+                a.download = getFileName(contentDisposition); // Lấy tên file từ Content-Disposition header
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+
+                // Giải phóng đường dẫn URL
+                window.URL.revokeObjectURL(url);
+
+            },
+            error: function(xhr, status, error) {
+
+                // Xử lý lỗi
+                console.error('Lỗi khi gọi API: ' + error);
+            }
+        });
+    }
+
+    function getFileName(contentDisposition) {
+        var filename = '';
+        var startIndex = contentDisposition.indexOf('filename=');
+        if (startIndex !== -1) {
+            filename = contentDisposition.substring(startIndex + 9);
+            filename = filename.replace(/"/g, ''); // Loại bỏ dấu ngoặc kép (nếu có)
+        }
+        return filename;
+    }
+
+    function openNewTab(url) {
+        var newTab = window.open(url, '_blank');
+        newTab.focus();
+    }
+
 </script>
 </body>
 
