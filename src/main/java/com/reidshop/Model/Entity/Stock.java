@@ -5,6 +5,8 @@ import lombok.Data;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -17,9 +19,9 @@ public class Stock {
     @Column(name = "stock_id")
     Long id;
 
-    @Temporal(TemporalType.DATE) // Chỉ lấy ngày, bỏ qua giờ và phút
-    @DateTimeFormat(pattern = "dd--MM--yyyy") // Định dạng ngày theo ý muốn
+
     @Column
+    @DateTimeFormat(pattern = "hh:mm dd--MM--yyyy")
     Date createdAt;
 
     @ManyToOne
@@ -29,5 +31,16 @@ public class Stock {
     @ManyToOne
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
+
+    public void setCreatedAt() {
+        createdAt = Calendar.getInstance().getTime();
+    }
+    public String getCreatedAt() {
+        if (createdAt == null) {
+            return ""; // Hoặc bạn có thể trả về null nếu không có giá trị
+        }
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd-MM-yyyy");
+        return formatter.format(createdAt);
+    }
 
 }

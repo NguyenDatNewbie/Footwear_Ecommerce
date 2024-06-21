@@ -33,9 +33,9 @@ public class ProductOutOfStockServiceImpl implements IProductOutOfStockService {
             Product product = productRepository.findById(cart.getId()).orElse(null);
             double price = product.getPrice()*(1-product.getPromotion()/100.0);
             totalPrice +=price+ cart.getQuantity();
-            Inventory inventory = inventoryRepository.findByStore(cart.getId(), cart.getSize(), cart.getQuantity(), storeId, cart.getColor());
+            List<Inventory> inventories = inventoryRepository.findByStore(cart.getId(), cart.getSize(), cart.getQuantity(), storeId, cart.getColor());
 
-            if (stocking == 0 && inventory == null) {
+            if (stocking == 0 && inventories.size()==0) {
                 ProductOutOfStock productOutOfStock = new ProductOutOfStock();
                 productOutOfStock.setOrders(orders);
                 productOutOfStock.setSize(sizeRepository.findAllByProductIdAndSize(cart.getId(),cart.getSize()));
@@ -45,7 +45,7 @@ public class ProductOutOfStockServiceImpl implements IProductOutOfStockService {
                 productOutOfStockRepository.save(productOutOfStock);
             }
             else
-                orderItemService.save(inventory,cart.getQuantity(),price,orders);
+                orderItemService.save(inventories.get(0),cart.getQuantity(),price,orders);
         }
         return totalPrice;
     }
@@ -72,13 +72,15 @@ public class ProductOutOfStockServiceImpl implements IProductOutOfStockService {
 
             Size size = sizeRepository.findById(size_id).orElse(null);
             Color color = colorRepository.findById(color_id).orElse(null);
-
+            Orders orders = new Orders();
+            orders.setId((Long) item[3]);
             ProductOutOfStock product = new ProductOutOfStock();
             product.setId(productId);
             product.setSize(size);
             product.setColor(color);
             product.setPrice(0.0);
             product.setQuantity(quantity.intValue());
+            product.setOrders(orders);
             products.add(product);
             id++;
         }

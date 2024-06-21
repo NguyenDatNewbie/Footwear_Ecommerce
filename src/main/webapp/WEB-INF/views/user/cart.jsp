@@ -881,13 +881,6 @@
                                         </div>
                                         <div class="store scroll-container">
                                             <ul id="ul-address">
-                                                <li>
-                                                    <div style="display: flex"><input type="radio" name="option"
-                                                                                      value="1"><label
-                                                            style="margin-left: 7px; margin-right: 4px;">Số 1 Võ Văn
-                                                        Ngân, Phường Linh Chiểu, Quận Thủ Đức, Thành phố Hồ Chí
-                                                        Minh<span>Còn hàng</span></label></div>
-                                                </li>
                                             </ul>
                                         </div>
                                     </div>
@@ -2092,6 +2085,7 @@
             data: data,
             success: function (response) {
                 document.getElementById('ul-address').innerHTML = '';
+                console.log(response);
                 response.forEach(item => {
                     addItemToList(item);
                 });
@@ -2271,7 +2265,7 @@
                         storeValid: storeValid,
                         voucher: voucher != null ? voucher.value : null
                     }
-
+                    console.log(orderCombine);
                     $.ajax({
                         url: '/cart/payment/STORE/' + paymentOption.value,
                         type: "POST",

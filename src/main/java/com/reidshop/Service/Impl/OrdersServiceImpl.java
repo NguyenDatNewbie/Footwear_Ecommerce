@@ -159,7 +159,7 @@ public class OrdersServiceImpl implements IOrdersService {
 
         double totalPrice = 0.0;
         Orders complete;
-        // Nhận tại store hoặc sản phẩm hết hàng
+        // Hết hàng
         if(orderCombineRequest.getStoreValid().get(0).getStatus()==0){
             orders.setLimitReceiveAt(java.sql.Timestamp.valueOf(LocalDateTime.now().plusDays(7)));
             orders.setStatus(OrderStatus.WAIT);

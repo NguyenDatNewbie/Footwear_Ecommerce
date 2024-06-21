@@ -8,7 +8,7 @@ import com.reidshop.Reponsitory.AccountRepository;
 import com.reidshop.Reponsitory.CategoryRepository;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.ProductRepository;
-import com.reidshop.Service.CollaborativeFiltering;
+import com.reidshop.Service.Handle.CollaborativeFiltering;
 import com.reidshop.Service.IProductService;
 import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.util.*;
 
 @Controller

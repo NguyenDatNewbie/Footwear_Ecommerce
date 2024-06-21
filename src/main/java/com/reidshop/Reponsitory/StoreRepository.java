@@ -15,6 +15,8 @@ public interface StoreRepository extends JpaRepository<Store,Long> {
     @Query("SELECT s FROM Store s WHERE s.account.id=?1")
     Store searchAllByAccountId(long accountId);
 
+    Store findByAccountId(Long accountId);
+
     @Query("SELECT DISTINCT  SUBSTRING_INDEX(department, ',', -1) FROM Store")
     List<String> findOneColumnCity();
 
