@@ -44,7 +44,66 @@
 <!-- ======= Header ======= -->
 <jsp:include page="header.jsp" />
 <!-- ======= Sidebar ======= -->
-<jsp:include page="sidebar.jsp" />
+<aside id="sidebar" class="sidebar">
+
+    <ul class="sidebar-nav" id="sidebar-nav">
+
+        <li class="nav-item">
+            <a class="nav-link" href="<c:url value="/admin/home"/>">
+                <i class="bi bi-grid"></i>
+                <span>Dashboard</span>
+            </a>
+        </li><!-- End Dashboard Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<c:url value="/admin/products"/>">
+                <i class="bi bi-shop"></i>
+                <span>Products</span>
+            </a>
+        </li><!-- End Order Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<c:url value="/admin/order"/>">
+                <i class="bi bi-journal-text"></i>
+                <span>Orders</span>
+            </a>
+        </li><!-- End Order Page Nav -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<c:url value="/admin/voucher"/>">
+                <i class="bi bi-gift"></i>
+                <span>Voucher</span>
+            </a>
+        </li><!-- End Category Page Nav -->
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<c:url value="/admin/stores"/>">
+                <i class="bi bi-diagram-3"></i>
+                <span>Stores</span>
+            </a>
+        </li><!-- End Category Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<c:url value="/admin/account"/>">
+                <i class="bi bi-person"></i>
+                <span>Accounts</span>
+            </a>
+        </li><!-- End Account Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<c:url value="/admin/categories"/>">
+                <i class="bi bi-card-list"></i>
+                <span>Categories</span>
+            </a>
+        </li><!-- End Category Page Nav -->
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="<c:url value="/admin/posts"/>">
+                <i class="bi bi-file-earmark-word"></i>
+                <span>Posts</span>
+            </a>
+        </li><!-- End Category Page Nav -->
+    </ul>
+
+</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
 
@@ -52,7 +111,7 @@
         <h1>Dashboard</h1>
         <nav>
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a href="<c:url value="/admin/home"/>">Home</a></li>
                 <li class="breadcrumb-item active">Dashboard</li>
             </ol>
         </nav>
@@ -61,10 +120,8 @@
     <section class="section dashboard">
         <div class="row">
 
-            <!-- Left side columns -->
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="row">
-
                     <!-- Orders Card -->
                     <div class="col-xxl-4 col-md-6">
                         <div class="card info-card sales-card">
@@ -190,6 +247,11 @@
                             </div>
                         </div>
                     </div><!-- End Chart Revenue month -->
+                </div>
+            </div>
+            <!-- Left side columns -->
+            <div class="col-lg-8">
+                <div class="row">
 
                     <!-- Recent Sales -->
                     <div class="col-12">
@@ -202,23 +264,24 @@
                                         <h6>Filter</h6>
                                     </li>
 
-                                    <li><a class="dropdown-item" href="#">Today</a></li>
-                                    <li><a class="dropdown-item" href="#">This Month</a></li>
-                                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                                    <li><a class="dropdown-item" id="todayOrders">Today</a></li>
+                                    <li><a class="dropdown-item" id="weekOrders">This Week</a></li>
+                                    <li><a class="dropdown-item" id="monthOrders">This Month</a></li>
                                 </ul>
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Recent Sales <span>| Today</span></h5>
+                                <h5 class="card-title">Recent Sales <span id="orderTitle">| All Order</span></h5>
 
-                                <table class="table table-borderless datatable">
+                                <table class="table table-borderless datatable" id="recent-order-table">
                                     <thead>
                                     <tr>
                                         <th scope="col">ID</th>
                                         <th scope="col">Customer</th>
                                         <th scope="col">Phone</th>
-                                        <th scope="col">Address</th>
+                                        <th scope="col">Store</th>
                                         <th scope="col">Total Price</th>
+                                        <th scope="col">Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -227,8 +290,12 @@
                                                 <th scope="row">${order.id}</th>
                                                 <td>${order.account.accountDetail.name}</td>
                                                 <td>${order.phone}</td>
-                                                <td>${order.address}</td>
-                                                <td>${order.totalPrice}</td>
+                                                <td>${order.store.department}</td>
+<%--                                                <td>${order.store.account.accountDetail.name}</td>--%>
+                                                <td>${formatVND.format(order.totalPrice)}</td>
+                                                <td>
+                                                    <a href="/admin/account/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -271,8 +338,8 @@
                                     <tbody>
                                         <c:forEach items="${productService.top5ProductSoldTop()}" var="product">
                                         <tr>
-                                            <th scope="row"><a href="#"><img src="${product.images.get(0).img}" alt=""></a></th>
-                                            <td><a href="#" class="text-primary fw-bold">${product.name}</a></td>
+                                            <th scope="row"><a href="<c:url value="/admin/products/edit/${product.id}"/>"><img src="${product.images.get(0).img}" alt=""></a></th>
+                                            <td><a href="<c:url value="/admin/products/edit/${product.id}"/>" class="text-primary fw-bold">${product.name}</a></td>
                                             <td>${product.price}</td>
                                             <td class="fw-bold">${product.sold}</td>
                                             <td>${product.promotion}</td>
@@ -290,79 +357,6 @@
 
             <!-- Right side columns -->
             <div class="col-lg-4">
-
-                <!-- Recent Activity -->
-                <div class="card">
-                    <div class="filter">
-                        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                            <li class="dropdown-header text-start">
-                                <h6>Filter</h6>
-                            </li>
-
-                            <li><a class="dropdown-item" href="#">Today</a></li>
-                            <li><a class="dropdown-item" href="#">This Month</a></li>
-                            <li><a class="dropdown-item" href="#">This Year</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="card-body">
-                        <h5 class="card-title">Recent Activity <span>| Today</span></h5>
-
-                        <div class="activity">
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">32 min</div>
-                                <i class='bi bi-circle-fill activity-badge text-success align-self-start'></i>
-                                <div class="activity-content">
-                                    Quia quae rerum <a href="#" class="fw-bold text-dark">explicabo officiis</a> beatae
-                                </div>
-                            </div><!-- End activity item-->
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">56 min</div>
-                                <i class='bi bi-circle-fill activity-badge text-danger align-self-start'></i>
-                                <div class="activity-content">
-                                    Voluptatem blanditiis blanditiis eveniet
-                                </div>
-                            </div><!-- End activity item-->
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">2 hrs</div>
-                                <i class='bi bi-circle-fill activity-badge text-primary align-self-start'></i>
-                                <div class="activity-content">
-                                    Voluptates corrupti molestias voluptatem
-                                </div>
-                            </div><!-- End activity item-->
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">1 day</div>
-                                <i class='bi bi-circle-fill activity-badge text-info align-self-start'></i>
-                                <div class="activity-content">
-                                    Tempore autem saepe <a href="#" class="fw-bold text-dark">occaecati voluptatem</a> tempore
-                                </div>
-                            </div><!-- End activity item-->
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">2 days</div>
-                                <i class='bi bi-circle-fill activity-badge text-warning align-self-start'></i>
-                                <div class="activity-content">
-                                    Est sit eum reiciendis exercitationem
-                                </div>
-                            </div><!-- End activity item-->
-
-                            <div class="activity-item d-flex">
-                                <div class="activite-label">4 weeks</div>
-                                <i class='bi bi-circle-fill activity-badge text-muted align-self-start'></i>
-                                <div class="activity-content">
-                                    Dicta dolorem harum nulla eius. Ut quidem quidem sit quas
-                                </div>
-                            </div><!-- End activity item-->
-
-                        </div>
-
-                    </div>
-                </div><!-- End Recent Activity -->
 
                 <!-- Website Traffic -->
                 <div class="card">
@@ -628,6 +622,112 @@
     });
     //Hiển thị
     chart.render();
+</script>
+<script>
+    $(document).ready(function() {
+        $('#todayOrders').click(function() {
+            $.ajax({
+                url: '/admin/home/getOrdersToday', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function(response) {
+                    $('#recent-order-table tbody').empty();
+                    if (response && Array.isArray(response) && response.length > 0) {
+                        console.log("response: ", response);
+                        response.forEach(function (order) {
+                            var $row = $('<tr></tr>');
+                            $row.append('<th scope="row">' + order.id + '</th>');
+                            $row.append('<td>' + order.name + '</td>');
+                            $row.append('<td>' + order.phone + '</td>');
+                            $row.append('<td>' + order.store.department + '</td>');
+                            $row.append('<td>' + order.totalPrice + ' đ' + '</td>');
+                            $row.append('<td><a href="/admin/account/' + order.account.id + '/' + order.id + '" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a></td>');
+
+
+                            // Append the row to the table body
+                            $('#recent-order-table tbody').append($row);
+                        });
+                    } else {
+                        $('#recent-order-table tbody').append('<tr><td class="datatable-empty" colspan="6">No orders today</td></tr>');
+                    }
+                    $('#orderTitle').text("| Today");
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#weekOrders').click(function() {
+            $.ajax({
+                url: '/admin/home/getOrdersWeek', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function(response) {
+                    $('#recent-order-table tbody').empty();
+                    if (response && Array.isArray(response) && response.length > 0) {
+                        console.log("response: ", response);
+                        response.forEach(function (order) {
+                            var $row = $('<tr></tr>');
+                            $row.append('<th scope="row">' + order.id + '</th>');
+                            $row.append('<td>' + order.name + '</td>');
+                            $row.append('<td>' + order.phone + '</td>');
+                            $row.append('<td>' + order.store.department + '</td>');
+                            $row.append('<td>' + order.totalPrice + ' đ' + '</td>');
+                            $row.append('<td><a href="/admin/account/' + order.account.id + '/' + order.id + '" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a></td>');
+
+
+                            // Append the row to the table body
+                            $('#recent-order-table tbody').append($row);
+                        });
+                    } else {
+                        $('#recent-order-table tbody').append('<tr><td class="datatable-empty" colspan="6">No orders today</td></tr>');
+                    }
+                    $('#orderTitle').text("| Today");
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+
+    $(document).ready(function() {
+        $('#monthOrders').click(function() {
+            $.ajax({
+                url: '/admin/home/getOrdersMonth', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'GET',
+                contentType: "application/json; charset=utf-8",
+                success: function(response) {
+                    $('#recent-order-table tbody').empty();
+                    if (response && Array.isArray(response) && response.length > 0) {
+                        console.log("response: ", response);
+                        response.forEach(function (order) {
+                            var $row = $('<tr></tr>');
+                            $row.append('<th scope="row">' + order.id + '</th>');
+                            $row.append('<td>' + order.name + '</td>');
+                            $row.append('<td>' + order.phone + '</td>');
+                            $row.append('<td>' + order.store.department + '</td>');
+                            $row.append('<td>' + order.totalPrice + ' đ' + '</td>');
+                            $row.append('<td><a href="/admin/account/' + order.account.id + '/' + order.id + '" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a></td>');
+
+
+                            // Append the row to the table body
+                            $('#recent-order-table tbody').append($row);
+                        });
+                    } else {
+                        $('#recent-order-table tbody').append('<tr><td class="datatable-empty" colspan="6">No orders today</td></tr>');
+                    }
+                    $('#orderTitle').text("| Today");
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
 </script>
 
 </body>

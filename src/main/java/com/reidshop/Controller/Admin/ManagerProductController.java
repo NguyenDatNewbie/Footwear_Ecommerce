@@ -69,6 +69,7 @@ public class ManagerProductController {
         String name = product.getName() + " " + color;
         product.setName(name);
         product.setCategory(category);
+        product.setEnable(true);
         productRepository.save(product);
 
         //Xử lý hình ảnh, lưu vào cloud dinary
@@ -76,15 +77,17 @@ public class ManagerProductController {
         System.out.println(imageFiles);
         try {
             for (MultipartFile imageFile : imageFiles){
-                Image image = new Image();
-                Color color1 = new Color();
-                color1.setId(1L);
-                Map r = this.cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
-                String img = (String) r.get("secure_url");
-                image.setImg(img);
-                image.setProduct(product);
-                image.setColor(color1);
-                imageRepository.save(image);
+                if (!imageFile.isEmpty()) {
+                    Image image = new Image();
+                    Color color1 = new Color();
+                    color1.setId(1L);
+                    Map r = this.cloudinary.uploader().upload(imageFile.getBytes(), ObjectUtils.asMap("resource_type", "auto"));
+                    String img = (String) r.get("secure_url");
+                    image.setImg(img);
+                    image.setProduct(product);
+                    image.setColor(color1);
+                    imageRepository.save(image);
+                }
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -95,15 +98,17 @@ public class ManagerProductController {
         System.out.println(videoFiles);
         try {
             for (MultipartFile videoFile : videoFiles){
-                Image image = new Image();
-                Color color1 = new Color();
-                color1.setId(1L);
-                Map r = this.cloudinary.uploader().upload(videoFile.getBytes(), ObjectUtils.asMap("resource_type", "video"));
-                String img = (String) r.get("secure_url");
-                image.setImg(img);
-                image.setProduct(product);
-                image.setColor(color1);
-                imageRepository.save(image);
+                if (!videoFile.isEmpty()){
+                    Image image = new Image();
+                    Color color1 = new Color();
+                    color1.setId(1L);
+                    Map r = this.cloudinary.uploader().upload(videoFile.getBytes(), ObjectUtils.asMap("resource_type", "video"));
+                    String img = (String) r.get("secure_url");
+                    image.setImg(img);
+                    image.setProduct(product);
+                    image.setColor(color1);
+                    imageRepository.save(image);
+                }
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -179,15 +184,17 @@ public class ManagerProductController {
         System.out.println(videoFiles);
         try {
             for (MultipartFile videoFile : videoFiles){
-                Image image = new Image();
-                Color color1 = new Color();
-                color1.setId(1L);
-                Map r = this.cloudinary.uploader().upload(videoFile.getBytes(), ObjectUtils.asMap("resource_type", "video"));
-                String img = (String) r.get("secure_url");
-                image.setImg(img);
-                image.setProduct(product);
-                image.setColor(color1);
-                imageRepository.save(image);
+                if (!videoFile.isEmpty()){
+                    Image image = new Image();
+                    Color color1 = new Color();
+                    color1.setId(1L);
+                    Map r = this.cloudinary.uploader().upload(videoFile.getBytes(), ObjectUtils.asMap("resource_type", "video"));
+                    String img = (String) r.get("secure_url");
+                    image.setImg(img);
+                    image.setProduct(product);
+                    image.setColor(color1);
+                    imageRepository.save(image);
+                }
             }
         }catch (IOException e){
             e.printStackTrace();
@@ -201,7 +208,7 @@ public class ManagerProductController {
 
     @GetMapping("edit/{productId}")
     public ModelAndView edit(ModelMap model, @PathVariable("productId") Long productId) {
-        Optional<Product> opt = productRepository.findById(productId); //lấy đối tượng
+        Optional<Product> opt = productRepository.findByIdAtAdmin(productId); //lấy đối tượng
 
         //All Size
         List<String> allSizes = Arrays.asList("38", "39", "40", "41", "42", "43");

@@ -181,6 +181,20 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
             "and o.store.department LIKE CONCAT('%', ?1, '%')")
     List<Orders> findBySearchQuery(String query,Long accountId);
 
+    //Order Admin
+    //Get All order today at Admin
+    @Query("SELECT o FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE ORDER BY o.createdAt DESC")
+    List<Orders> findAllOrderTodayAtAdmin();
+
+    //Lấy All order trong tuần at Admin
+    @Query("SELECT o FROM Orders o WHERE YEARWEEK(o.createdAt, 1) = YEARWEEK(CURDATE(), 1) ORDER BY o.createdAt DESC")
+    List<Orders> findAllOrderWeekAtAdmin();
+
+    //Lấy All order trong tháng at Admin
+    @Query("SELECT o FROM Orders o WHERE FUNCTION('DATE_FORMAT', o.createdAt, '%Y-%m') = FUNCTION('DATE_FORMAT', CURRENT_DATE, '%Y-%m') ORDER BY o.createdAt DESC")
+    List<Orders> findAllOrderMonthAtAdmin();
+
+    //Order Vendor
     //Lấy danh sách order trong ngày
     @Query("SELECT o FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE AND o.store.id = :storeId ORDER BY o.createdAt DESC")
     List<Orders> findAllOrderTodayOfStore(@Param("storeId") Long storeId);

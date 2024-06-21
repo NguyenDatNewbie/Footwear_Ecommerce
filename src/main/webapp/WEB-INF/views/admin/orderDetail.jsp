@@ -49,8 +49,8 @@
     <h1>Profile</h1>
     <nav>
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/admin">Home</a></li>
-        <li class="breadcrumb-item"><a href="/admin/account">Account</a></li>
+        <li class="breadcrumb-item"><a href="<c:url value="/admin/home"/>">Home</a></li>
+        <li class="breadcrumb-item"><a href="<c:url value="/admin/account"/>">Account</a></li>
         <li class="breadcrumb-item active">Order Detail</li>
       </ol>
     </nav>

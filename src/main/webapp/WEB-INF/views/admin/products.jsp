@@ -110,12 +110,79 @@
 <!-- ======= Header ======= -->
 <jsp:include page="header.jsp" />
 <!-- ======= Sidebar ======= -->
-<jsp:include page="sidebar.jsp" />
+<aside id="sidebar" class="sidebar">
+
+  <ul class="sidebar-nav" id="sidebar-nav">
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/home"/>">
+        <i class="bi bi-grid"></i>
+        <span>Dashboard</span>
+      </a>
+    </li><!-- End Dashboard Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link" href="<c:url value="/admin/products"/>">
+        <i class="bi bi-shop"></i>
+        <span>Products</span>
+      </a>
+    </li><!-- End Order Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/order"/>">
+        <i class="bi bi-journal-text"></i>
+        <span>Orders</span>
+      </a>
+    </li><!-- End Order Page Nav -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/voucher"/>">
+        <i class="bi bi-gift"></i>
+        <span>Voucher</span>
+      </a>
+    </li><!-- End Category Page Nav -->
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/stores"/>">
+        <i class="bi bi-diagram-3"></i>
+        <span>Stores</span>
+      </a>
+    </li><!-- End Category Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/account"/>">
+        <i class="bi bi-person"></i>
+        <span>Accounts</span>
+      </a>
+    </li><!-- End Account Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/categories"/>">
+        <i class="bi bi-card-list"></i>
+        <span>Categories</span>
+      </a>
+    </li><!-- End Category Page Nav -->
+
+    <li class="nav-item">
+      <a class="nav-link collapsed" href="<c:url value="/admin/posts"/>">
+        <i class="bi bi-file-earmark-word"></i>
+        <span>Posts</span>
+      </a>
+    </li><!-- End Category Page Nav -->
+  </ul>
+
+</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
+
   <div class="pagetitle">
     <h1>Manager Product</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="<c:url value="/admin/home"/>">Home</a></li>
+        <li class="breadcrumb-item active">Product</li>
+      </ol>
+    </nav>
   </div><!-- End Page Title -->
+
   <section class="section dashboard">
     <div class="row">
 
@@ -127,7 +194,7 @@
             <div class="card recent-sales overflow-auto">
 
               <div class="card-body">
-                <h5 class="card-title">All Product <span>| </span></h5>
+                <h5 class="card-title">All Product Of Reid Shop</h5>
                 <!-- Basic Modal -->
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ExtralargeModal">
                   New Product
@@ -259,34 +326,34 @@
                   </div>
                 </div><!-- End Basic Modal-->
 
-                <table class="table table-hover">
+                <table class="table table-hover datatable">
                   <thead>
-                  <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Product Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Promotion</th>
-                    <th scope="col">Sold</th>
-                    <th scope="col">Category</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Action</th>
-                  </tr>
+                    <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">Product Name</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Promotion</th>
+                      <th scope="col">Sold</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Description</th>
+                      <th scope="col">Action</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  <c:forEach items="${productRepository.findAll()}" var="product">
-                    <tr>
-                      <th scope="row">${product.id}</th>
-                      <td>${product.name}</td>
-                      <td style="text-align: center;">${formatVND.format(product.price)}</td>
-                      <td style="text-align: center;">${product.promotion}%</td>
-                      <td style="text-align: center;">${product.sold}</td>
-                      <td style="text-align: center;">${product.category.name}</td>
-                      <td>${product.description}</td>
-                      <td>
-                        <button type="button" onclick="window.location.href='/admin/products/edit/${product.id}'" class="btn btn-info">Detail</button>
-                      </td>
-                    </tr>
-                  </c:forEach>
+                    <c:forEach items="${productRepository.AllProductOfSystem()}" var="product">
+                      <tr>
+                        <th scope="row">${product.id}</th>
+                        <td>${product.name}</td>
+                        <td style="text-align: center;">${formatVND.format(product.price)}</td>
+                        <td style="text-align: center;">${product.promotion}%</td>
+                        <td style="text-align: center;">${product.sold}</td>
+                        <td style="text-align: center;">${product.category.name}</td>
+                        <td>${product.description}</td>
+                        <td>
+                          <button type="button" onclick="window.location.href='/admin/products/edit/${product.id}'" class="btn btn-info">Detail</button>
+                        </td>
+                      </tr>
+                    </c:forEach>
                   </tbody>
                 </table>
 
