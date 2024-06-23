@@ -363,6 +363,9 @@
                 <i class="fas fa-chevron-left" style="margin-right: 5px"></i><span>Trở lại</span>
             </div>
             <div class="order-id">
+                <script>
+                    console.log(${order.id});
+                </script>
                      <c:choose>
                          <c:when test="${order.status =='COMPLETE'}">
                              <span>Mã đơn hàng: ${order.id}</span>
@@ -405,10 +408,10 @@
                 </div>
                 <div class="information">
                     <div class="address">
-                        <p>Nguyễn Đạt</p>
-                        <span>0397926273</span>
+                        <p>${order.name}</p>
+                        <span>SDT: ${order.phone}</span>
                         <br>
-                        <span>Số 63, Linh Trung, Phường Linh Trung, Thành Phố Thủ Đức, TP. Hồ Chí Minh</span>
+                        <span>Địa chỉ: ${order.address}</span>
                     </div>
                     <div class="delivery">
                         <div class="vertical">
@@ -508,7 +511,7 @@
                         <div class="info-row">
                             <div class="subject"><span>Phí vận chuyện</span></div>
                             <div class="detail">
-                                <div>${formatVND.format(order.delivery.cost)}</div>
+                                <div>${formatVND.format(order.delivery.cost == null ? 0 : order.delivery.cost)}</div>
                             </div>
                         </div>
                         <div class="info-row">
@@ -520,7 +523,7 @@
                         <div class="info-row">
                             <div class="subject"><span>Thành tiền</span></div>
                             <div class="detail">
-                                <div style="color: red; font-size: 16px">${formatVND.format(order.totalPrice+order.delivery.cost-order.voucherValue)}</div>
+                                <div style="color: red; font-size: 16px">${formatVND.format(order.totalPrice+(order.delivery.cost == null ? 0 : order.delivery.cost) -order.voucherValue)}</div>
                             </div>
                         </div>
                         <div class="info-row">
@@ -529,7 +532,7 @@
                                 <div>
                                     <c:choose>
                                         <c:when test="${order.paymentType == 'RECEIVE'}">
-                                            Thanh toán bằng tiền mặt
+                                            Thanh toán khi nhận hàng
                                         </c:when>
                                         <c:when test="${order.paymentType == 'VNPAY'}">
                                             Vnpay

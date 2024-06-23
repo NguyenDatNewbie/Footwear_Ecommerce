@@ -6,10 +6,7 @@ import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Mapper.CartRequestMapper;
 import com.reidshop.Model.Request.CartRequest;
 import com.reidshop.Model.Request.EvaluateRequest;
-import com.reidshop.Reponsitory.AccountRepository;
-import com.reidshop.Reponsitory.EvaluateRepository;
-import com.reidshop.Reponsitory.ImageRepository;
-import com.reidshop.Reponsitory.OrdersRepository;
+import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IEvaluateServiceImpl;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
@@ -48,6 +45,8 @@ public class OrderManagementController {
     JwtService jwtService;
     @Autowired
     CartRequestMapper cartRequestMapper;
+    @Autowired
+    OrderItemRepository orderItemRepository;
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
     @GetMapping("")
@@ -106,7 +105,8 @@ public class OrderManagementController {
         Orders orders = ordersRepository.findById(id).orElse(null);
         List<CartRequest> cartRequestList = new ArrayList<>();
         if(orders!=null){
-            List<OrderItem> orderItems = orders.getOrderItems();
+            List<OrderItem> orderItems = orderItemRepository.findAllItemByOrderId(orders.getId());
+
             cartRequestList = cartRequestMapper.toListCartRequest(orderItems);
             cartRequestList.addAll(cartRequestMapper.toListCartRequestOutStock(orders.getProductOutOfStocks()));
         }

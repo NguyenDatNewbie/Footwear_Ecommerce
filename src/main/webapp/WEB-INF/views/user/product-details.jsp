@@ -478,9 +478,9 @@
 <body>
 <!-- Lớp đè -->
 <div class="overlay" id="overlay">
-    <div class="overlay-content" style="margin-top: 20px; display: inline-block;">
+    <div class="overlay-content" style="margin-top: 20px; display: inline-block; width: 85%">
         <h2 style="color: #fff">Bảng quy đổi kích thước</h2>
-        <img style="width: 90%"
+        <img
              src="<c:url value="/assets/img/ShoeSizeChart.png"/>"/>
     </div>
 </div>

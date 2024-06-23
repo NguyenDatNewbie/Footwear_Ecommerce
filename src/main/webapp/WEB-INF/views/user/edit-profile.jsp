@@ -59,21 +59,8 @@
 <div class="container" style="padding: 50px 50px">
 	<div class="spad">
 		<div class="row">
-			<div class="col-md-4 mb-3">
-				<div class="card">
-					<div class="card-body">
-						<div class="d-flex flex-column align-items-center text-center"
-							 id="profile-head">
-							<img src="https://cdn-icons-png.flaticon.com/512/3033/3033143.png" width="150">
-							<div class="mt-3">
-								<h4>${info.accountDetail.name}</h4>
-							</div>
-							<button class="btn btn-info" style="background-color: blue">Update Image</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="card col-md-8">
+
+			<div class="card col-md-12">
 				<div class="user-profile">
 					<div style="padding: 15px">
 						<form method="post" action="/profile/update">

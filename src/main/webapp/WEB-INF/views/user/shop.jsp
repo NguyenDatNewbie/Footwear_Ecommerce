@@ -30,26 +30,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
     <style>
-        .grid_list .product_thumb {
-            margin-bottom: 0;
-            min-width: 33.333333%;
-            margin-right: 15px;
-            width: 200px;
-        }
-        @media only screen and (min-width: 768px) and (max-width: 991px) {
-            .grid_list .product_thumb {
-                flex: 0 0 40.667%;
-                min-width: 40.667%;
-            }
-        }
-        @media only screen and (max-width: 767px) {
-            .grid_list .product_thumb {
-                flex: 0 0 100%;
-                min-width: 100%;
-                margin-right: 0;
-                margin-bottom: 25px;
-            }
-        }
+
         .sidebar_widget.widget_categories ul li:focus {
             color: #ff6a28;
             font-style: oblique;
@@ -396,11 +377,7 @@
                     </div>
                     <div class="shop_toolbar_wrapper">
                         <div class="shop_toolbar_btn">
-
                             <button data-role="grid_3" type="button" class="active btn-grid-3" data-toggle="tooltip" title="3"></button>
-
-                            <button data-role="grid_list" type="button"  class="btn-list" data-toggle="tooltip" title="List"></button>
-
                         </div>
 
                         <select  class="select_option" id="select_id" onchange="filterAll()">
@@ -462,23 +439,7 @@
                                                 </c:forEach>
                                             </div>
                                         </div>
-                                        <div class="product_content list_content">
-                                            <h3><a href="product-details.html">${product.name}</a></h3>
-                                            <div class="product_price">
-                                                <c:choose>
-                                                    <c:when test="${product.promotion>0}">
-                                                        <span class="current_price">${formatVND.format(product.price*(1-product.promotion/100))}</span>
-                                                        <span class="old_price">${formatVND.format(product.price)}</span>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <span class="current_price">${formatVND.format(product.price)}</span>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </div>
-                                            <div class="product_desc">
-                                                <p>${product.description}</p>
-                                            </div>
-                                        </div>
+
                                     </div>
                                 </div>
                             </div>

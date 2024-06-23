@@ -333,7 +333,7 @@
                                     <td>
                                         <div id="autocomplete-container">
                                             <input type="text" id="autocomplete-input" placeholder="Search..."
-                                                   style="width: 100%">
+                                                   autocomplete="off"   style="width: 100%">
                                             <ul id="autocomplete-list"></ul>
                                         </div>
                                     </td>

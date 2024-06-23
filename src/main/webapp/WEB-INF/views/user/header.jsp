@@ -117,7 +117,7 @@
                     </div>
                     <div class="col-lg-4">
                         <div class="logo">
-                            <a href="index.jsp"><img src="<c:url value="/assets/img/logo/logo.png" />" ></a>
+                            <a href="/"><img src="<c:url value="/assets/img/logo/logo.png" />" ></a>
                         </div>
                     </div>
 

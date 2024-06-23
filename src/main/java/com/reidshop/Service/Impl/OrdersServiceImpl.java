@@ -50,6 +50,8 @@ public class OrdersServiceImpl implements IOrdersService {
     VoucherRepository voucherRepository;
     @Autowired
     DeliveryRepository deliveryRepository;
+    @Autowired
+    OrderItemRepository orderItemRepository;
 
 
     public OrdersServiceImpl(OrdersRepository ordersRepository) {
@@ -159,17 +161,19 @@ public class OrdersServiceImpl implements IOrdersService {
 
         double totalPrice = 0.0;
         Orders complete;
+
         // Hết hàng
         if(orderCombineRequest.getStoreValid().get(0).getStatus()==0){
             orders.setLimitReceiveAt(java.sql.Timestamp.valueOf(LocalDateTime.now().plusDays(7)));
             orders.setStatus(OrderStatus.WAIT);
-            complete = ordersRepository.save(orders);
-            totalPrice = productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
-            complete.setTotalPrice(totalPrice);
             if(receiveType == ReceiveType.DELIVERY) {
                 Delivery delivery = deliveryRepository.save(orderCombineRequest.getOrders().getDelivery());
                 orders.setDelivery(delivery);
             }
+            complete = ordersRepository.save(orders);
+            totalPrice = productOutOfStockService.save(orderCombineRequest.getCarts(),store.getId(),orderCombineRequest.getStoreValid().get(0).getStatus(),complete);
+            complete.setTotalPrice(totalPrice);
+
         }
         else if (receiveType==ReceiveType.STORE)
         {
@@ -195,12 +199,18 @@ public class OrdersServiceImpl implements IOrdersService {
             if(receiveType==ReceiveType.STORE && voucher.getVoucherType().equals(VoucherType.FREE_SHIPPING))
                 complete.setVoucherValue(0.0);
             else {
-                complete.setVoucherValue(calVoucherValue(totalPrice,voucher));
+                if(voucher.getVoucherType() == VoucherType.FREE_SHIPPING){
+                    complete.setVoucherValue(voucher.getDiscountValue()<complete.getDelivery().getCost()
+                            ? voucher.getDiscountValue() : complete.getDelivery().getCost());
+                }
+                else
+                    complete.setVoucherValue(calVoucherValue(totalPrice,voucher));
                 voucher.setQuantity(voucher.getQuantity()-1);
                 voucherRepository.save(voucher);
             }
         }
         ordersRepository.save(complete);
+
     }
 
     double calVoucherValue(double priceOriginal, Vourcher voucher){
@@ -217,7 +227,8 @@ public class OrdersServiceImpl implements IOrdersService {
         Orders orders = ordersRepository.findById(orderId).orElse(null);
         if(orders!=null)
         {
-            for (OrderItem item: orders.getOrderItems()) {
+            List<OrderItem> orderItems = orderItemRepository.findAllItemByOrderId(orderId);
+            for (OrderItem item: orderItems) {
                 Product product = item.getInventory().getSize().getProduct();
                 Evaluate newEvaluate = new Evaluate();
                 newEvaluate.setAccount(evaluate.getAccount());
@@ -263,7 +274,9 @@ public class OrdersServiceImpl implements IOrdersService {
             if(result.contains(order))
                 continue;
             boolean exist = false;
-            for (OrderItem orderItem: order.getOrderItems()) {
+            List<OrderItem> orderItems = orderItemRepository.findAllItemByOrderId(order.getId());
+
+            for (OrderItem orderItem: orderItems) {
                 if(orderItem.getInventory().getSize().getProduct().getName().toLowerCase().contains(keyword.toLowerCase()))
                 {
                     exist = true;
