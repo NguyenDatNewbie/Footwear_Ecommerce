@@ -401,7 +401,7 @@
             <div class="col-lg-6 col-md-6">
                 <div class="banner_area" style="height: 100%">
                     <div class="banner_thumb" style="height: 100%">
-                        <a href="shop.html"><img src="../assets/img/bg/shoes-banner.jpg" alt="#" style="width: 100%; height: 100%"></a>
+                        <a><img src="../assets/img/bg/shoes-banner.jpg" alt="#" style="width: 100%; height: 100%"></a>
                         <div class="banner_content">
                             <h1>Adidas <br> Men’s Collection</h1>
                             <a href="shop.html">Discover Now</a>
@@ -412,7 +412,7 @@
             <div class="col-lg-6 col-md-6">
                 <div class="banner_area">
                     <div class="banner_thumb">
-                        <a href="shop.html"><img src="../assets/img/bg/banner12.jpg" alt="#"></a>
+                        <a><img src="../assets/img/bg/banner12.jpg" alt="#"></a>
                         <div class="banner_content">
                             <h1>Balenciaga <br> Men’s Collection</h1>
                             <a href="shop.html">Discover Now</a>
