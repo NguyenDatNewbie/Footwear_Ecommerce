@@ -470,6 +470,17 @@
                 background-position: right, left, center, right
             }
         }
+        .product_thumb {
+            padding-top: 100%;
+        }
+
+        .product_thumb img{
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
     </style>
 
