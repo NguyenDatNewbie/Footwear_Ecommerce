@@ -252,10 +252,6 @@ public class ManagerProductController {
             try {
                 boolean isVideo = imageUrl.contains("/video");
                 Map result;
-                // Thực hiện xóa ảnh từ Cloudinary
-//            Map result = cloudinary.uploader().destroy(publicID, ObjectUtils.emptyMap());
-//                Map result = cloudinary.uploader().destroy(publicID, ObjectUtils.asMap("resource_type", "video"));
-
                 if (isVideo){
                     //Xóa video
                     result = cloudinary.uploader().destroy(publicID, ObjectUtils.asMap("resource_type", "video"));

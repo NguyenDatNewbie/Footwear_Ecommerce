@@ -186,12 +186,17 @@
                                             <label for="inputQuantity" class="form-label">Quantity</label>
                                             <input type="number" class="form-control" id="inputQuantity" required min="1" name="quantity">
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <label for="inputMinimumValue" class="form-label">Minimum Value</label>
                                             <input type="number" class="form-control" id="inputMinimumValue" required min="0" oninput="checkNegativeInputMinimum(this)" name="minimumValue">
                                             <div id="minimumErrorMessage" class="invalid-feedback" style="font-size: 12px;">Please enter a value >= 0</div>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
+                                            <label for="inputMaxDiscount" class="form-label">Max Discount</label>
+                                            <input type="number" class="form-control" id="inputMaxDiscount" required min="0" oninput="checkNegativeInputMaxdiscount(this)" name="maxDiscount">
+                                            <div id="maxDiscountErrorMessage" class="invalid-feedback" style="font-size: 12px;">Please enter a value >= 0</div>
+                                        </div>
+                                        <div class="col-md-4">
                                             <label for="inputExpirationDate" class="form-label">Expiration Date</label>
                                             <input type="date" class="form-control" id="inputExpirationDate" required name="expirationDateFormatYet">
                                         </div>
@@ -259,10 +264,11 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Voucher Code</th>
+<%--                                    <th scope="col">Voucher Code</th>--%>
                                     <th scope="col">Title</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Discount Value</th>
+                                    <th scope="col">Discount Max</th>
                                     <th scope="col">Minimum Value</th>
                                     <th scope="col">Expiration Value</th>
                                     <th scope="col">Voucher Type</th>
@@ -274,7 +280,7 @@
                                 <c:forEach items="${voucherRepository.findAll()}" var="voucher">
                                     <tr>
                                         <th scope="row">${voucher.id}</th>
-                                        <td>${voucher.voucherCode}</td>
+<%--                                        <td>${voucher.voucherCode}</td>--%>
                                         <td>${voucher.title}</td>
                                         <td>${voucher.quantity}</td>
                                         <td>
@@ -287,6 +293,7 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
+                                        <td>${formatVND.format(voucher.maxDiscount)}</td>
                                         <td>${formatVND.format(voucher.minimumValue)}</td>
                                         <td>${dateFormat.format(voucher.expirationDate)}</td>
                                         <td>
@@ -316,7 +323,7 @@
                                             </c:choose>
                                         </td>
                                         <td>
-                                            <button type="button" onclick="window.location.href='/admin/account/${voucher.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                            <button type="button" onclick="window.location.href='/admin/voucher/edit/${voucher.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -324,15 +331,16 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="profile-tab">
-                            <p>All vouchers in the system include both valid and expired ones</p>
+                            <p>All system vouchers that are still valid</p>
                             <table class="table datatable" style="font-size: 14px" id="table-Force-voucher">
                                 <thead>
                                 <tr>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Voucher Code</th>
+<%--                                    <th scope="col">Voucher Code</th>--%>
                                     <th scope="col">Title</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Discount Value</th>
+                                    <th scope="col">Discount Max</th>
                                     <th scope="col">Minimum Value</th>
                                     <th scope="col">Expiration Value</th>
                                     <th scope="col">Voucher Type</th>
@@ -344,7 +352,7 @@
                                 <c:forEach items="${voucherService.findVouchersInForce()}" var="voucher">
                                     <tr>
                                         <th scope="row">${voucher.id}</th>
-                                        <td>${voucher.voucherCode}</td>
+<%--                                        <td>${voucher.voucherCode}</td>--%>
                                         <td>${voucher.title}</td>
                                         <td>${voucher.quantity}</td>
                                         <td>
@@ -357,6 +365,7 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
+                                        <td>${formatVND.format(voucher.maxDiscount)}</td>
                                         <td>${formatVND.format(voucher.minimumValue)}</td>
                                         <td>${dateFormat.format(voucher.expirationDate)}</td>
                                         <td>
@@ -386,7 +395,7 @@
                                             </c:choose>
                                         </td>
                                         <td>
-                                            <button type="button" onclick="window.location.href='/admin/account/${voucher.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                            <button type="button" onclick="window.location.href='/admin/voucher/edit/${voucher.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -394,15 +403,16 @@
                             </table>
                         </div>
                         <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="contact-tab">
-                            <p>All vouchers in the system include both valid and expired ones</p>
+                            <p>All vouchers in the system have expired</p>
                             <table class="table datatable" style="font-size: 14px" id="table-expiration-voucher">
                                 <thead>
                                 <tr>
                                     <th scope="col">ID</th>
-                                    <th scope="col">Voucher Code</th>
+<%--                                    <th scope="col">Voucher Code</th>--%>
                                     <th scope="col">Title</th>
                                     <th scope="col">Quantity</th>
                                     <th scope="col">Discount Value</th>
+                                    <th scope="col">Discount Max</th>
                                     <th scope="col">Minimum Value</th>
                                     <th scope="col">Expiration Value</th>
                                     <th scope="col">Voucher Type</th>
@@ -414,7 +424,7 @@
                                 <c:forEach items="${voucherService.findVouchersExpiration()}" var="voucher">
                                     <tr>
                                         <th scope="row">${voucher.id}</th>
-                                        <td>${voucher.voucherCode}</td>
+<%--                                        <td>${voucher.voucherCode}</td>--%>
                                         <td>${voucher.title}</td>
                                         <td>${voucher.quantity}</td>
                                         <td>
@@ -427,6 +437,7 @@
                                                 </c:otherwise>
                                             </c:choose>
                                         </td>
+                                        <td>${formatVND.format(voucher.maxDiscount)}</td>
                                         <td>${formatVND.format(voucher.minimumValue)}</td>
                                         <td>${dateFormat.format(voucher.expirationDate)}</td>
                                         <td>
@@ -456,7 +467,7 @@
                                             </c:choose>
                                         </td>
                                         <td>
-                                            <button type="button" onclick="window.location.href='/admin/account/${voucher.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
+                                            <button type="button" onclick="window.location.href='/admin/voucher/edit/${voucher.id}'" class="btn btn-info" style="font-size: 15px">Detail</button>
                                         </td>
                                     </tr>
                                 </c:forEach>
@@ -514,6 +525,17 @@
     function checkNegativeInputMinimum(inputElement) {
         var inputValue = parseFloat(inputElement.value);
         var errorMessageElement = inputElement.id === "inputMinimumValue" ? document.getElementById("minimumErrorMessage") : document.getElementById("quantityErrorMessage");
+
+        if (inputValue < 0) {
+            errorMessageElement.style.display = "block";
+        } else {
+            errorMessageElement.style.display = "none";
+        }
+    }
+
+    function checkNegativeInputMaxdiscount(inputElement) {
+        var inputValue = parseFloat(inputElement.value);
+        var errorMessageElement = inputElement.id === "inputMaxDiscount" ? document.getElementById("maxDiscountErrorMessage") : document.getElementById("quantityErrorMessage");
 
         if (inputValue < 0) {
             errorMessageElement.style.display = "block";
