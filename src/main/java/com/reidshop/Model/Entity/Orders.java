@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Table
 @Entity
@@ -89,6 +90,31 @@ public class Orders {
     @ManyToOne
     @JoinColumn(name = "voucher_id")
     Vourcher vourcher;
+
+    public List<OrderItem> getOrderItems() {
+        List<OrderItem> result = new ArrayList<>();
+        for(int i=0;i<orderItems.size();i++)
+        {
+            OrderItem current = orderItems.get(i);
+
+            if(result.stream().filter(o -> o.getInventory().getSize().equals(current.getInventory().getSize())
+                            && o.getInventory().getColor().equals(current.getInventory().getColor()))
+                    .findFirst().isPresent())
+                continue;
+
+            List<OrderItem> exits = orderItems.stream()
+                                    .filter(o -> o.getInventory().getSize().equals(current.getInventory().getSize())
+                                    && o.getInventory().getColor().equals(current.getInventory().getColor()))
+                                    .collect(Collectors.toList());
+            int quantity = 0;
+            for(OrderItem o: exits){
+                quantity += o.getQuantity();
+            }
+            current.setQuantity(quantity);
+            result.add(current);
+        }
+        return result;
+    }
 
     public void setCreatedAt() {
         createdAt = Calendar.getInstance().getTime();

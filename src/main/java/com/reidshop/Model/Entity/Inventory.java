@@ -31,6 +31,9 @@ public class Inventory {
     @Column
     double importPrice;
 
+    @Column
+    Integer importQuantity;
+
     @ManyToOne
     @JoinColumn(name = "stock_id")
     Stock stock;

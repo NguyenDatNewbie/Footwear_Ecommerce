@@ -4,6 +4,8 @@ import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Request.StockRequest;
 import com.reidshop.Reponsitory.*;
+import com.reidshop.Service.IEmailService;
+import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class StockServiceImpl {
     OrdersRepository ordersRepository;
     @Autowired
     OrderItemRepository orderItemRepository;
+    @Autowired
+    IEmailService emailService;
     public String save(Store store, List<StockRequest> stockRequests, Supplier supplier){
         try {
             Stock stock = new Stock();
@@ -42,6 +46,7 @@ public class StockServiceImpl {
                 inventory.setImportPrice(stockRequest.getPrice());
                 inventory.setStore(store);
                 inventory.setColor(stockRequest.getColor());
+                inventory.setImportQuantity(stockRequest.getQuantity());
                 Inventory i =  inventoryRepository.save(inventory);
                 if(stockRequest.getPriorityOrder().getId()!=0)
                 {
@@ -58,29 +63,38 @@ public class StockServiceImpl {
         }
     }
 
-    void checkAndUpdateInProductOutOfStock(Stock stock, Store store, List<StockRequest.PriorityOrder> priorityOrders){
+    void checkAndUpdateInProductOutOfStock(Stock stock, Store store, List<StockRequest.PriorityOrder> priorityOrders) throws MessagingException {
         List<ProductOutOfStock> productOutOfStocks = productOutOfStockRepository.findAllByStoreId(store.getId());
         List<ProductOutOfStock> removed = new ArrayList<>();
 
+        // Xử lý để priority dưới lun chạy 1 lần
+        if(priorityOrders.size()==0) {
+            StockRequest.PriorityOrder priorityOrder = new StockRequest.PriorityOrder();
+            priorityOrder.setId(0L);
+            priorityOrders.add(priorityOrder);
+        }
+
         for (StockRequest.PriorityOrder priorityOrder : priorityOrders){
-            Inventory iv = priorityOrder.getInventory();
-            // Xử lý ưu tiên cho order
-            Optional<ProductOutOfStock> foundItem = productOutOfStocks.stream()
-                    .filter(item -> item.getOrders().getId() == priorityOrder.getId()
-                            && item.getColor() == iv.getColor()
-                            && item.getSize() == iv.getSize())
-                    .findFirst();
+            if(priorityOrder.getId()!=0) {
+                Inventory iv = priorityOrder.getInventory();
+                // Xử lý ưu tiên cho order
+                Optional<ProductOutOfStock> foundItem = productOutOfStocks.stream()
+                        .filter(item -> item.getOrders().getId() == priorityOrder.getId()
+                                && item.getColor() == iv.getColor()
+                                && item.getSize() == iv.getSize())
+                        .findFirst();
 
-            if(foundItem.isPresent()){
-                productOutOfStocks = sortByPriority(productOutOfStocks,foundItem.get());
+                if (foundItem.isPresent()) {
+                    productOutOfStocks = sortByPriority(productOutOfStocks, foundItem.get());
+                }
             }
-            int count =0;
 
+            int count =0;
             for(ProductOutOfStock p: productOutOfStocks){
                 count++;
                 if(removed.contains(p))
                     continue;
-                List<Inventory> checkExits = inventoryRepository.checkExistInStock(stock,iv.getSize().getId(),iv.getColor().getId());
+                List<Inventory> checkExits = inventoryRepository.checkExistInStock(stock,p.getSize().getId(),p.getColor().getId());
                 if(checkExits.contains(priorityOrder.getInventory())
                         && priorityOrder.getId() == p.getOrders().getId()) {
                     int quantity = addToOrderItemFollowPriority(p,priorityOrder.getInventory());
@@ -89,11 +103,15 @@ public class StockServiceImpl {
                         p.setQuantity(quantity);
                         productOutOfStocks.set(count-1,p);
                     }
-                    else{ removed.add(p); continue;}
+                    else{
+                        emailService.sendForVendor(p.getOrders());
+                        removed.add(p);
+                        continue;
+                    }
                 }
 
                 checkExits = inventoryRepository.checkExistInStock(stock,p.getSize().getId(),p.getColor().getId());
-                List<Inventory> inventories = inventoryRepository.findAllOutStock(stock,p.getSize().getId(),p.getColor().getId());
+                List<Inventory> inventories = inventoryRepository.findAllOutStock(stock,p.getSize().getId(),p.getColor().getId(),stock.getStore().getId());
                 inventories.addAll(checkExits);
                 int quantity = p.getQuantity();
                 List<Inventory> beUsed = new ArrayList<>();
@@ -104,11 +122,11 @@ public class StockServiceImpl {
                         continue;
                     if(i.getQuantity()>=quantity){
                         addToOrderItem(beUsed,p);
-                        // Send mail
+                        emailService.sendForVendor(p.getOrders());
                         break;
                     }
                     else{
-                        quantity -= i.getQuantity();
+                        quantity = quantity - i.getQuantity();
                     }
                 }
 
@@ -152,17 +170,27 @@ public class StockServiceImpl {
     }
     void addToOrderItem(List<Inventory> inventories, ProductOutOfStock p){
         Orders orders = p.getOrders();
+        int count = 0;
+        int quantity = p.getQuantity();
         for (Inventory i: inventories) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(orders);
             orderItem.setPrice(p.getPrice());
             orderItem.setInventory(i);
-            orderItem.setQuantity(p.getQuantity());
+            if(count==inventories.size()-1){
+                orderItem.setQuantity(i.getQuantity()-quantity);
+                i.setQuantity(i.getQuantity()-quantity);
+            }
+            else {
+                orderItem.setQuantity(i.getQuantity());
+                quantity -= i.getQuantity();
+                i.setQuantity(0);
+            }
             orderItemRepository.save(orderItem);
 
-            i.setQuantity(i.getQuantity()-p.getQuantity());
             inventoryRepository.save(i);
             productOutOfStockRepository.delete(p);
+            count++;
         }
     }
 }

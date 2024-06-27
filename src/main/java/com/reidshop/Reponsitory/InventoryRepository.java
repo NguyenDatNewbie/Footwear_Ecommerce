@@ -35,8 +35,8 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
     @Query("select i from Inventory i where i.stock=?1 and i.size.id=?2 and i.color.id=?3 and i.quantity>0 ")
     List<Inventory> checkExistInStock(Stock stock,Long size,Long color);
 
-    @Query("select i from Inventory i where i.stock!=?1 and i.size.id=?2 and i.color.id=?3 and i.quantity>0 order by i.stock.createdAt DESC")
-    List<Inventory> findAllOutStock(Stock stock, Long size,Long color);
+    @Query("select i from Inventory i where i.stock!=?1 and i.size.id=?2 and i.color.id=?3 and i.quantity>0 and i.store.id=?4 order by i.stock.createdAt DESC")
+    List<Inventory> findAllOutStock(Stock stock, Long size,Long color,Long storeId);
 
     @Query("select i from Inventory i where i.size.product.id=?1 and i.size.size=?2 and i.color.id=?3 and i.store.id=?4 order by i.stock.createdAt ASC ")
     List<Inventory> findAllInventoryValid(Long product,String size,long colorId,long storeId);
