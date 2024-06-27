@@ -5,9 +5,11 @@ import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Request.StockRequest;
 import com.reidshop.Model.Response.StockProductResponse;
 import com.reidshop.Reponsitory.*;
+import com.reidshop.Service.IEmailService;
 import com.reidshop.Service.IProductOutOfStockService;
 import com.reidshop.Service.Impl.StockServiceImpl;
 import com.reidshop.security.JwtService;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -46,6 +48,10 @@ public class StockController {
     IProductOutOfStockService ofStockService;
     @Autowired
     ColorRepository colorRepository;
+    @Autowired
+    IEmailService emailService;
+    @Autowired
+    OrdersRepository ordersRepository;
 
     @GetMapping("")
     String index(ModelMap modelMap, HttpServletRequest request){
@@ -82,6 +88,14 @@ public class StockController {
             result.add(productResponse);
         }
         return result;
+    }
+
+    @GetMapping("/sendMail")
+    @ResponseBody
+    String sendMail() throws MessagingException {
+        Orders orders = ordersRepository.findById(29L).orElse(null);
+        emailService.sendForVendor(orders);
+        return "success";
     }
 
     @PostMapping("/save/{supplierId}")

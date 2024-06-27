@@ -719,6 +719,9 @@
     }
     async function displayProduct(products){
         let result = '';
+        if(products.length==0)
+            result = '<h4 style="text-align: center;margin-bottom: 40px;font-size: 22px;">Không tìm thấy sản phẩm</h4>'
+        else
         for(let i =0;i<products.length;i++){
             result += '<div class="col-lg-4 col-md-4 col-12 item">'
                 + ' <div class="single_product" id="item-' +

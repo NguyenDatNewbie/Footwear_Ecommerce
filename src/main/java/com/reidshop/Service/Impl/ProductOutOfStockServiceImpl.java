@@ -32,7 +32,7 @@ public class ProductOutOfStockServiceImpl implements IProductOutOfStockService {
         for (CartRequest cart : cartRequests) {
             Product product = productRepository.findById(cart.getId()).orElse(null);
             double price = product.getPrice()*(1-product.getPromotion()/100.0);
-            totalPrice +=price+ cart.getQuantity();
+            totalPrice += price*cart.getQuantity();
             List<Inventory> inventories = inventoryRepository.findByStore(cart.getId(), cart.getSize(), cart.getQuantity(), storeId, cart.getColor());
 
             if (stocking == 0 && inventories.size()==0) {
