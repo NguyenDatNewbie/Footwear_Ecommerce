@@ -902,22 +902,22 @@
                                     </div>
 
                                     <div class="modal-body">
-                                        <div class="modal-search-voucher">
-                                            <span class="search-title" aria-label="Mã Voucher"
-                                                  tabindex="0">Mã Voucher</span>
-                                            <div class="search-area">
-                                                <div class="input-with-validator-wrapper">
-                                                    <div class="input-with-validator">
-                                                        <input type="text" value="" placeholder="Mã Reid Voucher"
-                                                               maxlength="255">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <button class="stardust-button" role="button" tabindex="0"
-                                                    aria-label="Tìm kiếm" aria-disabled="false">
-                                                <span>Tìm kiếm</span>
-                                            </button>
-                                        </div>
+<%--                                        <div class="modal-search-voucher">--%>
+<%--                                            <span class="search-title" aria-label="Mã Voucher"--%>
+<%--                                                  tabindex="0">Mã Voucher</span>--%>
+<%--                                            <div class="search-area">--%>
+<%--                                                <div class="input-with-validator-wrapper">--%>
+<%--                                                    <div class="input-with-validator">--%>
+<%--                                                        <input type="text" value="" placeholder="Mã Reid Voucher"--%>
+<%--                                                               maxlength="255">--%>
+<%--                                                    </div>--%>
+<%--                                                </div>--%>
+<%--                                            </div>--%>
+<%--                                            <button class="stardust-button" role="button" tabindex="0"--%>
+<%--                                                    aria-label="Tìm kiếm" aria-disabled="false">--%>
+<%--                                                <span>Tìm kiếm</span>--%>
+<%--                                            </button>--%>
+<%--                                        </div>--%>
                                         <div class="section section-coupon">
                                             <c:forEach items="${vourcher_sv.findAllVourcherNotExpired()}"
                                                        var="vourcher">
@@ -931,7 +931,7 @@
                                                         <h4 class="discountValue"> Giảm
                                                             <c:choose>
                                                                 <c:when test="${vourcher.voucherType == 'DISCOUNT_PERCENT'}">
-                                                                    ${formatterDecimal.format(vourcher.discountValue)} %
+                                                                    ${formatterDecimal.format(vourcher.discountValue)} % tối đa ${formatVND.format(vourcher.maxDiscount)}
                                                                 </c:when>
                                                                 <c:otherwise>
                                                                     ${formatVND.format(vourcher.discountValue)}
@@ -966,7 +966,8 @@
                                                                    value="${vourcher.voucherCode}"
                                                                    data-discount="${vourcher.discountValue}"
                                                                    data-type="${vourcher.voucherType}"
-                                                                   data-minimum="${vourcher.minimumValue}">
+                                                                   data-minimum="${vourcher.minimumValue}"
+                                                                   data-maxdiscount="${vourcher.maxDiscount}">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1056,6 +1057,8 @@
                                             </li>
                                         </ul>
                                     </div>
+                                    <div id="tempShipValue" hidden></div>
+                                    <div id="tempSubtotal" hidden></div>
                                     <div class="checkout_btn">
                                         <button type="submit" id="btn-pay">Thanh toán</button>
                                     </div>
@@ -1561,7 +1564,47 @@
                 console.log(selectedTime);
                 document.getElementById('receive_deli').textContent = formatter.format(selectedPrice);
 
+                //Đưa shipping value về default
+                //Tắt free ship
+                var free_ship = document.getElementById("free_ship_promotion");
+                free_ship.classList.add("hidden");
+                free_ship.classList.remove("active");
+
+                //tắt thẻ ship giảm giá
+                var promotion_ship = document.getElementById("promotion_ship");
+                promotion_ship.classList.add("hidden");
+                promotion_ship.classList.remove("active");
+
+                //Bật receive_deli
+                var promotion_ship = document.getElementById("receive_deli");
+                promotion_ship.classList.add("active");
+                promotion_ship.classList.remove("hidden");
+
+                // tắt subtotal_first
+                var subtotal_first = document.getElementById("subtotal_first");
+                subtotal_first.classList.add("hidden");
+                subtotal_first.classList.remove("active");
+
+                // Tắt thẻ giảm giá
+                var promotionElement = document.getElementById('promotion_value');
+                promotionElement.classList.add("hidden");
+                promotionElement.classList.remove("active");
+
+                // lưu giá ship tạm thời
+                var tempShipValue = document.getElementById('tempShipValue');
+                tempShipValue.innerHTML=selectedPrice;
+
                 showOrder(parseFloat(selectedPrice));
+
+                //Lấy thành tiền
+                var subtotal = document.getElementById('subtotal');
+                var subtotalElm = subtotal.getElementsByClassName('cart_amount');
+                subtotal_value = subtotalElm[0].textContent.trim();
+                var subtotalNumber = parseFloat(subtotal_value.replace(/[.₫]/g, ''));
+
+                // Gán giá trị mặc định
+                var tempSubtotalElm = document.getElementById('tempSubtotal');
+                tempSubtotalElm.innerHTML= (subtotalNumber);
 
                 var timeExpect = document.getElementById('time-expect');
                 timeExpect.innerHTML = '';
@@ -2216,7 +2259,6 @@
         valTotal.classList.add('cart_amount');
         valTotal.textContent = formatter.format(price);
 
-
         const valTotalLast = document.createElement('p');
         valTotalLast.classList.add('cart_amount');
         valTotalLast.textContent = formatter.format(price + cost);
@@ -2655,148 +2697,267 @@
 </script>
 
 <script>
-    var temp_subtotal = 0;
-    var temp_ship_value = 0;
-
-    // Định nghĩa hàm xử lý sự kiện khi nhấn vào nút "Áp dụng"
     function applyButtonClicked(button) {
         // Lấy giá trị của radio button được chọn
         var selectedRadioButton = document.querySelector('input[name="voucherRadio"]:checked');
         if (selectedRadioButton) {
-            var voucherCode = selectedRadioButton.value;        //Lấy voucher code
             var voucherMinimum = selectedRadioButton.getAttribute('data-minimum');      //Lấy giá trị tối thiểu
             var voucherDiscount = selectedRadioButton.getAttribute('data-discount');    //Lấy giá trị giảm giá
             var voucherType = selectedRadioButton.getAttribute('data-type');        //Lấy loại voucher
+            var voucherMaxDiscount = selectedRadioButton.getAttribute('data-maxdiscount');        //Lấy max discount
 
             //Lấy tổng tiền của cart
             var total_price = document.getElementById('total_cart');
-            //Lấy thành tiền
-            var subtotal = document.getElementById('subtotal');
-
-            //Total
             var totalPriceElm = total_price.getElementsByClassName('cart_amount');
             total_price_value = totalPriceElm[0].textContent.trim();
 
-            //Subtotal
+            //Lấy thành tiền
+            var subtotal = document.getElementById('subtotal');
             var subtotalElm = subtotal.getElementsByClassName('cart_amount');
             subtotal_value = subtotalElm[0].textContent.trim();
 
-            //Shipping value
+            //Lấy Shipping value
             var ship_value_elm = document.getElementById('receive_deli');
             ship_value = ship_value_elm.textContent.trim();
 
-            var totalPriceNumber = parseFloat(total_price_value.replace(/[.₫]/g, ''));
-            var subtotalNumber = parseFloat(subtotal_value.replace(/[.₫]/g, ''));
-            var shipValueNumber = parseFloat(ship_value.replace(/[.₫]/g, ''));
-
-
-            if (temp_subtotal == 0) {
-                temp_subtotal = subtotalNumber;
-            }
-            if (temp_ship_value == 0) {
-                temp_ship_value = shipValueNumber;
-            }
+            var totalPriceNumber = parseFloat(total_price_value.replace(/[.₫]/g, ''));  //Total price của cart
+            var subtotalNumber = parseFloat(subtotal_value.replace(/[.₫]/g, ''));       // thành tiền
+            var shipValueNumber = parseFloat(ship_value.replace(/[.₫]/g, ''));          //shipping
 
             if (totalPriceNumber >= voucherMinimum) {
                 if (voucherType === "DISCOUNT_DIRECT") {
-                    var promotionElement = document.getElementById('promotion_value');
+                    // Lấy giá trị subTotal tạm
+                    var tempSubtotalElm = document.getElementById('tempSubtotal');
+                    tempSubtotal = tempSubtotalElm.textContent.trim();
+                    var tempSubtotalValue = parseFloat(tempSubtotal.replace(/[.₫]/g, ''));
 
-                    promotionElement.innerText = "-" + formatter.format(voucherDiscount);
+                    // Lấy giá trị ship tạm
+                    var tempShipValueElm = document.getElementById('tempShipValue');
+                    tempShipValue = tempShipValueElm.textContent.trim();
+                    var tempShipValueNumber = parseFloat(tempShipValue.replace(/[.₫]/g, ''));
 
-                    promotionElement.classList.remove("hidden");
+                    // Lấy thẻ với id "free_ship"
+                    var freeShipElement = document.getElementById("free_ship_promotion");
 
-                    var new_subtotal = temp_subtotal - voucherDiscount;
+                    if (subtotalNumber === tempSubtotalValue){
+                        //Hiển thị giá giảm
+                        var promotionElement = document.getElementById('promotion_value');
+                        promotionElement.innerText = "-" + formatter.format(voucherDiscount);
+                        promotionElement.classList.remove("hidden");
 
-                    subtotalElm[0].textContent = formatter.format(new_subtotal);
-
-                    document.getElementById("btn-dimiss-voucher-modal").click();
-                } else if (voucherType === "DISCOUNT_PERCENT") {
-                    var promotionElement = document.getElementById('promotion_value');
-
-                    //Nếu là giảm theo % sẽ thực hiện
-                    //Tính số tiền được giảm
-                    var discountValue = (voucherDiscount / 100) * totalPriceNumber;
-
-                    promotionElement.innerText = "-" + formatter.format(discountValue);
-
-                    promotionElement.classList.remove("hidden");
-
-                    var new_subtotal = temp_subtotal - discountValue;
-
-                    subtotalElm[0].textContent = formatter.format(new_subtotal);
-
-                    //Đưa shipping value về default
-                    //Tắt free ship
-                    var free_ship = document.getElementById("free_ship_promotion");
-                    free_ship.classList.add("hidden");
-                    free_ship.classList.remove("active");
-
-                    //Bật giá trị
-                    //tắt thẻ giá trị
-                    ship_value_elm.innerText = formatter.format(temp_ship_value);
-                    ship_value_elm.classList.remove("hidden");
-                    ship_value_elm.classList.add("active");
-
-                    //tắt thẻ ship giảm giá
-                    var promotion_ship = document.getElementById("promotion_ship");
-
-                    //Hiển thị giá trị ban đầu
-                    promotion_ship.classList.add("hidden");
-                    promotion_ship.classList.remove("active");
-
-                    document.getElementById("btn-dimiss-voucher-modal").click();
-                } else if (voucherType === "FREE_SHIPPING") {
-                    var promotionElement = document.getElementById('promotion_value');
-                    promotionElement.classList.add("hidden");
-                    promotionElement.classList.remove("active");
-
-                    //Hiển thị giá trị cũ
-                    var promotion_ship = document.getElementById("promotion_ship");
-
-                    //Hiển thị giá trị ban đầu
-                    promotion_ship.classList.add("active");
-                    promotion_ship.classList.remove("hidden");
-
-                    promotion_ship.innerText = formatter.format(temp_ship_value);
-
-                    //Tính toán
-                    var new_ship_value = temp_ship_value - voucherDiscount;
-
-                    if (new_ship_value <= 0) {
-                        //Hiện thẻ free-ship
-                        var free_ship = document.getElementById("free_ship_promotion");
-                        free_ship.classList.add("active");
-                        free_ship.classList.remove("hidden");
-
-                        //tắt thẻ giá trị
-                        ship_value_elm.classList.remove("active");
-                        ship_value_elm.classList.add("hidden");
-
-                        var new_subtotal = temp_subtotal - temp_ship_value;
-
-                        subtotalElm[0].textContent = formatter.format(new_subtotal);
-                    } else {
+                        //Đưa shipping value về default
                         //Tắt free ship
                         var free_ship = document.getElementById("free_ship_promotion");
                         free_ship.classList.add("hidden");
                         free_ship.classList.remove("active");
 
-                        //Bật giá trị
-                        ship_value_elm.classList.remove("hidden");
-                        ship_value_elm.classList.add("active");
+                        //tắt thẻ ship giảm giá
+                        var promotion_ship = document.getElementById("promotion_ship");
+                        //Hiển thị giá trị ban đầu
+                        promotion_ship.classList.add("hidden");
+                        promotion_ship.classList.remove("active");
 
-                        //Hiển thị giá trị ship mới
-                        ship_value_elm.innerText = formatter.format(new_ship_value);
+                        //Lấy ship cũ
+                        showOrder(tempShipValueNumber);
 
-                        var new_subtotal = temp_subtotal - voucherDiscount;
+                        var new_subtotal = subtotalNumber - voucherDiscount;
 
                         subtotalElm[0].textContent = formatter.format(new_subtotal);
+
+                        var subtotal_first = document.getElementById("subtotal_first");
+                        subtotal_first.innerText = formatter.format(tempSubtotalValue);
+                        subtotal_first.classList.add("active");
+                        subtotal_first.classList.remove("hidden");
+                    } else if ((subtotalNumber !== tempSubtotalValue && tempShipValueNumber !== shipValueNumber) || (subtotalNumber !== tempSubtotalValue && tempShipValueNumber === shipValueNumber) || (freeShipElement.classList.contains("active") && subtotalNumber !== tempSubtotalValue)) {
+                        //Hiển thị giá giảm
+                        var promotionElement = document.getElementById('promotion_value');
+                        promotionElement.innerText = "-" + formatter.format(voucherDiscount);
+                        promotionElement.classList.remove("hidden");
+
+                        ship_value_elm.classList.remove("hidden");
+
+                        //Đưa shipping value về default
+                        //Tắt free ship
+                        var free_ship = document.getElementById("free_ship_promotion");
+                        free_ship.classList.add("hidden");
+                        free_ship.classList.remove("active");
+
+                        //tắt thẻ ship giảm giá
+                        var promotion_ship = document.getElementById("promotion_ship");
+                        //Hiển thị giá trị ban đầu
+                        promotion_ship.classList.add("hidden");
+                        promotion_ship.classList.remove("active");
+
+                        //Lấy ship cũ
+                        showOrder(tempShipValueNumber);
+
+                        var new_subtotal = tempSubtotalValue - voucherDiscount;
+
+                        subtotalElm[0].textContent = formatter.format(new_subtotal);
+                        var subtotal_first = document.getElementById("subtotal_first");
+                        subtotal_first.innerText = formatter.format(tempSubtotalValue);
+                        subtotal_first.classList.add("active");
+                        subtotal_first.classList.remove("hidden");
+                    } else {
+                        console.log("Bạn đã sử dụng voucher này!");
+                    }
+                    document.getElementById("btn-dimiss-voucher-modal").click();
+                } else if (voucherType === "DISCOUNT_PERCENT") {
+                    // Lấy giá trị subTotal tạm
+                    var tempSubtotalElm = document.getElementById('tempSubtotal');
+                    tempSubtotal = tempSubtotalElm.textContent.trim();
+                    var tempSubtotalValue = parseFloat(tempSubtotal.replace(/[.₫]/g, ''));
+
+                    // Lấy giá trị ship tạm
+                    var tempShipValueElm = document.getElementById('tempShipValue');
+                    tempShipValue = tempShipValueElm.textContent.trim();
+                    var tempShipValueNumber = parseFloat(tempShipValue.replace(/[.₫]/g, ''));
+
+                    // Lấy thẻ với id "free_ship"
+                    var freeShipElement = document.getElementById("free_ship_promotion");
+
+                    //Nếu là giảm theo % sẽ thực hiện
+                    //Tính số tiền được giảm
+                    var discountValue = (voucherDiscount / 100) * totalPriceNumber;
+
+                    if (discountValue >= voucherMaxDiscount){
+                        discountValue = voucherMaxDiscount;
+                    }
+
+                    if (subtotalNumber === tempSubtotalValue) {
+                        //Hiển thị giá giảm
+                        var promotionElement = document.getElementById('promotion_value');
+                        promotionElement.innerText = "-" + formatter.format(discountValue);
+                        promotionElement.classList.remove("hidden");
+
+                        ship_value_elm.classList.remove("hidden");
+
+                        //Đưa shipping value về default
+                        //Tắt free ship
+                        var free_ship = document.getElementById("free_ship_promotion");
+                        free_ship.classList.add("hidden");
+                        free_ship.classList.remove("active");
+
+                        //tắt thẻ ship giảm giá
+                        var promotion_ship = document.getElementById("promotion_ship");
+                        //Hiển thị giá trị ban đầu
+                        promotion_ship.classList.add("hidden");
+                        promotion_ship.classList.remove("active");
+
+                        //Lấy ship cũ
+                        showOrder(tempShipValueNumber);
+
+                        var new_subtotal = tempSubtotalValue - discountValue;
+
+                        subtotalElm[0].textContent = formatter.format(new_subtotal);
+
+                        var subtotal_first = document.getElementById("subtotal_first");
+                        subtotal_first.innerText = formatter.format(tempSubtotalValue);
+                        subtotal_first.classList.add("active");
+                        subtotal_first.classList.remove("hidden");
+                    } else if ((subtotalNumber !== tempSubtotalValue && tempShipValueNumber !== shipValueNumber) || (subtotalNumber !== tempSubtotalValue && tempShipValueNumber === shipValueNumber) || (freeShipElement.classList.contains("active") && subtotalNumber !== tempSubtotalValue)) {
+                        console.log("test");
+                        //Hiển thị giá giảm
+                        var promotionElement = document.getElementById('promotion_value');
+                        promotionElement.innerText = "-" + formatter.format(discountValue);
+                        promotionElement.classList.remove("hidden");
+
+                        ship_value_elm.classList.remove("hidden");
+
+                        //Đưa shipping value về default
+                        //Tắt free ship
+                        var free_ship = document.getElementById("free_ship_promotion");
+                        free_ship.classList.add("hidden");
+                        free_ship.classList.remove("active");
+
+                        //tắt thẻ ship giảm giá
+                        var promotion_ship = document.getElementById("promotion_ship");
+                        //Hiển thị giá trị ban đầu
+                        promotion_ship.classList.add("hidden");
+                        promotion_ship.classList.remove("active");
+
+                        //Lấy ship cũ
+                        showOrder(tempShipValueNumber);
+
+                        var new_subtotal = tempSubtotalValue - discountValue;
+
+                        subtotalElm[0].textContent = formatter.format(new_subtotal);
+
+                        var subtotal_first = document.getElementById("subtotal_first");
+                        subtotal_first.innerText = formatter.format(tempSubtotalValue);
+                        subtotal_first.classList.add("active");
+                        subtotal_first.classList.remove("hidden");
+                    } else {
+                        console.log("Bạn đã sử dụng voucher này!")
                     }
 
                     document.getElementById("btn-dimiss-voucher-modal").click();
+                } else if (voucherType === "FREE_SHIPPING") {
+                    // Lấy giá trị ship tạm
+                    var tempShipValueElm = document.getElementById('tempShipValue');
+                    tempShipValue = tempShipValueElm.textContent.trim();
+                    var tempShipValueNumber = parseFloat(tempShipValue.replace(/[.₫]/g, ''));
+
+                    // Lấy giá trị subTotal tạm
+                    var tempSubtotalElm = document.getElementById('tempSubtotal');
+                    tempSubtotal = tempSubtotalElm.textContent.trim();
+                    var tempSubtotalValue = parseFloat(tempSubtotal.replace(/[.₫]/g, ''));
+
+                    if (tempShipValueNumber === shipValueNumber){
+                        // Tắt thẻ giảm giá
+                        var promotionElement = document.getElementById('promotion_value');
+                        promotionElement.classList.add("hidden");
+                        promotionElement.classList.remove("active");
+
+                        //Hiển thị giá trị cũ
+                        var promotion_ship = document.getElementById("promotion_ship");
+                        promotion_ship.classList.add("active");
+                        promotion_ship.classList.remove("hidden");
+                        promotion_ship.innerText = formatter.format(tempShipValueNumber);
+
+                        //Tính toán
+                        var new_ship_value = tempShipValueNumber - voucherDiscount;
+
+                        if (new_ship_value <= 0) {
+                            //Hiện thẻ free-ship
+                            var free_ship = document.getElementById("free_ship_promotion");
+                            free_ship.classList.add("active");
+                            free_ship.classList.remove("hidden");
+
+                            //tắt thẻ giá trị
+                            ship_value_elm.classList.remove("active");
+                            ship_value_elm.classList.add("hidden");
+
+                            showOrder(0);
+
+                            var subtotal_first = document.getElementById("subtotal_first");
+                            subtotal_first.innerText = formatter.format(tempSubtotalValue);
+                            subtotal_first.classList.add("active");
+                            subtotal_first.classList.remove("hidden");
+                        } else {
+                            //Tắt free ship
+                            var free_ship = document.getElementById("free_ship_promotion");
+                            free_ship.classList.add("hidden");
+                            free_ship.classList.remove("active");
+
+                            //Bật giá trị
+                            ship_value_elm.classList.remove("hidden");
+                            ship_value_elm.classList.add("active");
+                            //Hiển thị giá trị ship mới
+                            ship_value_elm.innerText = formatter.format(new_ship_value);
+
+                            showOrder(new_ship_value);
+
+                            var subtotal_first = document.getElementById("subtotal_first");
+                            subtotal_first.innerText = formatter.format(tempSubtotalValue);
+                            subtotal_first.classList.add("active");
+                            subtotal_first.classList.remove("hidden");
+                        }
+                    } else {
+                        console.log("Bạn đã sử dụng voucher này rồi!");
+                    }
+                    document.getElementById("btn-dimiss-voucher-modal").click();
                 }
-                var subtotal_first = document.getElementById("subtotal_first");
-                subtotal_first.innerText = formatter.format(temp_subtotal);
             } else {
                 console.log("hhhhh");
             }

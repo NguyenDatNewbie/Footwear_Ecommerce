@@ -9,10 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.net.URLEncoder;
@@ -81,6 +78,40 @@ public class VoucherController {
                 String successMessage = "Create new voucher successfully.";
                 return new ModelAndView("redirect:/admin/voucher?success=" + URLEncoder.encode(successMessage, StandardCharsets.UTF_8), modelMap);
             }
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+    @GetMapping("/edit/{voucherId}")
+    public ModelAndView edit(ModelMap model, @PathVariable("voucherId") Long voucherId){
+        Optional<Vourcher> opt = voucherRepository.findById(voucherId);
+
+        if (opt.isPresent()){
+            Vourcher vourcher = opt.get();
+            model.addAttribute("voucher", vourcher);
+            model.addAttribute("dateFormat",dateFormat);
+            return new ModelAndView("admin/voucherDetail", model);
+        }
+        return new ModelAndView("redirect:/admin/voucher", model);
+    }
+    @PostMapping("updateVoucher")
+    public ModelAndView updateVoucher(ModelMap modelMap,
+                                      @Valid @ModelAttribute("voucher")Vourcher vourcher,
+                                      @RequestParam("expirationDateFormatYet") Date expirationDateFormatYet,
+                                      BindingResult result) {
+        if(result.hasErrors()){
+            System.out.println(result);
+            return new ModelAndView("admin/voucher");
+        }
+
+        try {
+                vourcher.setVoucherCode(vourcher.getVoucherCode().toUpperCase()); //uppercase voucher
+
+                vourcher.setExpirationDate(expirationDateFormatYet);
+
+                voucherRepository.save(vourcher);
+                return new ModelAndView("redirect:/admin/voucher", modelMap);
+//            }
         }catch (Exception e){
             throw new RuntimeException(e);
         }

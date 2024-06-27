@@ -174,6 +174,7 @@ public class ManagerProductController {
                     String img = (String) r.get("secure_url");
                     image.setImg(img);
                     image.setProduct(product);
+                    image.setColor(color1);
                     imageRepository.save(image);
                 }
             }
@@ -240,26 +241,39 @@ public class ManagerProductController {
     @GetMapping("delete-image/{imageId}")
     public ModelAndView deleteImage(ModelMap model, @PathVariable("imageId") Long imageId) {
         Optional<Image> image = imageRepository.findById(imageId);
-        Long productID = image.get().getProduct(); //lay productID
-        String imageUrl = image.get().getImg();    //lấy đường dẫn của ảnh trên cloudinary
-        String publicID = extractPublicId(imageUrl);
+        if (image.isPresent()) {
+            Long productID = image.get().getProduct(); //lay productID
+            String imageUrl = image.get().getImg();    //lấy đường dẫn của ảnh trên cloudinary
+            String publicID = extractPublicId(imageUrl);
 
-        try {
-            // Thực hiện xóa ảnh từ Cloudinary
-            Map result = cloudinary.uploader().destroy(publicID, ObjectUtils.emptyMap());
+            System.out.println("publicID: " + publicID);
+            System.out.println("imageUrl: " + imageUrl);
 
-            // Kiểm tra kết quả xóa ảnh từ Cloudinary
-            if (result.get("result").equals("ok")) {
-                imageRepository.deleteById(imageId);
-                System.out.println("Đã xóa ảnh từ Cloudinary");
-            } else {
-                System.out.println("Lỗi xóa ảnh từ Cloudinary");
+            try {
+                boolean isVideo = imageUrl.contains("/video");
+                Map result;
+                if (isVideo){
+                    //Xóa video
+                    result = cloudinary.uploader().destroy(publicID, ObjectUtils.asMap("resource_type", "video"));
+                } else {
+                    //Xóa ảnh
+                    result = cloudinary.uploader().destroy(publicID, ObjectUtils.emptyMap());
+                }
+
+                // Kiểm tra kết quả xóa ảnh từ Cloudinary
+                if (result.get("result").equals("ok")) {
+                    imageRepository.deleteById(imageId);
+                    System.out.println("Đã xóa ảnh từ Cloudinary");
+                } else {
+                    System.out.println("Lỗi xóa ảnh từ Cloudinary");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        return new ModelAndView("redirect:/admin/products/edit/" + productID, model);
+            return new ModelAndView("redirect:/admin/products/edit/" + productID, model);
+        }
+        return new ModelAndView("redirect:/admin/products/", model);
     }
     private static String extractPublicId(String imageUrl) {
         String[] parts = imageUrl.split("/");

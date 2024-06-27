@@ -55,6 +55,14 @@
       margin-bottom: 10px;
     }
 
+    .image-container video {
+      width: 150px;
+      height: 150px;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
     .image-container a {
       display: block;
       margin-top: 10px; /* Khoảng cách giữa ảnh và nút xóa */
@@ -225,8 +233,16 @@
               <span class="card-title" style="font-size: 1em; margin-left: 5px;">Image</span>
               <div class="mb-0">
                 <c:forEach items="${imagesPro}" var="image">
+                  <c:set var="isVideo" value="${image.img.indexOf('/video') != -1 ? 0 : -1}"/>
                   <div class="image-container">
-                      <img src="${image.img}" class="img-fluid rounded-start" style="width: 150px; height: 150px; margin-right: 10px; margin-top: 10px;">
+                      <c:choose>
+                        <c:when test="${isVideo == 0}">
+                          <video controls src="${image.img}" height="150px" width="150px"></video>
+                        </c:when>
+                        <c:otherwise>
+                          <img src="${image.img}" class="img-fluid rounded-start" style="width: 150px; height: 150px; margin-right: 10px; margin-top: 10px;">
+                        </c:otherwise>
+                      </c:choose>
                       <a href="/admin/products/delete-image/${image.id}" title="Delete" class="btn btn-danger" style="font-size: 15px"><i class="bi bi-trash"></i></a>
                   </div>
                 </c:forEach>

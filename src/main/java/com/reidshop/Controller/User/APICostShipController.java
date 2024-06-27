@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 public class APICostShipController {
-    private String apiToken = "eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiIwMzM1NDQxODk1IiwiVXNlcklkIjoxNDE1NjA0OCwiRnJvbVNvdXJjZSI6NSwiVG9rZW4iOiJVSzZVMjVYNVgxWUIiLCJleHAiOjE3MTczMTcyMTMsIlBhcnRuZXIiOjE0MTU2MDQ4fQ.-1H53035Jkqd9_EKpksi3gbhTs5gbztukYLOACFCCNS4IWdV4fPZoxf3JS-IoFcMyqWf-THwiosqQB30bqczrw";
+    private String apiToken = "eyJhbGciOiJFUzI1NiJ9.eyJzdWIiOiIwMzM1NDQxODk1IiwiVXNlcklkIjoxNDE1NjA0OCwiRnJvbVNvdXJjZSI6NSwiVG9rZW4iOiJVSzZVMjVYNVgxWUIiLCJleHAiOjE3MTkyMzY1MzEsIlBhcnRuZXIiOjE0MTU2MDQ4fQ.eERdt6cCXXwYJJ24hlf0EbKRyDZm65rGVUg82L7TbuLV_P9jtNSPwEHpidJvd5iqvFSDBY-kkdSfo2Qeebu-VQ";
     @GetMapping("/listProvinceById")
     public String listProvinceById() {
         String apiUrl = "https://partner.viettelpost.vn/v2/categories/listProvinceById?provinceId=0";

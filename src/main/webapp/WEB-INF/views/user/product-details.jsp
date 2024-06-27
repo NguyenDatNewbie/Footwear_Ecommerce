@@ -470,6 +470,18 @@
                 background-position: right, left, center, right
             }
         }
+        .product_thumb {
+            padding-top: 100%;
+        }
+
+        .product_thumb img{
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
     </style>
 
 </head>
@@ -810,11 +822,11 @@
                             <div class="single_product">
                                 <div class="product_thumb">
                                     <c:if test="${product.images.size()>0}">
-                                        <a class="primary_img" href="/product?id=${product.id}"><img
+                                        <a class="primary_img" href="/product?=${product.id}"><img
                                                 src="${product.images.get(0).img}" alt=""></a>
                                     </c:if>
                                     <c:if test="${product.images.size()>1}">
-                                        <a class="secondary_img" href="/product?id=${product.id}"><img
+                                        <a class="secondary_img" href="/product/${product.id}"><img
                                                 src="${product.images.get(1).img}" alt=""></a>
                                     </c:if>
 
@@ -870,11 +882,11 @@
                             <div class="single_product">
                                 <div class="product_thumb">
                                     <c:if test="${product.images.size()>0}">
-                                        <a class="primary_img" href="/product?id=${product.id}"><img
+                                        <a class="primary_img" href="/product?=${product.id}"><img
                                                 src="${product.images.get(0).img}" alt=""></a>
                                     </c:if>
                                     <c:if test="${product.images.size()>1}">
-                                        <a class="secondary_img" href="/product?id=${product.id}"><img
+                                        <a class="secondary_img" href="/product/${product.id}"><img
                                                 src="${product.images.get(1).img}" alt=""></a>
                                     </c:if>
 
