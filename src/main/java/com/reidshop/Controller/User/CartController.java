@@ -107,9 +107,9 @@ public class CartController {
         else if(payment==PaymentType.VNPAY){
             // Luu do thong tin order vao session
             session.setAttribute("orderCombine",orderCombineRequest);
-//            session.setMaxInactiveInterval(20);
-            OrderCombineRequest orderCombineRequest1 = (OrderCombineRequest) session.getAttribute("orderCombine");
-            responseData.put("url", "/payment/vnpay?receive="+receiveType+"&price=1200000");
+            // session.setMaxInactiveInterval(20);
+            double price = ordersService.calTotalOrder(orderCombineRequest);
+            responseData.put("url", "/payment/vnpay?receive="+receiveType+"&price="+ price);
             responseData.put("status", "wait");
         }
         return ResponseEntity.status(HttpStatus.OK).body(responseData);

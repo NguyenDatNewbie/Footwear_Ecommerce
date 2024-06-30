@@ -387,7 +387,6 @@
                                         <c:when test="${order.status =='PREPARE' || order.status =='WAIT' || order.status =='ALREADY'}">
                                             <div class="checkout_form">
                                                 <button onclick="cancel(${order.id})">Hủy</button>
-                                                <button onclick="repurchase(${order.id})">Mua lại</button>
                                             </div>
                                         </c:when>
 

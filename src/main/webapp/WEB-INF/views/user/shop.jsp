@@ -421,7 +421,7 @@
                                     </div>
                                     <div class="content" >
                                         <div class="product_content grid_content" >
-                                            <h3><a href="product-details.jsp">${product.name}</a></h3>
+                                            <h3><a href="/product?id=${product.id}">${product.name}</a></h3>
                                             <c:choose>
                                                 <c:when test="${product.promotion>0}">
                                                     <span class="current_price" >${formatVND.format(product.price*(1-product.promotion/100))}</span>
@@ -767,7 +767,7 @@
             result+= '</div>'
                 +'<div class="content" >'
                 +'<div class="product_content grid_content">'
-                +'<h3><a href="product-details.html">'
+                +'<h3><a href="/product?id=' + products[i].id +'"z>'
                 + products[i].name +'</a></h3>';
             + '<span class="current_price">'
             var old_price = products[i].price;
@@ -791,7 +791,7 @@
             result+='</div>';
 
             result+='   <div class="product_content list_content">'
-                +'<h3><a href="product-details.html">'
+                +'<h3><a href="/product?id=' + products[i].id +'">'
                 +products[i].name+'</a></h3>'
                 +'   <div class="product_ratting">'
                 +'       <ul>'

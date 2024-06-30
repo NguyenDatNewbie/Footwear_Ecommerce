@@ -257,9 +257,11 @@
         .color-more {
             margin-top: 1%;
         }
-        .product-color:hover{
+
+        .product-color:hover {
             cursor: pointer;
         }
+
         .thumb-color {
             width: 50px;
             margin-right: 2%;
@@ -462,19 +464,22 @@
             justify-content: space-between;
 
         }
-        #messageBox{
+
+        #messageBox {
             z-index: 99999999;
         }
+
         @keyframes l14 {
             100% {
                 background-position: right, left, center, right
             }
         }
+
         .product_thumb {
             padding-top: 100%;
         }
 
-        .product_thumb img{
+        .product_thumb img {
             position: absolute;
             top: 0;
             width: 100%;
@@ -482,6 +487,9 @@
             object-fit: cover;
         }
 
+        .modal_body .product_desc p {
+            width: 100%
+        }
     </style>
 
 </head>
@@ -492,7 +500,7 @@
     <div class="overlay-content" style="margin-top: 20px; display: inline-block; width: 85%">
         <h2 style="color: #fff">Bảng quy đổi kích thước</h2>
         <img
-             src="<c:url value="/assets/img/ShoeSizeChart.png"/>"/>
+                src="<c:url value="/assets/img/ShoeSizeChart.png"/>"/>
     </div>
 </div>
 <!-- Spinner sẽ được hiển thị tại đây -->
@@ -539,10 +547,10 @@
                     </div>
                     <script>
                         $("#zoom${productCurrent.id}").elevateZoom({
-                            gallery:'gallery_${productCurrent.id}',
-                            responsive : true,
+                            gallery: 'gallery_${productCurrent.id}',
+                            responsive: true,
                             cursor: 'crosshair',
-                            zoomType : 'inner'
+                            zoomType: 'inner'
                         });
                     </script>
 
@@ -996,7 +1004,7 @@
 <c:forEach var="product"
            items="${productService.addAll(productService.findAllSimilarityProductByCategory(productCurrent.category),productService.findNewProduct(10)) }">
     <!-- modal area start-->
-    <div class="modal fade" id="modal_box-${product.id}" tabindex="-1"
+    <div class="modal fade modal-product" id="modal_box-${product.id}" tabindex="-1"
          role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -1010,17 +1018,20 @@
                             <div class="row">
                                 <div class="col-lg-5 col-md-5">
                                     <div class="product-details-tab" id="single-zoom-${product.id}">
-                                        <c:set var="imagesColorOtherProduct" value="${imageRepository.findAllByProductAndColor(imageRepository.findColorOther(product.id).get(0),product.id)}"/>
-                                        <div id="img-${product.id}"  class="zoomWrapper single-zoom">
+                                        <c:set var="imagesColorOtherProduct"
+                                               value="${imageRepository.findAllByProductAndColor(imageRepository.findColorOther(product.id).get(0),product.id)}"/>
+                                        <div id="img-${product.id}" class="zoomWrapper single-zoom">
                                             <img src="${imagesColorOtherProduct.get(0).img}"
                                                  data-zoom-image="${imagesColorOtherProduct.get(0).img}"
                                                  alt="big-1">
                                         </div>
 
                                         <div class="single-zoom-thumb">
-                                            <ul id="gallery_${product.id}" class="s-tab-zoom owl-carousel single-product-active">
+                                            <ul id="gallery_${product.id}"
+                                                class="s-tab-zoom owl-carousel single-product-active">
                                                 <c:forEach items="${imagesColorOtherProduct}" var="img">
-                                                    <c:set var="isVideo" value="${img.img.indexOf('/video') != -1 ? 0 : -1}"/>
+                                                    <c:set var="isVideo"
+                                                           value="${img.img.indexOf('/video') != -1 ? 0 : -1}"/>
                                                     <li><a href="#" class="elevatezoom-gallery active"
                                                            data-update="" data-image="${img.img}"
                                                            data-zoom-image="${img.img}">
@@ -1038,10 +1049,10 @@
                                         </div>
                                         <script>
                                             $("#zoom${product.id}").elevateZoom({
-                                                gallery:'gallery_${product.id}',
-                                                responsive : true,
+                                                gallery: 'gallery_${product.id}',
+                                                responsive: true,
                                                 cursor: 'crosshair',
-                                                zoomType : 'inner'
+                                                zoomType: 'inner'
                                             });
                                         </script>
                                     </div>
@@ -1049,13 +1060,15 @@
                                 <div class="col-lg-7 col-md-7">
                                     <div class="product_d_right">
                                         <form action="javascript:addToCart(${product.id})">
-                                            <c:set var="evaluates" value="${evaluateRepository.findAllByProductId(product.id)}"/>
+                                            <c:set var="evaluates"
+                                                   value="${evaluateRepository.findAllByProductId(product.id)}"/>
                                             <h1 style="margin-bottom: 0px">${product.name}</h1>
                                             <c:if test="${evaluates.size()>0}">
                                                 <div class=" product_ratting" style="margin-bottom: 0px">
                                                     <ul>
-                                                        <c:forEach items="${evaluates.rateStar(evaluateService.avg(evaluates))}"
-                                                                   var="star">
+                                                        <c:forEach
+                                                                items="${evaluates.rateStar(evaluateService.avg(evaluates))}"
+                                                                var="star">
                                                             <c:choose>
                                                                 <c:when test="${star==1}">
                                                                     <li><i class="fa fa-star"></i></li>
@@ -1068,7 +1081,8 @@
                                                                 </c:otherwise>
                                                             </c:choose>
                                                         </c:forEach>
-                                                        <li class="review">(${evaluates.size()} đánh giá - ${product.sold} đã
+                                                        <li class="review">(${evaluates.size()} đánh giá
+                                                            - ${product.sold} đã
                                                             bán)
                                                         </li>
 
@@ -1092,7 +1106,8 @@
                                             <div class="product_desc">
                                                 <p>${product.description}</p>
                                             </div>
-                                            <div class="product_variant size" style="display: block; margin-bottom: 10px">
+                                            <div class="product_variant size"
+                                                 style="display: block; margin-bottom: 10px">
                                                 <div style="display: flex">
                                                     <h3 style="margin-right: 0px;">Màu sắc</h3>
                                                 </div>
@@ -1103,7 +1118,8 @@
                                                         <div class="thumb-color">
                                                             <div class="product-color">
                                                                 <img src="${product_color.img}" alt="">
-                                                                <input value="${product_color.color.id}" hidden="hidden">
+                                                                <input value="${product_color.color.id}"
+                                                                       hidden="hidden">
                                                                 <input value="${product.id}" hidden="hidden">
                                                             </div>
                                                             <p style="text-align: center">${product_color.color.color_name}</p>
@@ -1112,10 +1128,13 @@
                                                 </div>
                                             </div>
 
-                                            <div class="product_variant size" style="display: block; margin-bottom: 10px">
+                                            <div class="product_variant size"
+                                                 style="display: block; margin-bottom: 10px">
                                                 <div class="size_product" style="width: 40%">
-                                                    <c:forEach var="size" items="${sizeRepository.findAllByProductId(productCurrent.id)}">
-                                                        <div class="box_size" onclick="changeSize(this)">${size.size}</div>
+                                                    <c:forEach var="size"
+                                                               items="${sizeRepository.findAllByProductId(productCurrent.id)}">
+                                                        <div class="box_size"
+                                                             onclick="changeSize(this)">${size.size}</div>
                                                     </c:forEach>
                                                 </div>
                                             </div>
@@ -1237,13 +1256,24 @@
     }
 </script>
 <script>
+    function resetChoice() {
+        var color = document.querySelectorAll(".activeColor");
+        var boxSize = document.querySelectorAll(".box_size.active");
+        color.forEach(function (item) {
+            item.classList.remove("activeColor");
+        });
+        boxSize.forEach(function (item) {
+            item.classList.remove("active");
+        });
+    }
+
     function addToCart(id) {
         let cart = [];
         let storage = localStorage.getItem('cart');
 
         var activeColor = document.querySelector(".activeColor");
         var colorValue = null;
-        if(activeColor!=null)
+        if (activeColor != null)
             colorValue = activeColor.parentElement.querySelector("input").value;
 
         if (storage)
@@ -1337,10 +1367,18 @@
 </script>
 <%--change img from color--%>
 <script>
+    $(document).ready(function () {
+        $('.modal-product').on('show.bs.modal', function (e) {
+            resetChoice();
+        });
+        $('.modal-product').on('hide.bs.modal', function (e) {
+            resetChoice();
+        });
+    })
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll(".product-color").forEach(function (item){
-            item.addEventListener("click",function (event){
-                document.querySelectorAll(".activeColor").forEach(function (active){
+        document.querySelectorAll(".product-color").forEach(function (item) {
+            item.addEventListener("click", function (event) {
+                document.querySelectorAll(".activeColor").forEach(function (active) {
                     active.classList.remove("activeColor");
                 });
                 event.target.parentNode.querySelector("img").classList.add("activeColor");
@@ -1348,25 +1386,26 @@
             });
         });
     });
-    function showImages(images){
-        if(images.length>0){
-            document.getElementById("img-"+images[0].product).innerHTML = '<img id="zoom' +images[0].product +'"' + 'src="'+
-                images[0].img+
+
+    function showImages(images) {
+        if (images.length > 0) {
+            document.getElementById("img-" + images[0].product).innerHTML = '<img id="zoom' + images[0].product + '"' + 'src="' +
+                images[0].img +
                 '"\n' +
-                '                             data-zoom-image="'+
-                images[0].img+
+                '                             data-zoom-image="' +
+                images[0].img +
                 '"\n' +
                 '                             alt="big-1">';
-            var gallery = document.getElementById("gallery_"+images[0].product);
-            gallery.innerHTML='';
-            for(var i=1;i<images.length;i++){
+            var gallery = document.getElementById("gallery_" + images[0].product);
+            gallery.innerHTML = '';
+            for (var i = 1; i < images.length; i++) {
                 gallery.innerHTML += '<li><a href="#" class="elevatezoom-gallery active"\n' +
-                    '                                       data-update="" data-image="'+
-                    images[i].img+'"\n' +
-                    '                                       data-zoom-image="'+
-                    images[i].img+'">' +
-                    '<img src="'+
-                    images[i].img+'" alt="zo-th-1"/>' +
+                    '                                       data-update="" data-image="' +
+                    images[i].img + '"\n' +
+                    '                                       data-zoom-image="' +
+                    images[i].img + '">' +
+                    '<img src="' +
+                    images[i].img + '" alt="zo-th-1"/>' +
                     '</a></li>';
             }
             reinitializeCarousel(images[0].product);
@@ -1374,6 +1413,7 @@
 
 
     }
+
     function initializeOwlCarousel(productId) {
         /* single product activation */
         $('.single-product-active').owlCarousel({
@@ -1405,27 +1445,29 @@
         var zoomId = '#zoom' + productId;
         var galleryId = 'gallery_' + productId;
         $(zoomId).elevateZoom({
-            gallery:galleryId,
-            responsive : true,
+            gallery: galleryId,
+            responsive: true,
             cursor: 'crosshair',
-            zoomType : 'inner'
+            zoomType: 'inner'
         });
     }
+
     function reinitializeCarousel(productId) {
         var selector = '#single-zoom-' + productId + ' .owl-carousel';
 
-        // Destroy carousel trước khi khởi tạo lại
+// Destroy carousel trước khi khởi tạo lại
         $(selector).trigger('destroy.owl.carousel');
-        // Xóa các class và style do OwlCarousel thêm vào
+// Xóa các class và style do OwlCarousel thêm vào
         $(selector).removeClass('owl-loaded owl-hidden').removeAttr('style');
         $(selector).find('.owl-stage-outer').children().unwrap();
-        // Khởi tạo lại OwlCarousel
+// Khởi tạo lại OwlCarousel
         initializeOwlCarousel(productId);
     }
-    function getImages(event){
+
+    function getImages(event) {
         var inputs = event.querySelectorAll("input");
         $.ajax({
-            url: '/product/images?product='+inputs[1].value+'&color='+inputs[0].value,
+            url: '/product/images?product=' + inputs[1].value + '&color=' + inputs[0].value,
             type: 'GET',
             contentType: "application/json; charset=utf-8",
             success: function (response) {

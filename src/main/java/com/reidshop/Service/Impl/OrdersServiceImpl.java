@@ -1,12 +1,12 @@
 package com.reidshop.Service.Impl;
 
-import com.nimbusds.openid.connect.sdk.assurance.evidences.Voucher;
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Model.Enum.VoucherType;
+import com.reidshop.Model.Request.CartRequest;
 import com.reidshop.Model.Request.OrderCombineRequest;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.Handle.DistanceService;
@@ -21,7 +21,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -52,6 +51,8 @@ public class OrdersServiceImpl implements IOrdersService {
     DeliveryRepository deliveryRepository;
     @Autowired
     OrderItemRepository orderItemRepository;
+    @Autowired
+    ProductRepository productRepository;
 
 
     public OrdersServiceImpl(OrdersRepository ordersRepository) {
@@ -221,6 +222,20 @@ public class OrdersServiceImpl implements IOrdersService {
         else if(voucher.getVoucherType().equals(VoucherType.DISCOUNT_DIRECT))
             return voucher.getDiscountValue();
         return 0;
+    }
+    @Override
+    public double calTotalOrder(OrderCombineRequest orderCombineRequest){
+        double total = orderCombineRequest.getOrders().getDelivery().getCost();
+        for(CartRequest c: orderCombineRequest.getCarts()){
+            Product product = productRepository.findByProductId(c.getId());
+            if(product!=null){
+                total += (1-product.getPromotion()/100.0)*product.getPrice()*c.getQuantity();
+            }
+        }
+        Vourcher voucher = voucherRepository.findByVoucherCode(orderCombineRequest.getVoucher()).orElse(null);
+        if(voucher!=null)
+            total -= calVoucherValue(total,voucher);
+        return total;
     }
     @Override
     public void rateSave(Evaluate evaluate, long orderId){
