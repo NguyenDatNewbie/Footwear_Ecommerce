@@ -23,7 +23,7 @@ public class Vourcher {
     @Column(name = "discount_value", nullable = false)
     Double discountValue;
 
-    @Column(name = "max_discount", nullable = false)
+    @Column(name = "max_discount")
     Double maxDiscount;
 
     @Column(name = "minimum_value")

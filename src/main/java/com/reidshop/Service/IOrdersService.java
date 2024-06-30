@@ -33,6 +33,8 @@ public interface IOrdersService {
 
     void savePayment(OrderCombineRequest orderCombineRequest, ReceiveType receiveType, PaymentType paymentType, HttpServletRequest request);
 
+    double calTotalOrder(OrderCombineRequest orderCombineRequest);
+
     void rateSave(Evaluate evaluate, long orderId);
 
     void UpdateOrderStatus(Long orderId, OrderStatus orderStatus);

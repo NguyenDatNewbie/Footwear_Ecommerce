@@ -404,7 +404,7 @@
                         <a><img src="../assets/img/bg/shoes-banner.jpg" alt="#" style="width: 100%; height: 100%"></a>
                         <div class="banner_content">
                             <h1>Adidas <br> Men’s Collection</h1>
-                            <a href="shop.html">Discover Now</a>
+                            <a href="/blogs/size/detail/2">Discover Now</a>
                         </div>
                     </div>
                 </div>
@@ -415,7 +415,7 @@
                         <a><img src="../assets/img/bg/banner12.jpg" alt="#"></a>
                         <div class="banner_content">
                             <h1>Balenciaga <br> Men’s Collection</h1>
-                            <a href="shop.html">Discover Now</a>
+                            <a href="/blogs/size/detail/2">Discover Now</a>
                         </div>
                     </div>
                 </div>
