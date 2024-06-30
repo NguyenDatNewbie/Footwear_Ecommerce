@@ -217,6 +217,12 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     @Query("SELECT o FROM Orders o WHERE DATE(o.createdAt) = :date AND o.status = 'COMPLETE' AND o.store.id = :storeId")
     List<Orders> findAllOrderOfStoreByDate(@Param("storeId") Long storeId, @Param("date") LocalDate date);
 
+    @Query("SELECT COALESCE(COUNT(o), 0) FROM Orders o WHERE DATE(o.createdAt) = :date AND o.status = 'COMPLETE'")
+    int countAllOrderByDate(@Param("date") LocalDate date);
+
+    @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE DATE(o.createdAt) = :date AND o.status = 'COMPLETE'")
+    double salesByDate(@Param("date") LocalDate date);
+
     @Query("SELECT o FROM Orders o WHERE DATE(o.createdAt) = :date AND o.status = 'COMPLETE'")
     List<Orders> findAllOrderByDate(@Param("date") LocalDate date);
 }

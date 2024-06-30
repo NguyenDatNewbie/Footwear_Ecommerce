@@ -536,6 +536,19 @@
             width: 2,
             colors: ['transparent']
         },
+        yaxis:  [
+            {
+                title: {
+                    text: '$ (VNĐ)'
+                }
+            },
+            // {
+            //     opposite: true,
+            //     title: {
+            //         text: 'Million (VND)'
+            //     }
+            // }
+        ],
         fill: {
             opacity: 1
         },
@@ -568,6 +581,63 @@
                 currentDate.add(1, 'days');
             }
             console.log("Dates: ", dates);
+            var revenueData = [];
+            var salesData = [];
+            var orderData = []
+
+            // Hàm để cập nhật series khi cả hai dữ liệu đã sẵn sàng
+            function updateChart() {
+                if (revenueData.length && salesData.length && orderData.length) {
+                    chart.updateSeries([{
+                        name: 'Order',
+                        data: orderData
+                    }, {
+                        name: 'Sales',
+                        data: salesData
+                    },
+                    {
+                        name: 'Revenue',
+                        data: revenueData
+                    }]);
+                }
+            }
+            $.ajax({
+                url: '/admin/home/orderOfDates', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dates),
+                success: function(response) {
+                    console.log('Success:', response);
+
+                    // chart.appendSeries({
+                    //     name: 'Account',
+                    //     data: response
+                    // })
+                    orderData = response;
+                    updateChart();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            //lấy doanh số theo ngày
+            $.ajax({
+                url: '/admin/home/calculateSales', // Địa chỉ máy chủ để gửi yêu cầu
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(dates),
+                success: function(response) {
+                    console.log('Success:', response);
+                    salesData = response;
+                    updateChart();
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            // Lấy doanh thu theo ngày
             $.ajax({
                 url: '/admin/home/calculateRevenue', // Địa chỉ máy chủ để gửi yêu cầu
                 method: 'POST',
@@ -575,33 +645,13 @@
                 data: JSON.stringify(dates),
                 success: function(response) {
                     console.log('Success:', response);
-                    chart.updateSeries([{
-                        name: 'Revenue',
-                        data: response
-                    }])
+                    revenueData = response;
+                    updateChart();
                 },
                 error: function(xhr, status, error) {
                     console.error('Error:', error);
                 }
             });
-            //
-            // $.ajax({
-            //     url: '/admin/home/calculateRevenue', // Địa chỉ máy chủ để gửi yêu cầu
-            //     method: 'POST',
-            //     contentType: 'application/json',
-            //     data: JSON.stringify(dates),
-            //     success: function(response) {
-            //         console.log('Success:', response);
-            //
-            //         chart.appendSeries({
-            //             name: 'Account',
-            //             data: response
-            //         })
-            //     },
-            //     error: function(xhr, status, error) {
-            //         console.error('Error:', error);
-            //     }
-            // });
         }
 
         $('#reportrange').daterangepicker({
