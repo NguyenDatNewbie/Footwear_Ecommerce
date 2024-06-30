@@ -85,7 +85,7 @@ public class AdminController {
 
     @PostMapping(value = "/calculateRevenue")
     @ResponseBody
-    public ResponseEntity<List<Map<String, Object>>> caculateRevenue(@RequestBody List<LocalDate> dates, HttpServletRequest request) {
+    public ResponseEntity<List<Map<String, Object>>> caculateRevenue(@RequestBody List<LocalDate> dates) {
         List<Map<String, Object>> revenues = new ArrayList<>();
 
         for (LocalDate date : dates) {
@@ -96,6 +96,36 @@ public class AdminController {
             revenues.add(revenueData);
         }
         return ResponseEntity.ok(revenues);
+    }
+
+    @PostMapping(value = "/calculateSales")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> caculateSales(@RequestBody List<LocalDate> dates) {
+        List<Map<String, Object>> sales = new ArrayList<>();
+
+        for (LocalDate date : dates) {
+            double saleDate = ordersRepository.salesByDate(date);
+            Map<String, Object> salesData = new HashMap<>();
+            salesData.put("x", date);
+            salesData.put("y", saleDate);
+            sales.add(salesData);
+        }
+        return ResponseEntity.ok(sales);
+    }
+
+    @PostMapping(value = "/orderOfDates")
+    @ResponseBody
+    public ResponseEntity<List<Map<String, Object>>> countOrderByDate(@RequestBody List<LocalDate> dates) {
+        List<Map<String, Object>> orderNumList = new ArrayList<>();
+
+        for (LocalDate date : dates) {
+            int orderOfDate = ordersRepository.countAllOrderByDate(date);
+            Map<String, Object> orderNum = new HashMap<>();
+            orderNum.put("x", date);
+            orderNum.put("y", orderOfDate);
+            orderNumList.add(orderNum);
+        }
+        return ResponseEntity.ok(orderNumList);
     }
 
     //Orders
