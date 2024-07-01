@@ -66,10 +66,11 @@ git clone https://github.com/NguyenDatNewbie/Footwear_Ecommerce.git
 2. **Import the project into IntelliJ IDEA:**
 - If you are using IntelliJ IDEA, make sure the IDE opens project as Maven and recognizes the project as a Spring Boot project. Also, you must change the working directory of the project so that the views are found by Spring Boot.
 <img src="https://res.cloudinary.com/dm8bkuplu/image/upload/v1719853254/Spring_y4t0yt.png" alt="spring" height="350"/>
-3. **Configure the database connection in application.properties file**
+3.<b> Configure the database connection in application.properties file</b>
 <img src="https://res.cloudinary.com/dm8bkuplu/image/upload/v1719853443/application_il08g4.png" alt="spring"/>
-4. **Running the project**
-- Open http://localhost:8080/ in your browser!
+4. <b>Running the project</b>
+  
+- Open http://localhost:8083/ in your browser!
 
 ## 📸 Preview
 | (1)                                                                                                                                                              | (2)                                                                                                                                                             | (3)                                                                                                                                                   |
