@@ -1978,6 +1978,22 @@
             receiveDeli.classList.remove("active");
             receiveDeli.classList.add("hidden");
             document.getElementById('addressDetail').removeAttribute('required');
+
+            var total_price = document.getElementById('total_cart');
+            var totalPriceElm = total_price.getElementsByClassName('cart_amount');
+            total_price_value = totalPriceElm[0].textContent.trim();
+            var totalPriceNumber = parseFloat(total_price_value.replace(/[.₫]/g, ''));  //Total price của cart
+
+            // Gán giá trị mặc định
+            var tempSubtotalElm = document.getElementById('tempSubtotal');
+            tempSubtotalElm.innerHTML= (totalPriceNumber);
+
+            var tempShipValue = document.getElementById('tempShipValue');
+            tempShipValue.innerHTML=0;
+
+            var subtotalFirst = document.getElementById('subtotal_first');
+            subtotalFirst.classList.remove("active");
+            subtotalFirst.classList.add("hidden");
         }
         if (tabId === "tab1") {
             document.getElementById("toggle").style.display = "block";
@@ -2265,6 +2281,20 @@
 
         total_price.appendChild(valTotal);
         var costHtml = document.getElementById("receive_deli");
+
+        var tab2Radio = document.getElementById('tab2-radio');
+        if (tab2Radio.checked) {
+            costHtml.classList.remove("active");
+            costHtml.classList.add("hidden");
+
+            var free_ship_promotion = document.getElementById("free_ship_promotion");
+            free_ship_promotion.classList.remove("active");
+            free_ship_promotion.classList.add("hidden");
+
+            var promotion_ship = document.getElementById("promotion_ship");
+            promotion_ship.classList.remove("active");
+            promotion_ship.classList.add("hidden");
+        }
 
         if (cost != 0)
             costHtml.textContent = formatter.format(cost);
@@ -2856,7 +2886,6 @@
                         subtotal_first.classList.add("active");
                         subtotal_first.classList.remove("hidden");
                     } else if ((subtotalNumber !== tempSubtotalValue && tempShipValueNumber !== shipValueNumber) || (subtotalNumber !== tempSubtotalValue && tempShipValueNumber === shipValueNumber) || (freeShipElement.classList.contains("active") && subtotalNumber !== tempSubtotalValue)) {
-                        console.log("test");
                         //Hiển thị giá giảm
                         var promotionElement = document.getElementById('promotion_value');
                         promotionElement.innerText = "-" + formatter.format(discountValue);
