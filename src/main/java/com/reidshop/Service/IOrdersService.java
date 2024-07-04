@@ -52,4 +52,23 @@ public interface IOrdersService {
     double caculatorRevenueByDate(LocalDate date);
 
     double totalSateByDate(LocalDate date);
+
+    Long countOrdersByPaymentType(PaymentType paymentType);
+
+    Long countOrdersByStatus(OrderStatus orderStatus);
+
+    List<Orders> findAllOrderDESC();
+
+    List<Orders> findAllOrderWait();
+
+    List<Orders> findAllOrderPrepare();
+
+    List<Orders> findAllOrderAlready();
+
+    List<Orders> findAllOrderDelivery();
+
+    List<Orders> findAllOrderComplete();
+
+    List<Orders> findAllOrderCancel();
+
 }

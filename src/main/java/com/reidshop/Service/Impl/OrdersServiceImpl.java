@@ -386,5 +386,48 @@ public class OrdersServiceImpl implements IOrdersService {
         return totalPrice;
     }
 
+    @Override
+    public Long countOrdersByPaymentType(PaymentType paymentType) {
+        return ordersRepository.countOrdersByPaymentType(paymentType);
+    }
 
+    @Override
+    public Long countOrdersByStatus(OrderStatus orderStatus) {
+        return ordersRepository.countOrdersByStatus(orderStatus);
+    }
+
+    @Override
+    public List<Orders> findAllOrderDESC() {
+        return ordersRepository.findAllOrderDESC();
+    }
+
+    @Override
+    public List<Orders> findAllOrderWait() {
+        return ordersRepository.findAllOrderWait();
+    }
+
+    @Override
+    public List<Orders> findAllOrderPrepare() {
+        return ordersRepository.findAllOrderPrepare();
+    }
+
+    @Override
+    public List<Orders> findAllOrderAlready() {
+        return ordersRepository.findAllOrderAlready();
+    }
+
+    @Override
+    public List<Orders> findAllOrderDelivery() {
+        return ordersRepository.findAllOrderDelivery();
+    }
+
+    @Override
+    public List<Orders> findAllOrderComplete() {
+        return ordersRepository.findAllOrderComplete();
+    }
+
+    @Override
+    public List<Orders> findAllOrderCancel() {
+        return ordersRepository.findAllOrderCancel();
+    }
 }

@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Reponsitory.*;
+import com.reidshop.Service.IProductService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +26,9 @@ import java.util.*;
 @RequestMapping("admin/products")
 public class ManagerProductController {
     @Autowired
-    OrdersRepository ordersRepository;
-    @Autowired
     ProductRepository productRepository;
+    @Autowired
+    IProductService productService;
     @Autowired
     CategoryRepository categoryRepository;
     @Autowired
@@ -43,8 +44,7 @@ public class ManagerProductController {
     public String listProduct(ModelMap modelMap){
         List<Category> categoryList = categoryRepository.findAll();
         modelMap.addAttribute("categories",categoryList);
-        modelMap.addAttribute("ordersRepository", ordersRepository);
-        modelMap.addAttribute("productRepository", productRepository);
+        modelMap.addAttribute("productService", productService);
         modelMap.addAttribute("formatVND",formatVND);
 
         return "admin/products";

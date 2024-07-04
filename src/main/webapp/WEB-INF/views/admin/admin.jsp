@@ -37,6 +37,14 @@
 
     <!-- Template Main CSS File -->
     <link href="/admin/assets/css/style.css" rel="stylesheet">
+    <style>
+        .datatable-sorter::before{
+            display: none;
+        }
+        .datatable-sorter::after{
+            display: none;
+        }
+    </style>
 
 </head>
 
@@ -271,7 +279,7 @@
                             </div>
 
                             <div class="card-body">
-                                <h5 class="card-title">Recent Sales <span id="orderTitle">| All Order</span></h5>
+                                <h5 class="card-title">Recent Sales<span id="orderTitle">| All Order</span></h5>
 
                                 <table class="table table-borderless datatable" id="recent-order-table">
                                     <thead>
@@ -285,13 +293,12 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <c:forEach items="${ordersRepository.findAll()}" var="order">
+                                        <c:forEach items="${ordersService.findAllOrderDESC()}" var="order">
                                             <tr>
                                                 <th scope="row">${order.id}</th>
                                                 <td>${order.account.accountDetail.name}</td>
                                                 <td>${order.phone}</td>
                                                 <td>${order.store.department}</td>
-<%--                                                <td>${order.store.account.accountDetail.name}</td>--%>
                                                 <td>${formatVND.format(order.totalPrice)}</td>
                                                 <td>
                                                     <a href="/admin/account/${order.account.id}/${order.id}" title="Detail" class="btn btn-info" style="font-size: 15px"><i class="bi bi-file-earmark-text"></i></a>

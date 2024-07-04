@@ -44,6 +44,12 @@
       /* hoặc sử dụng overflow-wrap nếu word-wrap không được hỗ trợ */
       /* overflow-wrap: break-word; */
     }
+    .datatable-sorter::before{
+      display: none;
+    }
+    .datatable-sorter::after{
+      display: none;
+    }
   </style>
 </head>
 
@@ -256,7 +262,7 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersRepository.findAllOrderWait()}" var="order">
+                      <c:forEach items="${ordersService.findAllOrderWait()}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
@@ -335,7 +341,7 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersRepository.findAllOrderPrepare()}" var="order">
+                      <c:forEach items="${ordersService.findAllOrderPrepare()}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
@@ -414,7 +420,7 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersRepository.findAllOrderAlready()}" var="order">
+                      <c:forEach items="${ordersService.findAllOrderAlready()}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
@@ -493,7 +499,7 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersRepository.findAllOrderDelivery()}" var="order">
+                      <c:forEach items="${ordersService.findAllOrderDelivery()}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
@@ -572,7 +578,7 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersRepository.findAllOrderComplete()}" var="order">
+                      <c:forEach items="${ordersService.findAllOrderComplete()}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
@@ -651,7 +657,7 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersRepository.findAllOrderCancel()}" var="order">
+                      <c:forEach items="${ordersService.findAllOrderCancel()}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>

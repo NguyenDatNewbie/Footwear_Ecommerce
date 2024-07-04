@@ -83,7 +83,18 @@ public class StoreServiceImpl implements IStoreService {
             return storeValid; // Không tìm thấy store theo dia chi nào còn hàng
         }
     }
-    Boolean checkStoreValid(Store store,List<CartRequest> cartRequests){
+
+    @Override
+    public List<Store> getAllStore() {
+        return storeRepository.findAll();
+    }
+
+    @Override
+    public Long countStore() {
+        return storeRepository.count();
+    }
+
+    Boolean checkStoreValid(Store store, List<CartRequest> cartRequests){
         for(CartRequest cartRequest: cartRequests){
             int totalQuantity = inventoryRepository.totalQuantity(cartRequest.getId(), cartRequest.getSize(), cartRequest.getColor(), store.getId());
             if(totalQuantity<cartRequest.getQuantity())

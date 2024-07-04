@@ -10,4 +10,6 @@ public interface IVoucherService {
     List<Vourcher> findVouchersInForce();
 
     List<Vourcher> findVouchersExpiration();
+
+    List<Vourcher> getAllVoucher();
 }

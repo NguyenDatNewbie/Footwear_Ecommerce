@@ -3,6 +3,7 @@ package com.reidshop.Controller.Admin;
 import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.ROLE;
 import com.reidshop.Reponsitory.*;
+import com.reidshop.Service.IAccountService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,6 +27,8 @@ import java.util.Optional;
 public class ManagerAccountController {
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    IAccountService accountService;
 
     @Autowired
     AccountDetailRepository accountDetailRepository;
@@ -44,6 +47,7 @@ public class ManagerAccountController {
     public String listAccount(ModelMap modelMap){
         modelMap.addAttribute("formatVND",formatVND);
         modelMap.addAttribute("accountRepository", accountRepository);
+        modelMap.addAttribute("accountService", accountService);
         modelMap.addAttribute("accountDetailRepository", accountDetailRepository);
         return "admin/account";
     }

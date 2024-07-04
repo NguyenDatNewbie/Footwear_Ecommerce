@@ -15,6 +15,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AccountServiceImpl implements IAccountService {
@@ -65,5 +67,10 @@ public class AccountServiceImpl implements IAccountService {
             System.out.println(exception);
             return false;
         }
+    }
+
+    @Override
+    public List<Account> getAllAccount() {
+        return accountRepository.findAll();
     }
 }

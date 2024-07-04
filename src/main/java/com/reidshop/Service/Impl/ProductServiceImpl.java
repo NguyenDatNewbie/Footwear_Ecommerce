@@ -210,4 +210,9 @@ public class ProductServiceImpl implements IProductService {
 		products1.addAll(products2);
 		return products1;
 	}
+
+	@Override
+	public List<Product> AllProductOfSystem() {
+		return productRepository.findAll();
+	}
 }

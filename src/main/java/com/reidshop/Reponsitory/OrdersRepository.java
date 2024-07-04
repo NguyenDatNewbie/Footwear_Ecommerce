@@ -47,6 +47,9 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
     @Query("SELECT COALESCE(SUM(o.totalPrice), 0) FROM Orders o WHERE YEAR(o.createdAt) = YEAR(CURRENT_DATE) AND o.status = 'COMPLETE'")
     double totalSalesOfThisYear();
 
+    @Query("select o from Orders o ORDER BY o.createdAt DESC")
+    List<Orders> findAllOrderDESC();
+
     //Lấy tất cả order_id trong ngày
     @Query("SELECT o.id FROM Orders o WHERE DATE(o.createdAt) = CURRENT_DATE AND o.status = 'COMPLETE'")
     List<Integer> findAllOrderToday();

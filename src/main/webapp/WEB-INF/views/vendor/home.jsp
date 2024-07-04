@@ -37,6 +37,15 @@
     <!-- Template Main CSS File -->
     <link href="/admin/assets/css/style.css" rel="stylesheet">
 
+    <style>
+        .datatable-sorter::before{
+            display: none;
+        }
+        .datatable-sorter::after{
+            display: none;
+        }
+    </style>
+
 </head>
 
 <body>
@@ -641,6 +650,7 @@
                 currentDate.add(1, 'days');
             }
             // console.log("Dates: ", dates);
+            // Lấy danh sách lợi nhuận theo ngày
             $.ajax({
                 url: '/vendor/home/calculateRevenue', // Địa chỉ máy chủ để gửi yêu cầu
                 method: 'POST',

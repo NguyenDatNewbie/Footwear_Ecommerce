@@ -39,7 +39,6 @@ public class VoucherController {
         modelMap.addAttribute("formatVND",formatVND);
         modelMap.addAttribute("dateFormat",dateFormat);
         modelMap.addAttribute("formatterDecimal",formatterDecimal);
-        modelMap.addAttribute("voucherRepository", voucherRepository);
         modelMap.addAttribute("voucherService", voucherService);
         return "admin/voucher";
     }
