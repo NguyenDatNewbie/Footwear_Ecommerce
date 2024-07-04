@@ -62,23 +62,20 @@ public class AdminController {
 
         modelMap.addAttribute("labels", labelsJson);
         modelMap.addAttribute("listRevenue", listRevenue5Month());
-        modelMap.addAttribute("numRecv", ordersRepository.countOrdersByPaymentType(PaymentType.RECEIVE));
-        modelMap.addAttribute("numPayPal", ordersRepository.countOrdersByPaymentType(PaymentType.PAYPAL));
-        modelMap.addAttribute("numMOMO", ordersRepository.countOrdersByPaymentType(PaymentType.MOMO));
-        modelMap.addAttribute("numVNpay", ordersRepository.countOrdersByPaymentType(PaymentType.VNPAY));
-        modelMap.addAttribute("waitOrders", ordersRepository.countOrdersByStatus(OrderStatus.WAIT));
-        modelMap.addAttribute("preOrders", ordersRepository.countOrdersByStatus(OrderStatus.PREPARE));
-        modelMap.addAttribute("readyOrders", ordersRepository.countOrdersByStatus(OrderStatus.ALREADY));
-        modelMap.addAttribute("deliOrders", ordersRepository.countOrdersByStatus(OrderStatus.DELIVERY));
-        modelMap.addAttribute("completeOrders", ordersRepository.countOrdersByStatus(OrderStatus.COMPLETE));
-        modelMap.addAttribute("cancelOrders", ordersRepository.countOrdersByStatus(OrderStatus.CANCEL));
+        modelMap.addAttribute("numRecv", ordersService.countOrdersByPaymentType(PaymentType.RECEIVE));
+        modelMap.addAttribute("numPayPal", ordersService.countOrdersByPaymentType(PaymentType.PAYPAL));
+        modelMap.addAttribute("numMOMO", ordersService.countOrdersByPaymentType(PaymentType.MOMO));
+        modelMap.addAttribute("numVNpay", ordersService.countOrdersByPaymentType(PaymentType.VNPAY));
+        modelMap.addAttribute("waitOrders", ordersService.countOrdersByStatus(OrderStatus.WAIT));
+        modelMap.addAttribute("preOrders", ordersService.countOrdersByStatus(OrderStatus.PREPARE));
+        modelMap.addAttribute("readyOrders", ordersService.countOrdersByStatus(OrderStatus.ALREADY));
+        modelMap.addAttribute("deliOrders", ordersService.countOrdersByStatus(OrderStatus.DELIVERY));
+        modelMap.addAttribute("completeOrders", ordersService.countOrdersByStatus(OrderStatus.COMPLETE));
+        modelMap.addAttribute("cancelOrders", ordersService.countOrdersByStatus(OrderStatus.CANCEL));
         modelMap.addAttribute("productService",productService);
         modelMap.addAttribute("formatVND",formatVND);
-        modelMap.addAttribute("productRepository",productRepository);
-        modelMap.addAttribute("imageRepository",imageRepository);
         modelMap.addAttribute("ordersService", ordersService);
         modelMap.addAttribute("orderItemService", orderItemService);
-        modelMap.addAttribute("ordersRepository", ordersRepository);
 
         return "admin/admin";
     }

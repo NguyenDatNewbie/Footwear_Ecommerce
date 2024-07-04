@@ -40,4 +40,9 @@ public class VoucherServiceImpl implements IVoucherService {
 
         return vouchersExpire;
     }
+
+    @Override
+    public List<Vourcher> getAllVoucher() {
+        return voucherRepository.findAll();
+    }
 }

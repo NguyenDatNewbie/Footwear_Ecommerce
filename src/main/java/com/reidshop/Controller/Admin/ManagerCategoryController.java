@@ -23,7 +23,6 @@ public class ManagerCategoryController {
     public String listProduct(ModelMap modelMap){
         List<Category> categoryList = categoryRepository.findAll();
         modelMap.addAttribute("categories",categoryList);
-        modelMap.addAttribute("categoryRepository", categoryRepository);
         return "admin/categories";
     }
 

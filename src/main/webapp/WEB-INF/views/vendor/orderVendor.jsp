@@ -39,6 +39,12 @@
             display: flex;
             gap: 5px; /* Khoảng cách giữa các nút */
         }
+        .datatable-sorter::before{
+            display: none;
+        }
+        .datatable-sorter::after{
+            display: none;
+        }
     </style>
 </head>
 

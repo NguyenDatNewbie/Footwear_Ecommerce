@@ -34,6 +34,14 @@
 
   <!-- Template Main CSS File -->
   <link href="/admin/assets/css/style.css" rel="stylesheet">
+  <style>
+    .datatable-sorter::before{
+      display: none;
+    }
+    .datatable-sorter::after{
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -125,7 +133,7 @@
 
               <div class="card-body">
                 <h5 class="card-title">All Store <span>| The list of Reid Shop branches</span></h5>
-                <p>Currently, the system is operating with <strong style="color: #4D869C; font-size: 15px">${storeRepository.count()}</strong> branches</p>
+                <p>Currently, the system is operating with <strong style="color: #4D869C; font-size: 15px">${storeService.countStore()}</strong> branches</p>
 
                 <table class="table datatable">
                   <thead>
@@ -139,7 +147,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <c:forEach items="${storeRepository.findAll()}" var="store">
+                  <c:forEach items="${storeService.getAllStore()}" var="store">
                     <tr>
                       <th scope="row">${store.id}</th>
                       <td>${store.account.accountDetail.name}</td>

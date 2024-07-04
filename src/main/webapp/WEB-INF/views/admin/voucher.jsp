@@ -57,6 +57,12 @@
         .header-dsc {
             margin-left: 15px;
         }
+        .datatable-sorter::before{
+            display: none;
+        }
+        .datatable-sorter::after{
+            display: none;
+        }
     </style>
 </head>
 
@@ -277,7 +283,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <c:forEach items="${voucherRepository.findAll()}" var="voucher">
+                                <c:forEach items="${voucherService.getAllVoucher()}" var="voucher">
                                     <tr>
                                         <th scope="row">${voucher.id}</th>
 <%--                                        <td>${voucher.voucherCode}</td>--%>

@@ -39,4 +39,6 @@ public interface IProductService {
     List<Product> findNewProduct(int quantityProduct);
 
     List<Product> addAll(List<Product> products1, List<Product> products2);
+
+	List<Product> AllProductOfSystem();
 }

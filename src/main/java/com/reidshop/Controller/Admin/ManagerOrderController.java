@@ -49,7 +49,7 @@ public class ManagerOrderController {
     @RequestMapping("")
     public String index(ModelMap modelMap){
         modelMap.addAttribute("formatVND",formatVND);
-        modelMap.addAttribute("ordersRepository", ordersRepository);
+        modelMap.addAttribute("ordersService", ordersService);
         List<Orders> orders = ordersRepository.findAll();
         modelMap.addAttribute("orders", orders);
 

@@ -34,6 +34,14 @@
 
   <!-- Template Main CSS File -->
   <link href="/admin/assets/css/style.css" rel="stylesheet">
+  <style>
+    .datatable-sorter::before{
+      display: none;
+    }
+    .datatable-sorter::after{
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -224,7 +232,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <c:forEach items="${accountRepository.findAll()}" var="account">
+                  <c:forEach items="${accountService.getAllAccount()}" var="account">
                     <tr>
                       <th scope="row">${account.id}</th>
                       <td>${account.email}</td>

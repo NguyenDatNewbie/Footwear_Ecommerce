@@ -102,6 +102,12 @@
       padding-right: 10px;
       font-size: 15px;
     }
+    .datatable-sorter::before{
+      display: none;
+    }
+    .datatable-sorter::after{
+      display: none;
+    }
 
   </style>
 </head>
@@ -340,7 +346,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <c:forEach items="${productRepository.AllProductOfSystem()}" var="product">
+                    <c:forEach items="${productService.AllProductOfSystem()}" var="product">
                       <tr>
                         <th scope="row">${product.id}</th>
                         <td>${product.name}</td>
