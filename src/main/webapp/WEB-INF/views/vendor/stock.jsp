@@ -231,8 +231,7 @@
                                             <td>${outStock.color.color_name}</td>
                                             <td>${outStock.size.size}</td>
                                             <td>${outStock.quantity}</td>
-<%--                                            <td>${inventoryRepository.getQuantityOfProduct(storeID, outStock.size.id, outStock.color.id)}</td>--%>
-                                            <c:set var="inventory" value="${inventoryRepository.getQuantityOfProduct(storeID, outStock.size.id, outStock.color.id)}"/>
+                                            <c:set var="inventory" value="${iInventoryService.getQuantityOfProduct(storeID, outStock.size.id, outStock.color.id)}"/>
                                             <td>${inventory}</td>
                                             <td>${outStock.quantity - inventory}</td>
                                         </tr>
@@ -252,7 +251,7 @@
                                 <div class="col-12">
                                     <h5 class="card-title">Supplier</h5>
                                     <select class="form-select">
-                                        <c:forEach var="supplier" items="${supplierRepository.findAll()}">
+                                        <c:forEach var="supplier" items="${listSupplier}">
                                             <c:choose>
                                                 <c:when test="${loop.index eq 0}">
                                                     <option value="${supplier.id}" selected>${supplier.name}</option>
@@ -353,7 +352,7 @@
                                     <td>
                                         <select id="priority" style="width: 100%; padding: 2px">
                                             <option value="0" >None</option>
-                                            <c:forEach var="outOfStock" items="${productOutOfStockRepository.findAllByStoreId(storeID)}">
+                                            <c:forEach var="outOfStock" items="${productOutOfStock}">
                                                 <option value="${outOfStock.orders.id}">${outOfStock.orders.id} - ${outOfStock.orders.createdAt}</option>
                                             </c:forEach>
                                         </select>
