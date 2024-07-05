@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryServiceImpl implements ICategoryService {
@@ -32,5 +33,13 @@ public class CategoryServiceImpl implements ICategoryService {
         return categories;
     }
 
+    @Override
+    public List<Category> familyByParent(Long parent){
+        return categoryRepository.familyByParent(parent);
+    }
 
+    @Override
+    public List<Category> findAll(){return categoryRepository.findAll();}
+    @Override
+    public Optional<Category> findById(Long id){return categoryRepository.findById(id);}
 }

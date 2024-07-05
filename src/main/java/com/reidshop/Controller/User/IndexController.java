@@ -9,6 +9,7 @@ import com.reidshop.Reponsitory.CategoryRepository;
 import com.reidshop.Reponsitory.ImageRepository;
 import com.reidshop.Reponsitory.ProductRepository;
 import com.reidshop.Service.Handle.CollaborativeFiltering;
+import com.reidshop.Service.IImageService;
 import com.reidshop.Service.IProductService;
 import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +39,8 @@ public class IndexController {
     JwtService jwtService;
     @Autowired
     AccountRepository accountRepository;
+    @Autowired
+    IImageService iImageService;
 
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
@@ -45,9 +48,9 @@ public class IndexController {
     public String index(ModelMap modelMap, HttpServletRequest request){
         List<Category> categoryList = categoryRepository.findAll();
         modelMap.addAttribute("categories",categoryList);
-        modelMap.addAttribute("productRepository",productRepository);
+        modelMap.addAttribute("productRepository",productService);
         modelMap.addAttribute("productService",productService);
-        modelMap.addAttribute("iImageService",imageRepository);
+        modelMap.addAttribute("iImageService",iImageService);
         modelMap.addAttribute("formatVND",formatVND);
 
         modelMap.addAttribute("productSoldAll",quantityListEven(productRepository.findAllByProductSold()));
