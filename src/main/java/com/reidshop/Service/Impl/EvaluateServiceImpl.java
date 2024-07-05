@@ -1,8 +1,6 @@
 package com.reidshop.Service.Impl;
 
 import com.reidshop.Model.Entity.Evaluate;
-import com.reidshop.Model.Entity.OrderItem;
-import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Reponsitory.EvaluateRepository;
 import com.reidshop.Service.IEvaluateServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EvaluateServiceImpl implements IEvaluateServiceImpl {
@@ -77,12 +76,12 @@ public class EvaluateServiceImpl implements IEvaluateServiceImpl {
             arrayList.add(i);
         return arrayList;
     }
-//    @Override
-//    public boolean checkExist(Orders orders){
-//        for (OrderItem item:orders.getOrderItems()) {
-//            if(evaluateRepository.checkExits(orders.getAccount(),item.getInventory().getSize().getProduct())!=null)
-//                return false;
-//        }
-//        return true;
-//    }
+
+    @Override
+    public List<Evaluate> findAllByProductId(Long id){return evaluateRepository.findAllByProductId(id);}
+    @Override
+    public List<Evaluate> findAll(){return evaluateRepository.findAll();}
+    @Override
+    public Optional<Evaluate> findById(Long id){return evaluateRepository.findById(id);}
+
 }

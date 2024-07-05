@@ -205,9 +205,9 @@
 <script>
     ClassicEditor
         .create(document.getElementById('shortContent'), {
-            licenseKey: 'VFlNam5DcmlzNWdNbWxjdVhsTTZQMEk4YU1oc0ZxV0tJZmUrenkrcE91Nkk5Z3F3QlFxd0ZsbStUbkJPLU1qQXlOREExTURnPQ==',
+            licenseKey: 'd2tpMWtPSGN0d0xoQkFZYy9qdmo5dHduR0kvY1FnOURxVWNCZEI2ZWV6a3ozdytSNkM0MnRNRXgwWlBnMUE9PS1NakF5TkRBNE1ETT0=',
             ckbox: {
-                tokenUrl: 'https://108066.cke-cs.com/token/dev/IkoiFymHdgfwwCsfYmdAo7MfVGGGzg9CDrXi?limit=10'
+                tokenUrl: 'https://112702.cke-cs.com/token/dev/32869dfd2e7c511e456f84c2339d6d92f9340bd1bdb37f2c7a9630489a3b?limit=10'
             },
             toolbar: {
                 items: [
@@ -271,9 +271,9 @@
 
     ClassicEditor
         .create(document.getElementById('fullContent'), {
-            licenseKey: 'VFlNam5DcmlzNWdNbWxjdVhsTTZQMEk4YU1oc0ZxV0tJZmUrenkrcE91Nkk5Z3F3QlFxd0ZsbStUbkJPLU1qQXlOREExTURnPQ==',
+            licenseKey: 'd2tpMWtPSGN0d0xoQkFZYy9qdmo5dHduR0kvY1FnOURxVWNCZEI2ZWV6a3ozdytSNkM0MnRNRXgwWlBnMUE9PS1NakF5TkRBNE1ETT0=',
             ckbox: {
-                tokenUrl: 'https://108066.cke-cs.com/token/dev/IkoiFymHdgfwwCsfYmdAo7MfVGGGzg9CDrXi?limit=10'
+                tokenUrl: 'https://112702.cke-cs.com/token/dev/32869dfd2e7c511e456f84c2339d6d92f9340bd1bdb37f2c7a9630489a3b?limit=10'
             },
             toolbar: {
                 items: [

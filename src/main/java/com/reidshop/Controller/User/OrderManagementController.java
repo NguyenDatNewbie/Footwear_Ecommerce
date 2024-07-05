@@ -8,6 +8,7 @@ import com.reidshop.Model.Request.CartRequest;
 import com.reidshop.Model.Request.EvaluateRequest;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IEvaluateServiceImpl;
+import com.reidshop.Service.IImageService;
 import com.reidshop.Service.IOrderItemService;
 import com.reidshop.Service.IOrdersService;
 import com.reidshop.security.JwtService;
@@ -47,6 +48,10 @@ public class OrderManagementController {
     CartRequestMapper cartRequestMapper;
     @Autowired
     OrderItemRepository orderItemRepository;
+    @Autowired
+    IEvaluateServiceImpl evaluateService;
+    @Autowired
+    IImageService iImageService;
     Locale locale = new Locale("vi","VN");
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
     @GetMapping("")
@@ -60,10 +65,10 @@ public class OrderManagementController {
         modelMap.addAttribute("account",account);
         modelMap.addAttribute("orders",ordersRepository.findOrdersByAccount(account.getId()));
         modelMap.addAttribute("ordersRepository",ordersService);
-        modelMap.addAttribute("ordersService",ordersRepository);
-        modelMap.addAttribute("evaluateRepository",evaluateRepository);
+        modelMap.addAttribute("ordersService",ordersService);
+        modelMap.addAttribute("evaluateRepository",evaluateService);
         modelMap.addAttribute("formatVND",formatVND);
-        modelMap.addAttribute("imageRepository",imageRepository);
+        modelMap.addAttribute("imageRepository",iImageService);
         return "user/order";
     }
 
@@ -80,10 +85,10 @@ public class OrderManagementController {
         modelMap.addAttribute("keyword",keyword);
         modelMap.addAttribute("account",account);
         modelMap.addAttribute("ordersRepository",ordersService);
-        modelMap.addAttribute("ordersService",ordersRepository);
+        modelMap.addAttribute("ordersService",ordersService);
         modelMap.addAttribute("evaluateRepository",evaluateRepository);
         modelMap.addAttribute("formatVND",formatVND);
-        modelMap.addAttribute("imageRepository",imageRepository);
+        modelMap.addAttribute("imageRepository",iImageService);
         return "user/order";
     }
 
@@ -131,10 +136,10 @@ public class OrderManagementController {
         Account account = accountRepository.findByEmail(email).orElse(null);
         modelMap.addAttribute("account",account);
         modelMap.addAttribute("ordersRepository",ordersService);
-        modelMap.addAttribute("ordersService",ordersRepository);
-        modelMap.addAttribute("evaluateRepository",evaluateRepository);
+        modelMap.addAttribute("ordersService",ordersService);
+        modelMap.addAttribute("evaluateRepository",evaluateService);
         modelMap.addAttribute("formatVND",formatVND);
-        modelMap.addAttribute("imageRepository",imageRepository);
+        modelMap.addAttribute("imageRepository",iImageService);
         modelMap.addAttribute("order",ordersRepository.findById(id).orElse(null));
         return "user/order-detail";
     }

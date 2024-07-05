@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ProductOutOfStockServiceImpl implements IProductOutOfStockService {
@@ -86,4 +85,10 @@ public class ProductOutOfStockServiceImpl implements IProductOutOfStockService {
         }
         return products;
     }
+
+    @Override
+    public List<ProductOutOfStock> findAllByStoreId(long storeId){
+        return productOutOfStockRepository.findAllByStoreId(storeId);
+    }
+
 }

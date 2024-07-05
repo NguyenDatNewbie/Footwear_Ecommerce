@@ -11,4 +11,6 @@ public interface IProductOutOfStockService {
     boolean checkOrder(Long orderId);
 
     List<ProductOutOfStock> listProductBySize(Long storeId);
+
+    List<ProductOutOfStock> findAllByStoreId(long storeId);
 }
