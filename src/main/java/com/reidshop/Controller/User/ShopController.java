@@ -54,7 +54,6 @@ public class ShopController {
         modelMap.addAttribute("productRepository",productRepository);
         modelMap.addAttribute("imageService",imageService);
         modelMap.addAttribute("colorRepository",colorRepository);
-
         return "user/shop";
     }
 

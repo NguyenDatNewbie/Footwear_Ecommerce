@@ -24,4 +24,8 @@ public class ImageServiceImpl implements IImageService {
         }
         return images;
     }
+    @Override
+    public List<Long> findColorOther(Long id){return imageRepository.findColorOther(id);}
+    @Override
+    public List<Image> findAllByProductAndColor(Long color_id, Long product_id){return imageRepository.findAllByProductAndColor(color_id,product_id);}
 }

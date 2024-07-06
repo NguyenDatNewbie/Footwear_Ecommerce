@@ -10,11 +10,8 @@ import com.reidshop.Model.Request.OrderCombineRequest;
 import com.reidshop.Model.Request.StoreValidRequest;
 import com.reidshop.Model.Response.StoreValidResponse;
 import com.reidshop.Reponsitory.*;
+import com.reidshop.Service.*;
 import com.reidshop.Service.Handle.DistanceService;
-import com.reidshop.Service.ICartService;
-import com.reidshop.Service.IOrdersService;
-import com.reidshop.Service.IStoreService;
-import com.reidshop.Service.IVoucherService;
 import com.reidshop.security.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -55,7 +52,10 @@ public class CartController {
     IVoucherService voucherService;
     @Autowired
     StoreValidResponseMapper storeValidResponseMapper;
-
+    @Autowired
+    IProductService productService;
+    @Autowired
+    IImageService iImageService;
     Locale locale = new Locale("vi","VN");
 
     DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
@@ -66,11 +66,11 @@ public class CartController {
 
     @GetMapping("")
     String index(ModelMap modelMap) throws Exception {
-        modelMap.addAttribute("productRepository",productRepository);
+        modelMap.addAttribute("productRepository",productService);
         modelMap.addAttribute("formatVND",formatVND);
         modelMap.addAttribute("formatterDecimal",formatterDecimal);
         modelMap.addAttribute("dateFormat",dateFormat);
-        modelMap.addAttribute("imageRepository",imageRepository);
+        modelMap.addAttribute("imageRepository",iImageService);
         modelMap.addAttribute("vourcher_sv", voucherService);
         modelMap.addAttribute("store",storeRepository.findAll());
         return "user/cart";

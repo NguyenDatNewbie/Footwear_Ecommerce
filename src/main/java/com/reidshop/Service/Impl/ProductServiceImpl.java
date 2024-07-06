@@ -8,6 +8,7 @@ import com.reidshop.Service.IProductService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -215,4 +216,11 @@ public class ProductServiceImpl implements IProductService {
 	public List<Product> AllProductOfSystem() {
 		return productRepository.findAll();
 	}
+
+	@Override
+	public List<Product> findAll(){return productRepository.findAll();}
+	@Override
+	public Optional<Product> findById(Long id){return productRepository.findById(id);}
+	@Override
+	public List<Product> findAllByCategoryAndIsParent(Long id){return productRepository.findAllByCategoryAndIsParent(id);}
 }

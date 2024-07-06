@@ -1,6 +1,7 @@
 package com.reidshop.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.reidshop.Model.Entity.Category;
 import com.reidshop.Model.Entity.Product;
@@ -41,4 +42,11 @@ public interface IProductService {
     List<Product> addAll(List<Product> products1, List<Product> products2);
 
 	List<Product> AllProductOfSystem();
+
+
+	List<Product> findAll();
+
+	Optional<Product> findById(Long id);
+
+	List<Product> findAllByCategoryAndIsParent(Long id);
 }
