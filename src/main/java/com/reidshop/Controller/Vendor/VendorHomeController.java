@@ -83,11 +83,8 @@ public class VendorHomeController {
         modelMap.addAttribute("ordersAll", ordersAll);
         modelMap.addAttribute("orderTodayList", orderToday);
         modelMap.addAttribute("formatVND",formatVND);
-        modelMap.addAttribute("productRepository",productRepository);
         modelMap.addAttribute("imageRepository",imageRepository);
         modelMap.addAttribute("ordersService", ordersService);
-        modelMap.addAttribute("orderItemService", orderItemService);
-        modelMap.addAttribute("ordersRepository", ordersRepository);
         return "vendor/home";
     }
 

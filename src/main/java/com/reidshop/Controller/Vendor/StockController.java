@@ -8,6 +8,7 @@ import com.reidshop.Model.Response.StockProductResponse;
 import com.reidshop.Model.Response.StockResponse;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IEmailService;
+import com.reidshop.Service.IInventoryService;
 import com.reidshop.Service.IProductOutOfStockService;
 import com.reidshop.Service.Impl.StockServiceImpl;
 import com.reidshop.security.JwtService;
@@ -45,6 +46,8 @@ public class StockController {
     @Autowired
     InventoryRepository inventoryRepository;
     @Autowired
+    IInventoryService iInventoryService;
+    @Autowired
     AccountDetailRepository accountDetailRepository;
     @Autowired
     ProductOutOfStockRepository productOutOfStockRepository;
@@ -71,17 +74,19 @@ public class StockController {
         Long storeID = store.getId();
 
         AccountDetail accountDetail = accountDetailRepository.findAccountDetailByAccountId(account.getId());
-//        List<ProductOutOfStock> outOfStocks = productOutOfStockRepository.findAllByStoreId(storeID);
         List<ProductOutOfStock> importProduct = ofStockService.listProductBySize(storeID);
+
+        //All Supplier
+        List<Supplier> listSupplier = supplierRepository.findAll();
 
 
         modelMap.addAttribute("accountDetail", accountDetail);
-        modelMap.addAttribute("supplierRepository", supplierRepository);
-        modelMap.addAttribute("inventoryRepository", inventoryRepository);
+        modelMap.addAttribute("listSupplier", listSupplier);
+        modelMap.addAttribute("iInventoryService", iInventoryService);
         modelMap.addAttribute("importProduct", importProduct);
         modelMap.addAttribute("storeID", storeID);
         modelMap.addAttribute("colors",colorRepository.findAll());
-        modelMap.addAttribute("productOutOfStockRepository",productOutOfStockRepository);
+        modelMap.addAttribute("productOutOfStock",productOutOfStockRepository.findAllByStoreId(storeID));
         return "vendor/stock";
     }
 

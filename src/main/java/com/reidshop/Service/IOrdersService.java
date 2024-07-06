@@ -8,6 +8,7 @@ import com.reidshop.Model.Enum.PaymentType;
 import com.reidshop.Model.Enum.ReceiveType;
 import com.reidshop.Model.Request.OrderCombineRequest;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.repository.query.Param;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -71,4 +72,6 @@ public interface IOrdersService {
 
     List<Orders> findAllOrderCancel();
 
+    List<Orders> findAllOrderByStore(long accountId);
+    List<Orders> findAllOrderOfStoreByStatus(Long accountId, OrderStatus status);
 }
