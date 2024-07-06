@@ -1,5 +1,6 @@
 package com.reidshop.Reponsitory;
 
+import com.reidshop.Model.Entity.Inventory;
 import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Model.Entity.Size;
 import com.reidshop.Model.Enum.OrderStatus;
@@ -228,4 +229,10 @@ public interface OrdersRepository extends JpaRepository<Orders,Long> {
 
     @Query("SELECT o FROM Orders o WHERE DATE(o.createdAt) = :date AND o.status = 'COMPLETE'")
     List<Orders> findAllOrderByDate(@Param("date") LocalDate date);
+
+    @Query("SELECT o from Orders o where o.store.account.id= :accountID ORDER BY o.createdAt DESC")
+    List<Orders> findAllOrderByStore(@Param("accountID") Long accountId);
+
+    @Query("SELECT o from Orders o where o.store.account.id = :accountID and o.status = :status ORDER BY o.createdAt DESC")
+    List<Orders> findAllOrderOfStoreByStatus(@Param("accountID") Long accountId, @Param("status") OrderStatus status);
 }

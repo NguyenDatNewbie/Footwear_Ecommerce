@@ -63,7 +63,6 @@ public class OrderAtStoreController {
         Long storeID = store.getId();
 
         modelMap.addAttribute("formatVND",formatVND);
-        modelMap.addAttribute("ordersRepository", ordersRepository);
 
         AccountDetail accountDetail = accountDetailRepository.findAccountDetailByAccountId(account.getId());
         modelMap.addAttribute("accountDetail", accountDetail);
