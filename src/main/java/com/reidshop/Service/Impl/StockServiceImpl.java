@@ -3,6 +3,7 @@ package com.reidshop.Service.Impl;
 import com.reidshop.Model.Entity.*;
 import com.reidshop.Model.Enum.OrderStatus;
 import com.reidshop.Model.Request.StockRequest;
+import com.reidshop.Model.Response.StockResponse;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IEmailService;
 import jakarta.mail.MessagingException;
@@ -193,4 +194,7 @@ public class StockServiceImpl {
             count++;
         }
     }
+
+
+
 }

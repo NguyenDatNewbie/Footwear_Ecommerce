@@ -1,8 +1,12 @@
 package com.reidshop.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 
 @Table
 @Entity
@@ -34,7 +38,12 @@ public class Inventory {
     @Column
     Integer importQuantity;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "stock_id")
     Stock stock;
+
+    public Stock getStock() {
+        stock.setInventories(new ArrayList<>());
+        return stock;
+    }
 }

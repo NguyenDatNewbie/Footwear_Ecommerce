@@ -1,6 +1,7 @@
 package com.reidshop.Service.Impl;
 
 import com.reidshop.Model.Entity.Evaluate;
+import com.reidshop.Model.Entity.Orders;
 import com.reidshop.Reponsitory.EvaluateRepository;
 import com.reidshop.Service.IEvaluateServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,5 +84,7 @@ public class EvaluateServiceImpl implements IEvaluateServiceImpl {
     public List<Evaluate> findAll(){return evaluateRepository.findAll();}
     @Override
     public Optional<Evaluate> findById(Long id){return evaluateRepository.findById(id);}
+    @Override
+    public List<Evaluate> checkExits(Orders orders){return evaluateRepository.checkExits(orders);}
 
 }

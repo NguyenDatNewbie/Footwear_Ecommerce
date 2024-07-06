@@ -431,13 +431,5 @@ public class OrdersServiceImpl implements IOrdersService {
         return ordersRepository.findAllOrderCancel();
     }
 
-    @Override
-    public List<Orders> findAllOrderByStore(long accountId) {
-        return ordersRepository.findAllOrderByStore(accountId);
-    }
-
-    @Override
-    public List<Orders> findAllOrderOfStoreByStatus(Long accountId, OrderStatus status) {
-        return ordersRepository.findAllOrderOfStoreByStatus(accountId, status);
-    }
+    public List<Orders> findOrdersByAccountReceive(Long id){return ordersRepository.findOrdersByAccountReceive(id);}
 }

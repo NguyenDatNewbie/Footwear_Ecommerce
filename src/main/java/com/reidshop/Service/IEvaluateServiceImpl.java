@@ -22,5 +22,6 @@ public interface IEvaluateServiceImpl {
 
     Optional<Evaluate> findById(Long id);
 
-//    boolean checkExist(Orders orders);
+    List<Evaluate> checkExits(Orders orders);
+
 }

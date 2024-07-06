@@ -40,4 +40,6 @@ public interface InventoryRepository extends JpaRepository<Inventory,Long> {
 
     @Query("select i from Inventory i where i.size.product.id=?1 and i.size.size=?2 and i.color.id=?3 and i.store.id=?4 order by i.stock.createdAt ASC ")
     List<Inventory> findAllInventoryValid(Long product,String size,long colorId,long storeId);
+
+    List<Inventory> findAllByStockId(Long id);
 }

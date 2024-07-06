@@ -27,7 +27,7 @@ public class BlogController {
         return "user/blog";
     }
 
-    @GetMapping("/size/detail/{blogId}")
+    @GetMapping("/detail/{blogId}")
     String sizeDetail(ModelMap modelMap, @PathVariable Long blogId){
         Posts posts = postsRepository.findById(blogId).orElse(null);
         modelMap.addAttribute("post",posts);
