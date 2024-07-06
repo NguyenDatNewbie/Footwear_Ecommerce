@@ -1,11 +1,14 @@
 package com.reidshop.Model.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +35,9 @@ public class Stock {
     @JoinColumn(name = "supplier_id")
     Supplier supplier;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "stock")
+    @JsonManagedReference
+    List<Inventory> inventories = new ArrayList<>();
     public void setCreatedAt() {
         createdAt = Calendar.getInstance().getTime();
     }
@@ -42,5 +48,4 @@ public class Stock {
         SimpleDateFormat formatter = new SimpleDateFormat("HH:mm dd-MM-yyyy");
         return formatter.format(createdAt);
     }
-
 }

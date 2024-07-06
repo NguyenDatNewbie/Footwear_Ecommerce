@@ -52,56 +52,8 @@
 <!-- ======= Header ======= -->
 <jsp:include page="../vendor/header.jsp" />
 <!-- ======= Sidebar ======= -->
-<aside id="sidebar" class="sidebar">
+<jsp:include page="sidebar.jsp"/>
 
-    <ul class="sidebar-nav" id="sidebar-nav">
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="<c:url value="/vendor/home"/>">
-          <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
-        </a>
-      </li><!-- End Dashboard Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-            <i class="bi bi-basket"></i><span>Order</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="tables-nav" class="nav-content collapse show" data-bs-parent="#sidebar-nav">
-            <li>
-                <a href="<c:url value="/vendor/orderRcvStore"/>">
-                    <i class="bi bi-circle"></i><span>Orders To Process</span>
-                </a>
-            </li>
-            <li>
-                <a href="<c:url value="/vendor/order"/>" class="active">
-                    <i class="bi bi-circle"></i><span>Order Management</span>
-                </a>
-            </li>
-        </ul>
-      </li> <!-- End Order Nav -->
-
-      <li class="nav-item">
-        <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-          <i class="bi bi-journal-text"></i><span>Inventory</span><i class="bi bi-chevron-down ms-auto"></i>
-        </a>
-        <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
-          <li>
-            <a href="<c:url value="/vendor/listStock"/>">
-              <i class="bi bi-circle"></i><span>Stock</span>
-            </a>
-          </li>
-          <li>
-            <a href="<c:url value="/vendor/stock"/>">
-              <i class="bi bi-circle"></i><span>Import Product</span>
-            </a>
-          </li>
-        </ul>
-      </li><!-- End Forms Nav -->
-
-    </ul>
-  
-</aside><!-- End Sidebar-->
 
 <main id="main" class="main">
     <div class="pagetitle">

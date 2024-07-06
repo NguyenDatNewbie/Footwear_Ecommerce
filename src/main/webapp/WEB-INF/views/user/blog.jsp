@@ -138,7 +138,7 @@
                     <div class="blog-item">
                         <img src="${post.image}"/>
                         <div>
-                            <a class="title">${post.title}</a>
+                            <a class="title" href="/blogs/detail/${post.id}">${post.title}</a>
                             <p>${post.shortContent}</p>
                             <span>Tác giả: ${post.account.accountDetail.name} . 07 Tháng 04, 2024</span>
                         </div>
@@ -196,7 +196,7 @@
                             <div class="blog-item">
                                 <img src="${postNew.image}">
                                 <div>
-                                    <a>${postNew.title}</a>
+                                    <a href="/blogs/detail/${postNew.id}">${postNew.title}</a>
                                     <div>
                                         <c:if test="${postNew.postType=='SIZE'}"><a style="color: #757575; font-weight: unset" href="/blogs?type=SIZE">Chia sẻ</a></c:if>
                                             <c:if test="${postNew.postType=='TREND'}"><a style="color: #757575; font-weight: unset" href="/blogs?type=TREND">Tin tức</a></c:if>

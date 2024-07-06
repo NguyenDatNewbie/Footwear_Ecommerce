@@ -2,8 +2,10 @@ package com.reidshop.Controller.Vendor;
 
 import com.reidshop.Model.Cookie.CookieHandle;
 import com.reidshop.Model.Entity.*;
+import com.reidshop.Model.Mapper.StockMapper;
 import com.reidshop.Model.Request.StockRequest;
 import com.reidshop.Model.Response.StockProductResponse;
+import com.reidshop.Model.Response.StockResponse;
 import com.reidshop.Reponsitory.*;
 import com.reidshop.Service.IEmailService;
 import com.reidshop.Service.IProductOutOfStockService;
@@ -19,6 +21,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
 
 @Controller
@@ -52,7 +56,12 @@ public class StockController {
     IEmailService emailService;
     @Autowired
     OrdersRepository ordersRepository;
-
+    @Autowired
+    StockRepository stockRepository;
+    @Autowired
+    StockMapper stockMapper;
+    Locale locale = new Locale("vi","VN");
+    DecimalFormat formatVND = (DecimalFormat) NumberFormat.getCurrencyInstance(locale);
     @GetMapping("")
     String index(ModelMap modelMap, HttpServletRequest request){
         String token = CookieHandle.getCookieValue(request, "token");
@@ -76,6 +85,33 @@ public class StockController {
         return "vendor/stock";
     }
 
+    @GetMapping("/list")
+    String listStock(HttpServletRequest request,ModelMap modelMap){
+        try {
+            String token = CookieHandle.getCookieValue(request, "token");
+            String email = jwtService.extractUsername(token);
+            Account account = accountRepository.findByEmail(email).orElse(new Account());
+            Store store = storeRepository.searchAllByAccountId(account.getId());
+
+            List<Stock> stocks = stockRepository.findAllByStoreId(store.getId());
+            List<StockResponse> stockResponses = stockMapper.toListResponse(stocks);
+            modelMap.addAttribute("stocks",stockResponses);
+            modelMap.addAttribute("formatVND",formatVND);
+
+        }
+        catch (Exception ex){
+            return "vendor/listStock";
+        }
+        return "vendor/listStock";
+    }
+
+    @GetMapping("/list/{id}")
+    String stockDetail(@PathVariable("id") Long id,ModelMap modelMap){
+        List<Inventory> inventories = inventoryRepository.findAllByStockId(id);
+        modelMap.addAttribute("formatVND",formatVND);
+        modelMap.addAttribute("inventories",inventories);
+        return "vendor/stockDetail";
+    }
     @GetMapping("/getProduct")
     @ResponseBody
     List<StockProductResponse> getProductByQuery(@RequestParam String query){

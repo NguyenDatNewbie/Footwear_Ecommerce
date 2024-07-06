@@ -430,4 +430,6 @@ public class OrdersServiceImpl implements IOrdersService {
     public List<Orders> findAllOrderCancel() {
         return ordersRepository.findAllOrderCancel();
     }
+
+    public List<Orders> findOrdersByAccountReceive(Long id){return ordersRepository.findOrdersByAccountReceive(id);}
 }
