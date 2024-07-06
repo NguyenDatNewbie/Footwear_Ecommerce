@@ -155,7 +155,8 @@
                       <td>${store.department}</td>
                       <td>${store.account.accountDetail.phone}</td>
                       <td>
-                        <button type="button" onclick="window.location.href='/admin/stores/${store.account.id}'" class="btn btn-info" style="font-size: 15px">Show Inventory</button>
+                        <button type="button" onclick="window.location.href='/admin/stores/inventory/${store.account.id}'" class="btn btn-info" style="font-size: 15px">Show Inventory</button>
+                        <button type="button" onclick="window.location.href='/admin/stores/orders/${store.account.id}'" class="btn btn-primary" style="font-size: 15px">Show Order</button>
                       </td>
                     </tr>
                   </c:forEach>

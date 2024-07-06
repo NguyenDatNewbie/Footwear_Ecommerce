@@ -76,7 +76,7 @@
     </li><!-- End Order Page Nav -->
 
     <li class="nav-item">
-      <a class="nav-link" href="<c:url value="/admin/order"/>">
+      <a class="nav-link collapsed" href="<c:url value="/admin/order"/>">
         <i class="bi bi-journal-text"></i>
         <span>Orders</span>
       </a>
@@ -88,7 +88,7 @@
       </a>
     </li><!-- End Category Page Nav -->
     <li class="nav-item">
-      <a class="nav-link collapsed" href="<c:url value="/admin/stores"/>">
+      <a class="nav-link" href="<c:url value="/admin/stores"/>">
         <i class="bi bi-diagram-3"></i>
         <span>Stores</span>
       </a>
@@ -121,11 +121,12 @@
 <main id="main" class="main">
 
   <div class="pagetitle">
-    <h1>Manager Product</h1>
+    <h1>Manage Store Orders</h1>
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="<c:url value="/admin/home"/>">Home</a></li>
-        <li class="breadcrumb-item active">Order Management</li>
+        <li class="breadcrumb-item"><a href="<c:url value="/admin/stores"/>">Stores</a></li>
+        <li class="breadcrumb-item active">Orders</li>
       </ol>
     </nav>
   </div><!-- End Page Title -->
@@ -141,7 +142,7 @@
             <div class="card recent-sales overflow-auto">
 
               <div class="card-body">
-                <h5 class="card-title">Management Orders <span>| Admin</span></h5>
+                <h5 class="card-title">List Orders Of The Store <span>| ${account.accountDetail.name}</span></h5>
                 <ul class="nav nav-tabs nav-tabs-bordered d-flex" id="borderedTabJustified" role="tablist">
                   <li class="nav-item flex-fill" role="presentation">
                     <button class="nav-link w-100 active" id="all-tab" data-bs-toggle="tab" data-bs-target="#bordered-justified-all" type="button" role="tab" aria-controls="home" aria-selected="true">All Order</button>
@@ -175,7 +176,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Delivery Address</th>
                         <th scope="col">Total Price</th>
-                        <th scope="col">Store</th>
+<%--                        <th scope="col">Store</th>--%>
                         <th scope="col">Creation Time</th>
                         <th scope="col">Receive Type</th>
                         <th scope="col">Status</th>
@@ -190,7 +191,7 @@
                           <td>${order.name}</td>
                           <td>${order.address}</td>
                           <td>${formatVND.format(order.totalPrice)}</td>
-                          <td>${order.store.account.accountDetail.name}</td>
+<%--                          <td>${order.store.account.accountDetail.name}</td>--%>
                           <td>${order.createdAt}</td>
                           <td>
                             <c:choose>
@@ -254,7 +255,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Delivery Address</th>
                         <th scope="col">Total Price</th>
-                        <th scope="col">Store</th>
+<%--                        <th scope="col">Store</th>--%>
                         <th scope="col">Creation Time</th>
                         <th scope="col">Receive Type</th>
                         <th scope="col">Status</th>
@@ -262,14 +263,14 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersService.findAllOrderWait()}" var="order">
+                      <c:forEach items="${orderWAIT}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
                           <td>${order.name}</td>
                           <td>${order.address}</td>
                           <td>${formatVND.format(order.totalPrice)}</td>
-                          <td>${order.store.account.accountDetail.name}</td>
+<%--                          <td>${order.store.account.accountDetail.name}</td>--%>
                           <td>${order.createdAt}</td>
                           <td>
                             <c:choose>
@@ -333,7 +334,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Delivery Address</th>
                         <th scope="col">Total Price</th>
-                        <th scope="col">Store</th>
+<%--                        <th scope="col">Store</th>--%>
                         <th scope="col">Creation Time</th>
                         <th scope="col">Receive Type</th>
                         <th scope="col">Status</th>
@@ -341,14 +342,14 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersService.findAllOrderPrepare()}" var="order">
+                      <c:forEach items="${orderPREPARE}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
                           <td>${order.name}</td>
                           <td>${order.address}</td>
                           <td>${formatVND.format(order.totalPrice)}</td>
-                          <td>${order.store.account.accountDetail.name}</td>
+<%--                          <td>${order.store.account.accountDetail.name}</td>--%>
                           <td>${order.createdAt}</td>
                           <td>
                             <c:choose>
@@ -412,7 +413,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Delivery Address</th>
                         <th scope="col">Total Price</th>
-                        <th scope="col">Store</th>
+<%--                        <th scope="col">Store</th>--%>
                         <th scope="col">Creation Time</th>
                         <th scope="col">Receive Type</th>
                         <th scope="col">Status</th>
@@ -420,14 +421,14 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersService.findAllOrderAlready()}" var="order">
+                      <c:forEach items="${orderALREADY}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
                           <td>${order.name}</td>
                           <td>${order.address}</td>
                           <td>${formatVND.format(order.totalPrice)}</td>
-                          <td>${order.store.account.accountDetail.name}</td>
+<%--                          <td>${order.store.account.accountDetail.name}</td>--%>
                           <td>${order.createdAt}</td>
                           <td>
                             <c:choose>
@@ -491,7 +492,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Delivery Address</th>
                         <th scope="col">Total Price</th>
-                        <th scope="col">Store</th>
+<%--                        <th scope="col">Store</th>--%>
                         <th scope="col">Creation Time</th>
                         <th scope="col">Receive Type</th>
                         <th scope="col">Status</th>
@@ -499,14 +500,14 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersService.findAllOrderDelivery()}" var="order">
+                      <c:forEach items="${orderDELIVERY}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
                           <td>${order.name}</td>
                           <td>${order.address}</td>
                           <td>${formatVND.format(order.totalPrice)}</td>
-                          <td>${order.store.account.accountDetail.name}</td>
+<%--                          <td>${order.store.account.accountDetail.name}</td>--%>
                           <td>${order.createdAt}</td>
                           <td>
                             <c:choose>
@@ -570,7 +571,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Delivery Address</th>
                         <th scope="col">Total Price</th>
-                        <th scope="col">Store</th>
+<%--                        <th scope="col">Store</th>--%>
                         <th scope="col">Creation Time</th>
                         <th scope="col">Receive Type</th>
                         <th scope="col">Status</th>
@@ -578,14 +579,14 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersService.findAllOrderComplete()}" var="order">
+                      <c:forEach items="${orderCOMPLETE}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
                           <td>${order.name}</td>
                           <td>${order.address}</td>
                           <td>${formatVND.format(order.totalPrice)}</td>
-                          <td>${order.store.account.accountDetail.name}</td>
+<%--                          <td>${order.store.account.accountDetail.name}</td>--%>
                           <td>${order.createdAt}</td>
                           <td>
                             <c:choose>
@@ -649,7 +650,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Delivery Address</th>
                         <th scope="col">Total Price</th>
-                        <th scope="col">Store</th>
+<%--                        <th scope="col">Store</th>--%>
                         <th scope="col">Creation Time</th>
                         <th scope="col">Receive Type</th>
                         <th scope="col">Status</th>
@@ -657,14 +658,14 @@
                       </tr>
                       </thead>
                       <tbody>
-                      <c:forEach items="${ordersService.findAllOrderCancel()}" var="order">
+                      <c:forEach items="${orderCANCEL}" var="order">
                         <tr>
                           <th scope="row">${order.id}</th>
                           <td>${order.phone}</td>
                           <td>${order.name}</td>
                           <td>${order.address}</td>
                           <td>${formatVND.format(order.totalPrice)}</td>
-                          <td>${order.store.account.accountDetail.name}</td>
+<%--                          <td>${order.store.account.accountDetail.name}</td>--%>
                           <td>${order.createdAt}</td>
                           <td style="vertical-align: middle;">
                             <c:choose>
