@@ -74,4 +74,6 @@ public interface IOrdersService {
 
     List<Orders> findAllOrderByStore(long accountId);
     List<Orders> findAllOrderOfStoreByStatus(Long accountId, OrderStatus status);
+
+    List<Orders> findOrdersByAccountReceive(Long id);
 }

@@ -42,8 +42,4 @@ public class Inventory {
     @JoinColumn(name = "stock_id")
     Stock stock;
 
-    public Stock getStock() {
-        stock.setInventories(new ArrayList<>());
-        return stock;
-    }
 }

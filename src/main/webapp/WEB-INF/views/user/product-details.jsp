@@ -1067,7 +1067,7 @@
                                                 <div class=" product_ratting" style="margin-bottom: 0px">
                                                     <ul>
                                                         <c:forEach
-                                                                items="${evaluates.rateStar(evaluateService.avg(evaluates))}"
+                                                                items="${evaluateService.rateStar(evaluateService.avg(evaluates))}"
                                                                 var="star">
                                                             <c:choose>
                                                                 <c:when test="${star==1}">

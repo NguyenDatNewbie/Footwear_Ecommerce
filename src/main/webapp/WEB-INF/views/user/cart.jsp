@@ -2136,7 +2136,8 @@
         if (district.value == "")
             valueDistrict = "";
 
-        var data = JSON.stringify({carts: JSON.parse(cart), city: valueCity, district: valueDistrict, wards: ""});
+        var data = JSON.stringify({orders: null, carts: JSON.parse(cart), city: valueCity, district: valueDistrict, wards: ""});
+        console.log(data);
         $.ajax({
             url: '/cart/getStore/STORE',
             type: "POST",
@@ -2148,6 +2149,9 @@
                 response.forEach(item => {
                     addItemToList(item);
                 });
+            },
+            error: function (error){
+                console.log(error);
             }
         });
     }
