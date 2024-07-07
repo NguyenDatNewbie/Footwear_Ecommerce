@@ -505,6 +505,22 @@
         localStorage.setItem('favorite',JSON.stringify(favorite));
         document.getElementById('favorite-'+productId).innerHTML='';
         showFavorite();
+
+
+        setTimeout(function (){
+            var button = document.querySelectorAll('.cart_remove a')[0];
+            var originalOnclick = button.onclick;
+            // Gán lại sự kiện onclick để thực hiện hàm gốc và hàm mới
+            button.onclick = function(event) {
+                // Gọi hàm gốc với tham số (dùng hàm call để giữ ngữ cảnh this)
+                if (typeof originalOnclick === 'function') {
+                    originalOnclick.call(button, event);
+                }
+                // Gọi hàm thứ hai sau khi hàm gốc hoàn tất
+                filterAll();
+            };
+        }, 2000);
+
     }
 
     function displayProductColor(img1,img2,divItem){
@@ -649,16 +665,20 @@
 
     function filterAll(){
         var filter = document.querySelector('.filter');
+
         if(window.getComputedStyle(filter).display === "none")
             filter.style.display = "block";
         let min = $( "#slider-range" ).slider("values", 0);
         let max = $( "#slider-range" ).slider("values", 1 );
         var boxSizeClass = document.querySelectorAll('.box_size.active');
         var sizeQuery = getText(boxSizeClass);
+
         var colorClass = document.querySelectorAll('.container-color.active input');
         var colorQuery = getValue(colorClass);
+
         var query="";
         var categoryDiv = document.querySelector('.brand-sidebar.active');
+
         var genders = document.querySelectorAll(".container-gender input[name='gender-checkbox']:checked");
         if(categoryDiv!=null) {
             var categoryId = categoryDiv.querySelector('input').value;
@@ -675,6 +695,7 @@
         if (genders.length>0){
             query+="genders="+getValue(genders);;
         }
+
         $.ajax({
             url: "/shop/filter",
             type: "Get",
@@ -906,6 +927,34 @@
             document.querySelector('.filter').style.display="none";
         });
     });
+</script>
+
+<script>
+    function addEventDelete(){
+        var buttons = document.querySelectorAll('.cart_remove a');
+        buttons.forEach(function(button) {
+            // Lưu lại sự kiện onclick gốc
+            var originalOnclick = button.onclick;
+            console.log(originalOnclick);
+
+            // Gán lại sự kiện onclick để thực hiện hàm gốc và hàm mới
+            button.onclick = function(event) {
+                console.log(button);
+
+                // Gọi hàm gốc với tham số (dùng hàm call để giữ ngữ cảnh this)
+                if (typeof originalOnclick === 'function') {
+                    originalOnclick.call(button, event);
+                }
+                // Gọi hàm thứ hai sau khi hàm gốc hoàn tất
+                filterAll();
+            };
+        });
+    }
+    // Khi trang được tải, thêm sự kiện thứ hai sau sự kiện onclick
+    window.onload = function() {
+        addEventDelete();
+    };
+
 </script>
 </body>
 
