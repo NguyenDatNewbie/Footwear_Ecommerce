@@ -304,7 +304,10 @@
             localStorage.setItem('favorite', JSON.stringify(favorite));
         }
         showFavorite();
-
+        if(typeof  addEventDelete === 'function'){
+            console.log(2);
+            setTimeout(addEventDelete,1000);
+        }
     }
 
     showFavorite();
