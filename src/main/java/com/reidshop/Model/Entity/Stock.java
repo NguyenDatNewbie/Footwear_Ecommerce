@@ -36,7 +36,6 @@ public class Stock {
     Supplier supplier;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stock")
-    @JsonManagedReference
     List<Inventory> inventories = new ArrayList<>();
     public void setCreatedAt() {
         createdAt = Calendar.getInstance().getTime();
