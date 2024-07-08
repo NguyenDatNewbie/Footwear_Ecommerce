@@ -127,7 +127,7 @@ public class Orders {
         return formatter.format(createdAt);
     }
 
-    public String getUpdatedAt() {
+    public String getUpdatedAt(Date updatedAt) {
         if (updatedAt == null) {
             return ""; // Hoặc bạn có thể trả về null nếu không có giá trị
         }
@@ -135,7 +135,7 @@ public class Orders {
         return formatter.format(updatedAt);
     }
 
-    public void setUpdatedAt() {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = Calendar.getInstance().getTime();
     }
 
@@ -147,9 +147,7 @@ public class Orders {
         return formatter.format(limitReceiveAt);
     }
 
-    public void setLimitReceiveAt() {
-        limitReceiveAt = Calendar.getInstance().getTime();
+    public void setLimitReceiveAt(Date limitReceiveAt) {
+        this.limitReceiveAt = Calendar.getInstance().getTime();
     }
-
-
 }

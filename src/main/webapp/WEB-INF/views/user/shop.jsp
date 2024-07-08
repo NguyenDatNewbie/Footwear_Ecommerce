@@ -526,10 +526,14 @@
     function displayProductColor(img1,img2,divItem){
         var primaryImg = divItem.querySelector(".product_thumb .primary_img img");
         var secondaryImg = divItem.querySelector(".product_thumb .secondary_img img");
-        primaryImg.src = img1;
-        secondaryImg.src = "";
-        if(img2!=null)
-            secondaryImg.src = img2;
+        if(primaryImg.src !== null) {
+            primaryImg.src = img1;
+        }
+        if(secondaryImg.src !== null) {
+            secondaryImg.src = "";
+            if (img2 != null)
+                secondaryImg.src = img2;
+        }
     }
     function addActive(current){
         var buttons = document.querySelectorAll(".thumb-color button");
@@ -579,6 +583,14 @@
     function reLoadItem(){
         list = document.querySelectorAll('.list .item');
         loadItem();
+        if(list.length === 0) {
+            console.log(document.querySelector(".shop_toolbar.t_bottom"));
+            document.querySelector(".shop_toolbar.t_bottom").style.display = 'none';
+        }
+        else{
+            changePage(1);
+            document.querySelector(".shop_toolbar.t_bottom").style.display = 'flex';
+        }
     }
     function loadItem(){
         let beginGet = limit * (thisPage - 1);
@@ -741,7 +753,7 @@
     async function displayProduct(products){
         let result = '';
         if(products.length==0)
-            result = '<h4 style="text-align: center;margin-bottom: 40px;font-size: 22px;">Không tìm thấy sản phẩm</h4>'
+            result = '<h4 style="text-align: center;margin-top: 40px; margin-bottom: 40px;font-size: 22px;">Không tìm thấy sản phẩm</h4>'
         else
         for(let i =0;i<products.length;i++){
             result += '<div class="col-lg-4 col-md-4 col-12 item">'
@@ -788,9 +800,9 @@
             result+= '</div>'
                 +'<div class="content" >'
                 +'<div class="product_content grid_content">'
-                +'<h3><a href="/product?id=' + products[i].id +'"z>'
-                + products[i].name +'</a></h3>';
-            + '<span class="current_price">'
+                +'<h3><a href="/product?id=' + products[i].id +'">'
+                + products[i].name +'</a></h3>'
+                + '<span class="current_price">';
             var old_price = products[i].price;
             old_price = old_price.toLocaleString('vi-VN', {style : 'currency', currency : 'VND'});
             if(products[i].promotion>0)

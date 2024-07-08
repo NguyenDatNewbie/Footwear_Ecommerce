@@ -305,7 +305,6 @@
         }
         showFavorite();
         if(typeof  addEventDelete === 'function'){
-            console.log(2);
             setTimeout(addEventDelete,1000);
         }
     }
@@ -336,7 +335,12 @@
         if(window.location.href.includes("shop")){
             li[1].classList.add('active');
         }
-        else li[0].classList.add('active');
+        else if(window.location.href.includes("contact"))
+            li[2].classList.add('active');
+        else if(window.location.href.includes("blogs"))
+            li[3].classList.add('active');
+        else
+            li[0].classList.add('active');
     }
 
     // Hàm để lấy giá trị của một cookie
@@ -443,6 +447,7 @@
         listFavorite = document.querySelectorAll('.favorites-item');
         loadFavorites();
 
+        // ChatBot
         const dfMessenger = document.querySelector( 'df-messenger' );
         if( dfMessenger )
         {
@@ -461,9 +466,6 @@
 
                 // event.preventDefault();
             });
-
-
-
         }
     });
 

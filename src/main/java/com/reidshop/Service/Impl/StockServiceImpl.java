@@ -179,7 +179,7 @@ public class StockServiceImpl {
             orderItem.setPrice(p.getPrice());
             orderItem.setInventory(i);
             if(count==inventories.size()-1){
-                orderItem.setQuantity(i.getQuantity()-quantity);
+                orderItem.setQuantity(quantity);
                 i.setQuantity(i.getQuantity()-quantity);
             }
             else {

@@ -94,7 +94,6 @@
                                                 <th scope="col">Quantity</th>
                                                 <th scope="col">Date Last Import</th>
                                                 <th scope="col">Supplier</th>
-                                                <th scope="col">Status</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -106,14 +105,7 @@
                                                     <td>${inventory.quantity}</td>
                                                     <td>${inventory.stock.createdAt}</td>
                                                     <td>${inventory.stock.supplier.name}</td>
-                                                    <td>
-                                                        <c:if test="${inventory.quantity <= 5}">
-                                                            <span class="text-white bg-danger p-1">Restock</span>
-                                                        </c:if>
-                                                        <c:if test="${inventory.quantity > 5}">
-                                                            <span class="text-white bg-success p-1">Available</span>
-                                                        </c:if>
-                                                    </td>
+
                                                 </tr>
                                             </c:forEach>
                                             </tbody>
