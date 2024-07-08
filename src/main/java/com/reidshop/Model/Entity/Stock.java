@@ -37,9 +37,12 @@ public class Stock {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "stock")
     List<Inventory> inventories = new ArrayList<>();
-    public void setCreatedAt() {
-        createdAt = Calendar.getInstance().getTime();
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = Calendar.getInstance().getTime();
     }
+
+
     public String getCreatedAt() {
         if (createdAt == null) {
             return ""; // Hoặc bạn có thể trả về null nếu không có giá trị
