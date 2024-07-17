@@ -120,6 +120,9 @@
         .list-blogs-latest .blog-item div div a{
             margin-right: 3px;
         }
+        .container{
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>

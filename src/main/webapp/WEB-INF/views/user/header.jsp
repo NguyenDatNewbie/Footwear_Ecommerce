@@ -2,7 +2,16 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
          isELIgnored="false"%>
 <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
-
+<style>
+    .header_three .middel_inner{
+        border-bottom: none;
+    }
+    .header_bottom {
+        border-top: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.11);
+    }
+</style>
 
 <df-messenger
         intent="WELCOME"
