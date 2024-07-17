@@ -106,7 +106,7 @@ public class ShopController {
         List<Map<String,String>> maps = new ArrayList<>();
         for (Product product:products) {
             Map<String,String> map  = new HashMap<>();
-            map.put("link","/product/"+ String.valueOf(product.getId()));
+            map.put("link","/product?id="+ String.valueOf(product.getId()));
             map.put("img",product.getImages().get(0).getImg());
             map.put("name",product.getName());
             map.put("priceOrigin",String.valueOf(product.getPrice()));

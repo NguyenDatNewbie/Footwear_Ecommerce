@@ -33,7 +33,7 @@
         .title{
             display: flex;
             width: 100%;
-            font-size: 16px;
+            font-size: 18px;
             font-family: Emoji;
             color: #242424;
         }
@@ -42,7 +42,6 @@
             text-align: end;
         }
         .order-id span:first-child{
-            border-right: 1px solid #242424;
             padding-right: 3px;
             margin-right: 3px ;
         }
@@ -352,6 +351,9 @@
         .back{
             user-select: none;
         }
+        .container{
+            margin-top: 30px;
+        }
     </style>
 </head>
 <body>
@@ -363,31 +365,53 @@
                 <i class="fas fa-chevron-left" style="margin-right: 5px"></i><span>Trở lại</span>
             </div>
             <div class="order-id">
-                <script>
-                    console.log(${order.id});
-                </script>
-                     <c:choose>
-                         <c:when test="${order.status =='COMPLETE'}">
-                             <span>Mã đơn hàng: ${order.id}</span>
-                             <span>Đơn hàng đã được giao thành công</span>
-                         </c:when>
-                         <c:when test="${order.status =='PREPARE' || order.status =='WAIT'}">
-                             <span>Mã đơn hàng: ${order.id}</span>
-                             <span>Đơn hàng đang đuợc xử lý</span>
-                         </c:when>
-                         <c:when test="${order.status =='ALREADY'}">
-                             <span>Mã đơn hàng: ${order.id}</span>
-                             <span>Đơn hàng đã được chuẩn bị xong</span>
-                         </c:when>
-                         <c:when test="${order.status =='DELIVERY'}">
-                             <span>Mã đơn hàng: ${order.id}</span>
-                             <span>Đơn hàng đang được giao</span>
-                         </c:when>
-                         <c:otherwise>
-                             <span>Mã đơn hàng: ${order.id}</span>
-                             <span style="color: red">Đơn hàng đã được hủy</span>
-                         </c:otherwise>
-                     </c:choose>
+                <div style="display: flex; justify-content: flex-end">
+                    <div>
+                        <span>Mã đơn hàng: <strong>#${order.id}</strong></span>
+                    </div>
+                    <div style="padding-right: 7px; transform: translateY(52%); height: 12px; margin-right: 7px; border-right: 2px solid black"></div>
+                    <div class="info-status">
+                        <c:choose>
+                            <c:when test="${order.status =='COMPLETE'}">
+                                <span style="color: green">Đơn hàng đã được giao thành công</span>
+                            </c:when>
+                            <c:when test="${order.status =='PREPARE' || order.status =='WAIT'}">
+                                <span style="color: blue">Đơn hàng đang đuợc xử lý</span>
+                            </c:when>
+                            <c:when test="${order.status =='ALREADY'}">
+                                <span style="color: blue">Đơn hàng đã được chuẩn bị xong</span>
+                            </c:when>
+                            <c:when test="${order.status =='DELIVERY'}">
+                                <span style="color: coral">Đơn hàng đang được giao</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span style="color: red">Đơn hàng đã được hủy</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+<%--                     <c:choose>--%>
+<%--                         <c:when test="${order.status =='COMPLETE'}">--%>
+<%--                             <span>Mã đơn hàng: ${order.id}</span>--%>
+<%--                             <span>Đơn hàng đã được giao thành công</span>--%>
+<%--                         </c:when>--%>
+<%--                         <c:when test="${order.status =='PREPARE' || order.status =='WAIT'}">--%>
+<%--                             <span>Mã đơn hàng: ${order.id}</span>--%>
+<%--                             <span>Đơn hàng đang đuợc xử lý</span>--%>
+<%--                         </c:when>--%>
+<%--                         <c:when test="${order.status =='ALREADY'}">--%>
+<%--                             <span>Mã đơn hàng: ${order.id}</span>--%>
+<%--                             <span>Đơn hàng đã được chuẩn bị xong</span>--%>
+<%--                         </c:when>--%>
+<%--                         <c:when test="${order.status =='DELIVERY'}">--%>
+<%--                             <span>Mã đơn hàng: ${order.id}</span>--%>
+<%--                             <span>Đơn hàng đang được giao</span>--%>
+<%--                         </c:when>--%>
+<%--                         <c:otherwise>--%>
+<%--                             <span>Mã đơn hàng: ${order.id}</span>--%>
+<%--                             <span style="color: red">Đơn hàng đã được hủy</span>--%>
+<%--                         </c:otherwise>--%>
+<%--                     </c:choose>--%>
             </div>
         </div>
         <div class="status">
@@ -436,31 +460,7 @@
                     <div class="solid">
                         <div class="info-store">
                             <div class="name"><h4>Chi nhánh ${order.store.id} - ${order.store.department}</h4></div>
-                            <div>
-                                <div class="info-status">
-                                    <c:choose>
-                                        <c:when test="${order.status =='COMPLETE'}">
-                                            <i class="fas fa-truck" style="color: green"></i>
-                                            <span style="color: green">Đơn hàng đã được giao thành công</span>
-                                            <span style="padding-left: 5px; border-left: 2px solid black; color: #F6821C">HOÀN THÀNH</span>
-                                        </c:when>
-                                        <c:when test="${order.status =='PREPARE' || order.status =='WAIT'}">
-                                            <span style="color: blue">Đơn hàng đang đuợc xử lý</span>
-                                        </c:when>
-                                        <c:when test="${order.status =='ALREADY'}">
-                                            <span style="color: blue">Đơn hàng đã được chuẩn bị xong</span>
-                                        </c:when>
-                                        <c:when test="${order.status =='DELIVERY'}">
-                                            <i class="fas fa-truck" style="color: orange"></i>
-                                            <span style="color: coral">Đơn hàng đang được giao</span>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <span style="color: red">Đơn hàng đã được hủy</span>
-                                            <span style="padding-left: 5px; border-left: 2px solid black; color: red">HỦY</span>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                     <div class="solid">

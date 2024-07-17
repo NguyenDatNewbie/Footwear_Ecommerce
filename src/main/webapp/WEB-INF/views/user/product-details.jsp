@@ -490,6 +490,28 @@
         .modal_body .product_desc p {
             width: 100%
         }
+        .product_ratting ul{
+            font-size: 13px;
+        }
+        .product_ratting ul li i{
+            font-size: 14px;
+        }
+        .product_ratting .review{
+            margin-left: 10px;
+            color: #242424;
+        }
+        .instruction .image-container img{
+            width: 250px;
+            height: 350px;
+        }
+        .instruction p{
+            font-size: 14px;
+            color: #242424;
+            font-family: "Times New Roman";
+        }
+        .instruction .grid-item{
+            display: block;
+        }
     </style>
 
 </head>
@@ -578,14 +600,17 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </c:forEach>
-                                    <li class="review">(${evaluateList.size()} đánh giá - ${productCurrent.sold} đã
-                                        bán)
+                                    <li class="review"><strong style="margin-right: 3px">${evaluateList.size()} </strong>  đánh giá -
+                                        <strong style="margin-right: 3px">${productCurrent.sold} </strong> lượt bán
                                     </li>
 
                                 </ul>
                             </div>
                         </c:if>
-
+                        <c:if test="${evaluateList.size()==0 && productCurrent.sold>0}">
+                            <li class="review"> <strong style="margin-right: 3px">${productCurrent.sold} </strong> lượt bán
+                            </li>
+                        </c:if>
                         <div class="product_price">
                             <c:choose>
                                 <c:when test="${productCurrent.promotion>0}">
@@ -947,25 +972,25 @@
                     <div class="grid">
                         <div class="grid-item">
                             <div class="image-container">
-                                <img src="${productCurrent.images.get(0).img}">
+                                <img src="https://product.hstatic.net/1000266137/product/cac-loai-giay-in-duoc-su-dung-trong-may-in-6_e748486ffaf148e88e34b288e7c17a16.jpg">
                             </div>
                             <p>Bước 1. Chuẩn bị một tờ giấy A4</p>
                         </div>
                         <div class="grid-item">
                             <div class="image-container">
-                                <img src="${productCurrent.images.get(0).img}">
+                                <img src="<c:url value="/assets/img/background.jpg" />">
                             </div>
                             <p>Bước 2. Đặt tờ giấy vào mặt phẳng khác màu</p>
                         </div>
                         <div class="grid-item">
                             <div class="image-container">
-                                <img src="${productCurrent.images.get(0).img}">
+                                <img src="<c:url value="/assets/img/foot.jpg"/>">
                             </div>
-                            <p>Bước 3. Đặt gót chân vào mép của tờ giấy A4</p>
+                            <p>Bước 3. Đặt chân vào giữa giấy và gót chân vào mép của tờ giấy A4</p>
                         </div>
                         <div class="grid-item">
                             <div class="image-container">
-                                <img src="${productCurrent.images.get(0).img}">
+                                <img src="<c:url value="/assets/img/foot5.jpg"/>">
                             </div>
                             <p>Bước 4. Chụp đủ các đối tượng ở các bước</p>
                         </div>
@@ -1082,8 +1107,7 @@
                                                             </c:choose>
                                                         </c:forEach>
                                                         <li class="review">(${evaluates.size()} đánh giá
-                                                            - ${product.sold} đã
-                                                            bán)
+                                                            - ${product.sold} lượt bán)
                                                         </li>
 
                                                     </ul>
@@ -1398,15 +1422,17 @@
                 '                             alt="big-1">';
             var gallery = document.getElementById("gallery_" + images[0].product);
             gallery.innerHTML = '';
-            for (var i = 1; i < images.length; i++) {
-                gallery.innerHTML += '<li><a href="#" class="elevatezoom-gallery active"\n' +
-                    '                                       data-update="" data-image="' +
-                    images[i].img + '"\n' +
-                    '                                       data-zoom-image="' +
-                    images[i].img + '">' +
-                    '<img src="' +
-                    images[i].img + '" alt="zo-th-1"/>' +
-                    '</a></li>';
+            if(images.length>1) {
+                for (var i = 0; i < images.length; i++) {
+                    gallery.innerHTML += '<li><a href="#" class="elevatezoom-gallery active"\n' +
+                        '                                       data-update="" data-image="' +
+                        images[i].img + '"\n' +
+                        '                                       data-zoom-image="' +
+                        images[i].img + '">' +
+                        '<img src="' +
+                        images[i].img + '" alt="zo-th-1"/>' +
+                        '</a></li>';
+                }
             }
             reinitializeCarousel(images[0].product);
         }
@@ -1471,7 +1497,6 @@
             type: 'GET',
             contentType: "application/json; charset=utf-8",
             success: function (response) {
-                console.log(response);
                 showImages(response);
             },
             error: function (error) {
@@ -1517,6 +1542,7 @@
                 processData: false, // Không xử lý dữ liệu formData
                 success: function (response) {
                     var size = 1.5 * (parseFloat(response) + 1.5);
+                    console.log(size);
                     var div = document.querySelector('#measurement .coupon_inner');
                     div.innerHTML = '';
                     var p = document.createElement('p');
@@ -1525,7 +1551,7 @@
                     div.appendChild(p);
                     p = document.createElement('p');
                     p.style.fontWeight = 'bold';
-                    p.textContent = 'Chúng tôi đề xuất bạn mua giày với kích thước ' + Math.round(size);
+                    p.textContent = 'Chúng tôi đề xuất bạn mua giày kích thước: ' + 'Nữ-' + Math.round(size) + '; Nam-'  + Math.round(size+1) ;
                     div.appendChild(p);
                     p = document.createElement('p');
                     p.style.fontWeight = 'bold';
@@ -1631,6 +1657,7 @@
         }
         result += '                        </div>';
         document.querySelector('#modal-box-measurement .product-size').style.display = 'block';
+
         document.querySelector('#modal-box-measurement .product-size .product-content').innerHTML = result;
         /* product_three_column4activation */
         $('.product_three_column3').owlCarousel({
@@ -1655,7 +1682,12 @@
                 }
             }
         });
+        document.querySelector('#modal-box-measurement .product-size').style.display = 'block';
 
+        if(products.length == 0)
+        {
+            document.querySelector('#modal-box-measurement .product-size').style.display = 'none';
+        }
     }
 </script>
 </body>

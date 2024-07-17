@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -217,10 +218,15 @@ public class OrdersServiceImpl implements IOrdersService {
     double calVoucherValue(double priceOriginal, Vourcher voucher){
         if(voucher.getMinimumValue()>priceOriginal)
             return 0;
-        if(voucher.getVoucherType().equals(VoucherType.DISCOUNT_PERCENT))
+        if(voucher.getVoucherType().equals(VoucherType.DISCOUNT_PERCENT)) {
+            double discountValue = priceOriginal * voucher.getDiscountValue() / 100.0;
+            if(discountValue>voucher.getMaxDiscount())
+                return voucher.getMaxDiscount();
             return priceOriginal * voucher.getDiscountValue() / 100.0;
-        else if(voucher.getVoucherType().equals(VoucherType.DISCOUNT_DIRECT))
+        }
+        else if(voucher.getVoucherType().equals(VoucherType.DISCOUNT_DIRECT)) {
             return voucher.getDiscountValue();
+        }
         return 0;
     }
     @Override
@@ -240,11 +246,14 @@ public class OrdersServiceImpl implements IOrdersService {
     @Override
     public void rateSave(Evaluate evaluate, long orderId){
         Orders orders = ordersRepository.findById(orderId).orElse(null);
+        List<Product> productsRated = new ArrayList<>();
         if(orders!=null)
         {
             List<OrderItem> orderItems = orderItemRepository.findAllItemByOrderId(orderId);
             for (OrderItem item: orderItems) {
                 Product product = item.getInventory().getSize().getProduct();
+                if(productsRated.contains(product))
+                    continue;
                 Evaluate newEvaluate = new Evaluate();
                 newEvaluate.setAccount(evaluate.getAccount());
                 newEvaluate.setRate(evaluate.getRate());
@@ -253,6 +262,7 @@ public class OrdersServiceImpl implements IOrdersService {
                 newEvaluate.setProduct(product);
                 newEvaluate.setOrders(orders);
                 evaluateRepository.save(newEvaluate);
+                productsRated.add(product);
             }
         }
     }
